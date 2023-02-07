@@ -23,25 +23,151 @@ export default [
     ],
   },
   {
-    path: '/welcome',
-    name: 'welcome',
+    path: '/dashboard',
+    name: 'dashboard',
     icon: 'smile',
-    component: './Welcome',
+    component: './dashboard',
   },
   {
-    path: '/admin',
-    name: 'admin',
+    path: '/position-manage',
+    name: 'position-manage',
     icon: 'crown',
-    access: 'canAdmin',
     routes: [
       {
-        path: '/admin',
-        redirect: '/admin/sub-page',
+        path: '/position-manage',
+        redirect: '/position-manage/real-time-location',
       },
       {
-        path: '/admin/sub-page',
-        name: 'sub-page',
-        component: './Admin',
+        path: '/position-manage/real-time-location',
+        name: 'real-time-location',
+        component: './position-manage/real-time-location',
+      },
+      {
+        path: '/position-manage/tracking-manage',
+        name: 'tracking-manage',
+        component: './position-manage/tracking-manage',
+      },
+      {
+        path: '/position-manage/tracking-history',
+        name: 'tracking-history',
+        component: './position-manage/tracking-history',
+      },
+    ],
+  },
+  {
+    path: '/device-manage',
+    name: 'device-manage',
+    icon: 'crown',
+    routes: [
+      {
+        path: '/device-manage',
+        redirect: '/device-manage/base-station',
+      },
+      {
+        path: '/device-manage/base-station',
+        name: 'base-station',
+        component: './device-manage/base-station',
+      },
+      {
+        path: '/device-manage/label-manage',
+        name: 'label-manage',
+        component: './device-manage/label-manage',
+      },
+    ],
+  },
+  {
+    path: '/analyze',
+    name: 'analyze',
+    icon: 'crown',
+    routes: [
+      {
+        path: '/analyze',
+        redirect: '/analyze/heatmap-analyze',
+      },
+      {
+        path: '/analyze/heatmap-analyze',
+        name: 'heatmap-analyze',
+        component: './analyze/heatmap-analyze',
+      },
+      {
+        path: '/analyze/area-analyze',
+        name: 'area-analyze',
+        component: './analyze/area-analyze',
+      },
+    ],
+  },
+  {
+    path: '/warning-manage',
+    name: 'warning-manage',
+    routes: [
+      {
+        path: '/warning-manage',
+        redirect: '/warning-manage/board',
+      },
+      {
+        path: '/warning-manage/board',
+        name: 'board',
+        component: './warning-manage/board',
+      },
+      {
+        path: '/warning-manage/warning-info',
+        name: 'warning-info',
+        component: './warning-manage/warning-info',
+      },
+    ],
+  },
+  {
+    path: '/personnel-manage',
+    name: 'personnel-manage',
+    routes: [
+      {
+        path: '/personnel-manage',
+        redirect: '/personnel-manage/organization',
+      },
+      {
+        path: '/personnel-manage/organization',
+        name: 'organization',
+        component: './personnel-manage/organization',
+      },
+      {
+        path: '/personnel-manage/personnel-classification',
+        name: 'personnel-classification',
+        component: './personnel-manage/personnel-classification',
+      },
+      {
+        path: '/personnel-manage/personnel-info',
+        name: 'personnel-info',
+        component: './personnel-manage/personnel-info',
+      },
+      {
+        path: '/personnel-manage/regional-statistics',
+        name: 'regional-statistics',
+        component: './personnel-manage/regional-statistics',
+      },
+    ],
+  },
+  {
+    path: '/system',
+    name: 'system',
+    routes: [
+      {
+        path: '/system',
+        redirect: '/system/fence-manage',
+      },
+      {
+        path: '/system/fence-manage',
+        name: 'fence-manage',
+        component: './system/fence-manage',
+      },
+      {
+        path: '/system/map-setup',
+        name: 'map-setup',
+        component: './system/map-setup',
+      },
+      {
+        path: '/system/general-setting',
+        name: 'general-setting',
+        component: './system/general-setting',
       },
     ],
   },
@@ -68,14 +194,8 @@ export default [
     ],
   },
   {
-    name: 'list.table-list',
-    icon: 'table',
-    path: '/list',
-    component: './TableList',
-  },
-  {
     path: '/',
-    redirect: '/welcome',
+    redirect: '/dashboard',
   },
   {
     path: '*',

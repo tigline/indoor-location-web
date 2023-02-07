@@ -1,21 +1,18 @@
+import background from '@/assets/images/background.png';
 import { PageContainer } from '@ant-design/pro-components';
 import Draw from 'ol/interaction/Draw';
-import TileLayer from 'ol/layer/Tile';
+import ImageLayer from 'ol/layer/Image';
 import LayerVector from 'ol/layer/Vector';
 import Map from 'ol/Map';
-import SourceVector from 'ol/source/Vector';
 import Static from 'ol/source/ImageStatic';
-import ImageLayer from 'ol/layer/Image';
-import XYZ from 'ol/source/XYZ';
+import SourceVector from 'ol/source/Vector';
 import Stroke from 'ol/style/Stroke';
 import Style from 'ol/style/Style';
 import View from 'ol/View';
 import React from 'react';
-import background from "@/assets/images/background.png";
 
 export default function Page() {
   React.useEffect(() => {
-
     const projection = 'EPSG:4326';
     const extent = [-10, -12, 10, 12];
 
