@@ -7,7 +7,39 @@ export default {
   'menu.login': 'ログイン',
   'menu.register': '登録',
   'menu.register-result': '登録結果',
-  'menu.dashboard': 'ダッシュボード',
+
+  // 项目专有菜单
+  'menu.dashboard': '总览',
+
+  'menu.position-manage': '位置管理',
+
+  'menu.position-manage.real-time-location': '实时位置',
+  'menu.position-manage.tracking-manage': '轨迹追踪',
+  'menu.position-manage.tracking-history': '历史轨迹',
+  'menu.device-manage': '设备管理',
+  'menu.device-manage.base-station': '基站管理',
+  'menu.device-manage.label-manage': '标签管理',
+
+  'menu.analyze': '数据分析',
+  'menu.analyze.heatmap-analyze': '热图分析',
+  'menu.analyze.area-analyze': '区域分析',
+
+  'menu.warning-manage': '智能告警',
+  'menu.warning-manage.board': '告警看板',
+  'menu.warning-manage.warning-info': '告警明细',
+
+  'menu.personnel-manage': '人员管理',
+  'menu.personnel-manage.organization': '组织管理',
+  'menu.personnel-manage.personnel-classification': '人员分类',
+  'menu.personnel-manage.personnel-info': '人员信息',
+  'menu.personnel-manage.regional-statistics': '区域统计',
+
+  'menu.system': '系统设置',
+  'menu.system.fence-manage': '围栏管理',
+  'menu.system.map-setup': '地图设置',
+  'menu.system.general-setting': '通用设置',
+  // 项目专有菜单
+
   'menu.dashboard.analysis': '分析',
   'menu.dashboard.monitor': 'モニター',
   'menu.dashboard.workplace': '職場',

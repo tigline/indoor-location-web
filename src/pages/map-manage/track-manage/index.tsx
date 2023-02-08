@@ -1,4 +1,4 @@
-import { ZrenderComponent } from '@/components/map-components/openlayer-component';
+import { ZrenderComponent } from '@/components/map-components/zrender-component';
 import { PageContainer } from '@ant-design/pro-components';
 
 /**
