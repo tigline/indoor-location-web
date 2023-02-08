@@ -49,6 +49,7 @@
     "@ant-design/icons": "^4.7.0",
     "@ant-design/pro-components": "^2.3.37",
     "@ant-design/use-emotion-css": "1.0.4",
+    "@antv/g2plot": "^2.4.25",
     "@antv/l7": "^2.13.3",
     "@antv/l7-draw": "^3.0.14",
     "@antv/l7-maps": "^2.13.3",
