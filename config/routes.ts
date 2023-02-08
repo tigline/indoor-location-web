@@ -30,13 +30,13 @@ export default [
   {
     path: '/dashboard',
     name: 'dashboard',
-    icon: 'smile',
+    icon: 'appstore',
     component: './dashboard',
   },
   {
     path: '/position-manage',
     name: 'position-manage',
-    icon: 'crown',
+    icon: 'compass',
     routes: [
       {
         path: '/position-manage',
@@ -62,7 +62,7 @@ export default [
   {
     path: '/device-manage',
     name: 'device-manage',
-    icon: 'crown',
+    icon: 'hdd',
     routes: [
       {
         path: '/device-manage',
@@ -83,7 +83,7 @@ export default [
   {
     path: '/analyze',
     name: 'analyze',
-    icon: 'crown',
+    icon: 'lineChart',
     routes: [
       {
         path: '/analyze',
@@ -104,6 +104,7 @@ export default [
   {
     path: '/warning-manage',
     name: 'warning-manage',
+    icon: 'warning',
     routes: [
       {
         path: '/warning-manage',
@@ -124,6 +125,7 @@ export default [
   {
     path: '/personnel-manage',
     name: 'personnel-manage',
+    icon: 'team',
     routes: [
       {
         path: '/personnel-manage',
@@ -154,6 +156,7 @@ export default [
   {
     path: '/system',
     name: 'system',
+    icon: 'setting',
     routes: [
       {
         path: '/system',

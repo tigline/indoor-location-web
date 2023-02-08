@@ -12,9 +12,10 @@ const Welcome: React.FC = () => {
     <PageContainer>
       <Row gutter={[8, 8]}>
         <Col span="6">
-          <StatisticCard.Group
+          <Card
             title={intl.formatMessage({ id: 'dashboard.info', defaultMessage: '定位概览' })}
-            direction="row"
+            // direction="row"
+            style={{ minHeight: 400 }}
           >
             <StatisticCard
               statistic={{
@@ -37,7 +38,7 @@ const Welcome: React.FC = () => {
                 status: 'error',
               }}
             />
-          </StatisticCard.Group>
+          </Card>
         </Col>
         <Col span="6">
           <Card
