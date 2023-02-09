@@ -4,14 +4,24 @@ declare namespace API {
     password: string;
   };
 
+  type loginParams = {
+    Authorization?: any;
+  };
+
   type refreshTokenParams = {
+    Authorization?: any;
     refreshToken: string;
+  };
+
+  type registerParams = {
+    Authorization?: any;
   };
 
   type RegistryInfo = {
     username: string;
     password: string;
     nickname?: string;
+    email?: string;
     phone?: string;
   };
 
@@ -29,10 +39,37 @@ declare namespace API {
     errorDetail?: string;
   };
 
+  type RestValueUserInfo = {
+    code?: number;
+    message?: string;
+    data?: UserInfo;
+    errorDetail?: string;
+  };
+
   type TokenInfo = {
     accessToken?: string;
     accessExpired?: number;
     refreshToken?: string;
     refreshExpired?: number;
+  };
+
+  type UpdateUserInfo = {
+    nickname?: string;
+    email?: string;
+    phone?: string;
+  };
+
+  type updateUserInfoParams = {
+    userId: number;
+  };
+
+  type UserInfo = {
+    userId?: number;
+    username?: string;
+    password?: string;
+    nickname?: string;
+    email?: string;
+    phone?: string;
+    role?: 'Admin' | 'User';
   };
 }

@@ -1,5 +1,5 @@
 export default {
-  'dashboard.info': '定位概览',
+  'dashboard.location.info': '定位概览',
   'dashboard.label-distribution': '在线标签分布',
   'dashboard.map': '地图',
   'dashboard.warning.last.24.hours': '24小时告警变化',

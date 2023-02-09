@@ -8,7 +8,7 @@ import { history, Link } from '@umijs/max';
 import { Location } from 'react-router-dom';
 import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
-import { currentUser as queryCurrentUser } from './services/ant-design-pro/api';
+import { getUserInfo } from './services/swagger/yonghuguanli';
 
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
@@ -33,7 +33,7 @@ export async function getInitialState(): Promise<{
 }> {
   const fetchUserInfo = async () => {
     try {
-      const msg = await queryCurrentUser({
+      const msg = await getUserInfo({
         skipErrorHandler: true,
       });
       return msg.data;
@@ -42,9 +42,9 @@ export async function getInitialState(): Promise<{
     }
     return undefined;
   };
-  // 如果不是登录页面，执行
+  // 如果不是免登录的页面，执行
   const { location } = history;
-  if (isNologin(location)) {
+  if (!isNologin(location)) {
     const currentUser = await fetchUserInfo();
     return {
       fetchUserInfo,

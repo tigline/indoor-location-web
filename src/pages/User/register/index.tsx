@@ -1,6 +1,6 @@
 import Footer from '@/components/Footer';
 import { register } from '@/services/swagger/dengluxiangguan';
-import { OK } from '@/utils/global-utils';
+import { NP, OK } from '@/utils/global-utils';
 import { LockOutlined, MailOutlined, PhoneOutlined, UserOutlined } from '@ant-design/icons';
 import { ProForm, ProFormText } from '@ant-design/pro-components';
 import { useEmotionCss } from '@ant-design/use-emotion-css';
@@ -51,7 +51,7 @@ const Register: React.FC = () => {
       // 登录
       const { confirm, ...rest } = values;
       console.log(confirm);
-      const msg = await register({ ...rest });
+      const msg = await register(NP, { ...rest });
       if (msg.code === OK && msg.data) {
         const defaultLoginSuccessMessage = intl.formatMessage({
           id: 'pages.register.success',

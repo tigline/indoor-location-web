@@ -13,7 +13,10 @@ const Welcome: React.FC = () => {
       <Row gutter={[8, 8]}>
         <Col span="6">
           <Card
-            title={intl.formatMessage({ id: 'dashboard.info', defaultMessage: '定位概览' })}
+            title={intl.formatMessage({
+              id: 'dashboard.location.info',
+              defaultMessage: '定位概览',
+            })}
             // direction="row"
             style={{ minHeight: 400 }}
           >
