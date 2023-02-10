@@ -26,7 +26,7 @@ export class Schematic {
 
   /**
    * 比例尺
-   * 默认为 1mm / 1px
+   * 默认为 1px / 1mm
    * @private
    * @memberof Schematic
    */
@@ -55,6 +55,7 @@ export class Schematic {
     } else {
       console.error('canvas dom is null!');
     }
+    // window.view = this.view;
   }
   public add(shape: Displayable | Group) {
     this.view.add(shape);
@@ -144,77 +145,100 @@ export class Schematic {
 
       // console.log('click');
       if (isEmpty(startPoint)) {
-        startPoint = mousePoint;
-        currentPoint = mousePoint;
+        startPoint[0] = mousePoint[0];
+        startPoint[1] = mousePoint[1];
+        currentPoint[0] = mousePoint[0];
+        currentPoint[1] = mousePoint[1];
         points.push(startPoint);
         points.push(currentPoint);
         this.tempPolygon = new Polyline({
-          shape: { points: points.map((p) => this.transformBack(p as [number, number])) },
-          style: { fill: 'red' },
+          shape: { points: this.transPoints(points) },
+          style: { fill: 'red', lineDash: 'dashed' },
         });
         this.view.add(this.tempPolygon);
         // 添加吸附点, 由于记录的是真实坐标，这里需要转换一下
         const [cx, cy] = this.transformBack(mousePoint);
         startCircle = new Circle({
-          shape: { cx, cy, r: 20 },
-          style: { fill: 'blue', fillOpacity: 1 },
+          shape: { cx, cy, r: 20 / this.zoom },
+          style: { fill: 'blue', fillOpacity: 0.3 },
         });
         this.view.add(startCircle);
       } else {
         // 最后一个点是鼠标的位置，如果点击确认的话需要先清除掉，再放一个新的点进去
         points.pop();
-        if (isEqual(currentPoint, startPoint)) {
+        if (isEqual(currentPoint, startPoint) && uniqWith(points, isEqual).length > 2) {
           // 终点与起点一致，表示已经画完了
           if (this.tempPolygon) {
             this.view.remove(this.tempPolygon);
           }
-          if (uniqWith(points, isEqual).length > 2) {
-            this.view.add(
-              new Polygon({
-                shape: { points: points.map((p) => this.transformBack(p as [number, number])) },
-                style: { fill: 'red' },
-              }),
-            );
-          }
+
+          this.view.add(
+            new Polygon({
+              shape: { points: this.transPoints(points) },
+              style: { fill: 'red', stroke: 'blue' },
+            }),
+          );
+
           points = [];
           startPoint = [];
           currentPoint = [];
           startCircle = null;
         } else {
           points.push(mousePoint);
-          currentPoint = mousePoint;
+          currentPoint = [...mousePoint];
           points.push(currentPoint);
           this.tempPolygon?.attr('shape', {
-            points: points.map((p) => this.transformBack(p as [number, number])),
+            points: this.transPoints(points),
           });
           // console.log(points);
         }
         console.log('points', points);
       }
     });
-
+    this.instance?.on('mousewheel', (ev) => {
+      // const [cx, cy] = this.transformBack(currentPoint);
+      const [startCx, startCy] = this.transformBack(startPoint);
+      circle.attr('shape', { cx: ev.offsetX, cy: ev.offsetY });
+      startCircle?.attr('shape', { cx: startCx, cy: startCy, r: 20 / this.zoom });
+      this.tempPolygon?.attr('shape', { points: this.transPoints(points) });
+    });
     this.instance?.on('mousemove', (ev) => {
-      // 鼠标真实坐标
+      // 鼠标相对于真实环境的坐标
       const [offsetX, offsetY] = this.transform([ev.offsetX, ev.offsetY]);
       if (!circle) {
         const [cx, cy] = this.transformBack([offsetX, offsetY]);
-        // this.view.remove(circle);
-        circle = new Circle({ shape: { cx, cy, r: 4 } });
+        circle = new Circle({ shape: { cx, cy, r: 4 / this.zoom }, zlevel: 999 });
         this.view.add(circle);
       }
       // 多边形两个点+跟随鼠标的一个点，当点的集合大于3个点时才作吸附的动作
-      if (points.length > 3 && !isEmpty(startPoint) && startCircle?.contain(offsetX, offsetY)) {
+      if (
+        points.length > 3 &&
+        !isEmpty(startPoint) &&
+        startCircle?.contain(ev.offsetX, ev.offsetY)
+      ) {
         currentPoint[0] = startPoint[0];
         currentPoint[1] = startPoint[1];
       } else {
         currentPoint[0] = offsetX;
         currentPoint[1] = offsetY;
       }
-      const [cx, cy] = this.transformBack([currentPoint[0], currentPoint[1]] as [number, number]);
+      const [cx, cy] = this.transformBack(currentPoint);
+      const [startCx, startCy] = this.transformBack(startPoint);
+      console.log(
+        `
+         图上偏移:${this.view.x}:${this.view.y},
+         放大倍率:${this.zoom},
+         真实起点坐标:${startPoint},
+         图上起点坐标:${[startCx, startCy]},
+         真实坐标:${currentPoint},
+         图上坐标:${[cx, cy]},
+         points:${points.length},
+         this.tempPolygon:${this.tempPolygon}
+        `,
+      );
       circle.attr('shape', { cx, cy });
-      this.tempPolygon?.attr('shape', {
-        points: points.map((pp) => this.transformBack(pp as [number, number])),
-      });
+      startCircle?.attr('shape', { cx: startCx, cy: startCy, r: 20 / this.zoom });
+      this.tempPolygon?.attr('shape', { points: this.transPoints(points) });
     });
   }
 
@@ -225,20 +249,25 @@ export class Schematic {
    * @return {*}  {[number, number]}
    * @memberof Schematic
    */
-  public transform(point: [number, number]): [number, number] {
-    // console.log(point);
-    return [(point[0] - this.x) / this.zoom, (point[1] - this.y) / this.zoom];
+  public transform(point: number[]): number[] {
+    return [(point[0] - this.view.x) / this.zoom, (point[1] - this.view.y) / this.zoom];
   }
+
   /**
    * 转换坐标
    * 将实际坐标转换为图上坐标
-   * @param {[number, number]} point
-   * @return {*}  {[number, number]}
+   * 第一次转换为全局坐标
+   * 第二次转换为相对于view的相对坐标
+   * @param {number[]} point
+   * @return {*}  {number[]}
    * @memberof Schematic
    */
-  public transformBack(point: [number, number]): [number, number] {
-    const record = [point[0] * this.zoom, point[1] * this.zoom] as [number, number];
-    console.log(`x:${this.x},y:${this.y},zoom:${this.zoom},point:${point},record:${record}`);
-    return record;
+  public transformBack(point: number[]): number[] {
+    const [x, y] = [point[0] * this.zoom + this.view.x, point[1] * this.zoom + this.view.y];
+    return this.view.transformCoordToLocal(x, y) as [number, number];
+  }
+
+  public transPoints(points: number[][]): number[][] {
+    return points.map(this.transformBack.bind(this));
   }
 }

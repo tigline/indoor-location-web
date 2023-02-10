@@ -27,9 +27,9 @@ const isNologin = (location: Location) =>
  * */
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
-  currentUser?: API.CurrentUser;
+  currentUser?: API.UserInfo;
   loading?: boolean;
-  fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
+  fetchUserInfo?: () => Promise<API.UserInfo | undefined>;
 }> {
   const fetchUserInfo = async () => {
     try {
@@ -42,8 +42,8 @@ export async function getInitialState(): Promise<{
     }
     return undefined;
   };
-  // 如果不是免登录的页面，执行
   const { location } = history;
+  // 如果不是免登录的页面，执行
   if (!isNologin(location)) {
     const currentUser = await fetchUserInfo();
     return {
@@ -63,7 +63,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
   return {
     rightContentRender: () => <RightContent />,
     waterMarkProps: {
-      content: initialState?.currentUser?.name,
+      content: initialState?.currentUser?.nickname,
     },
     footerRender: () => <Footer />,
     onPageChange: () => {

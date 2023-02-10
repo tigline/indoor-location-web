@@ -28,6 +28,15 @@ export default [
     ],
   },
   {
+    path: '/account',
+    name: 'account',
+    hideInMenu: true,
+    routes: [
+      { name: 'center', path: '/account/center', component: './account/center' },
+      // { name: 'settings', path: '/settings', component: './account/settings' },
+    ],
+  },
+  {
     path: '/dashboard',
     name: 'dashboard',
     icon: 'appstore',
