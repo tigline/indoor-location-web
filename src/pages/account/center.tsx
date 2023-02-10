@@ -1,13 +1,15 @@
-import { LockOutlined, MailOutlined, PhoneOutlined, UserOutlined } from '@ant-design/icons';
+import { updateUserInfo } from '@/services/swagger/yonghuguanli';
+import { MailOutlined, PhoneOutlined, UserOutlined } from '@ant-design/icons';
 import { PageContainer, ProForm, ProFormInstance, ProFormText } from '@ant-design/pro-components';
-import { FormattedMessage, useIntl } from '@umijs/max';
+import { FormattedMessage, useIntl, useModel, useRequest } from '@umijs/max';
+import { notification } from 'antd';
 import React from 'react';
 
 interface FormPropType {
   nickname?: string;
-  username?: string;
-  password?: string;
-  confirm?: string;
+  // username?: string;
+  // password?: string;
+  // confirm?: string;
   email?: string;
   phone?: string;
 }
@@ -15,28 +17,43 @@ interface FormPropType {
 export default function Page() {
   const formRef = React.useRef<ProFormInstance<FormPropType>>();
   const intl = useIntl();
+  const { initialState } = useModel('@@initialState');
+  const currentUser = initialState?.currentUser;
+  const { run } = useRequest(updateUserInfo, {
+    manual: true,
+    onSuccess(data) {
+      if (data) {
+        notification.success({
+          message: intl.formatMessage({
+            id: 'pages.account.update.success',
+            defaultMessage: '更新用户信息成功',
+          }),
+        });
+      }
+    },
+  });
   return (
     <PageContainer
-      title={intl.formatMessage({ id: '更新用户信息' })}
+      title={intl.formatMessage({ id: 'pages.account.update', defaultMessage: '更新用户信息' })}
       // subTitle={intl.formatMessage({ id: '更新用户信息' })}
     >
-      <ProForm formRef={formRef} style={{ maxWidth: 520 }}>
-        <ProFormText
-          name="nickname"
-          placeholder={intl.formatMessage({
-            id: 'pages.register.nickname',
-            defaultMessage: '昵称',
-          })}
-          fieldProps={{ size: 'large', prefix: <UserOutlined /> }}
-          rules={[
-            {
-              required: true,
-              message: (
-                <FormattedMessage id="pages.login.nickname.required" defaultMessage="请输入昵称!" />
-              ),
-            },
-          ]}
-        />
+      <ProForm
+        formRef={formRef}
+        style={{ maxWidth: 520 }}
+        onFinish={(values) => {
+          if (currentUser?.userId) {
+            return run({ userId: currentUser?.userId }, values);
+          } else {
+            notification.error({
+              message: intl.formatMessage({
+                id: 'pages.account.userId.failure',
+                defaultMessage: '用户ID不能为空',
+              }),
+            });
+            return Promise.reject();
+          }
+        }}
+      >
         <ProFormText
           name="username"
           fieldProps={{ size: 'large', prefix: <UserOutlined /> }}
@@ -44,6 +61,8 @@ export default function Page() {
             id: 'pages.login.username',
             defaultMessage: '用户名',
           })}
+          disabled
+          initialValue={currentUser?.username}
           rules={[
             {
               required: true,
@@ -56,7 +75,25 @@ export default function Page() {
             },
           ]}
         />
-        <ProFormText.Password
+        <ProFormText
+          name="nickname"
+          placeholder={intl.formatMessage({
+            id: 'pages.register.nickname',
+            defaultMessage: '昵称',
+          })}
+          initialValue={currentUser?.nickname}
+          fieldProps={{ size: 'large', prefix: <UserOutlined /> }}
+          rules={[
+            {
+              required: true,
+              message: (
+                <FormattedMessage id="pages.login.nickname.required" defaultMessage="请输入昵称!" />
+              ),
+            },
+          ]}
+        />
+
+        {/* <ProFormText.Password
           name="password"
           placeholder={intl.formatMessage({
             id: 'pages.register.password.placeholder',
@@ -105,11 +142,12 @@ export default function Page() {
               ),
             },
           ]}
-        />
+        /> */}
         <ProFormText
           name="email"
           placeholder={intl.formatMessage({ id: 'pages.register.email', defaultMessage: '邮箱' })}
           fieldProps={{ size: 'large', prefix: <MailOutlined /> }}
+          initialValue={currentUser?.email}
           rules={[
             {
               type: 'email',
@@ -123,6 +161,7 @@ export default function Page() {
           name="phone"
           placeholder={intl.formatMessage({ id: 'pages.register.phone', defaultMessage: '手机' })}
           fieldProps={{ size: 'large', prefix: <PhoneOutlined /> }}
+          initialValue={currentUser?.phone}
           rules={[
             {
               pattern: /^\d+$/,

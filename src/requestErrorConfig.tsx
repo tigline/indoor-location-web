@@ -1,7 +1,7 @@
 ﻿import type { RequestOptions } from '@@/plugin-request/request';
 import { FormattedMessage, RequestConfig } from '@umijs/max';
 import { message, notification } from 'antd';
-import { OK } from './utils/global-utils';
+import { OK } from './utils/global.utils';
 
 // 错误处理方案： 错误类型
 enum ErrorShowType {

@@ -1,6 +1,6 @@
 import Footer from '@/components/Footer';
 import { register } from '@/services/swagger/dengluxiangguan';
-import { NP, OK } from '@/utils/global-utils';
+import { NP, OK } from '@/utils/global.utils';
 import { LockOutlined, MailOutlined, PhoneOutlined, UserOutlined } from '@ant-design/icons';
 import { ProForm, ProFormText } from '@ant-design/pro-components';
 import { useEmotionCss } from '@ant-design/use-emotion-css';

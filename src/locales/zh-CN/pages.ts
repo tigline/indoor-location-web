@@ -2,6 +2,9 @@ export default {
   'pages.layouts.userLayout.title': 'Ant Design 是西湖区最具影响力的 Web 设计规范',
   'pages.login.accountLogin.tab': '账户密码登录',
   'pages.login.accountLogin.errorMessage': '错误的用户名和密码(admin/ant.design)',
+  'pages.account.update': '更新用户信息',
+  'pages.account.update.success': '更新用户信息成功',
+  'pages.account.userId.failure': '用户ID不能为空',
   'pages.login.failure': '登录失败，请重试！',
   'pages.login.success': '登录成功！',
   'pages.login.username.placeholder': '用户名: admin or user',
@@ -81,4 +84,13 @@ export default {
   'pages.searchTable.tenThousand': '万',
   'pages.searchTable.batchDeletion': '批量删除',
   'pages.searchTable.batchApproval': '批量审批',
+
+  'pages.position-manage.real-time-location.current-time': '当前时间',
+  'pages.position-manage.real-time-location.map-select': '请选择地图',
+  'pages.position-manage.real-time-location.floor-select': '请选择楼层',
+
+  'pages.position-manage.tracking-manage.person-select': '请选择人员',
+  'pages.position-manage.tracking-manage.start.time': '请选择起始时间',
+  'pages.position-manage.tracking-manage.end.time': '请选择结束时间',
+  'pages.position-manage.tracking-manage.speed-select': '速率',
 };

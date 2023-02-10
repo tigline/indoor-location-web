@@ -1,7 +1,7 @@
 import Footer from '@/components/Footer';
 // import { login } from '@/services/ant-design-pro/api';
 import { login } from '@/services/swagger/dengluxiangguan';
-import { NP, OK } from '@/utils/global-utils';
+import { NP, OK } from '@/utils/global.utils';
 import {
   // AlipayCircleOutlined,
   // TaobaoCircleOutlined,
