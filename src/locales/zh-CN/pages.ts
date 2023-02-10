@@ -93,4 +93,10 @@ export default {
   'pages.position-manage.tracking-manage.start.time': '请选择起始时间',
   'pages.position-manage.tracking-manage.end.time': '请选择结束时间',
   'pages.position-manage.tracking-manage.speed-select': '速率',
+
+  'pages.device-manage.base-station.device.code': '编号',
+  'pages.device-manage.base-station.device.name': '名称',
+  'pages.device-manage.base-station.device.type': '类型',
+  'pages.device-manage.base-station.device.time': '加入时间',
+  'pages.device-manage.base-station.device.state': '状态',
 };
