@@ -104,5 +104,5 @@ export function ZrenderComponent() {
       board.current.add(backgroundMap.root);
     }
   }, []);
-  return <div id="map" ref={ref} style={{ border: '1px solid ' }} />;
+  return <div id="map" ref={ref} style={{ border: '1px solid', display: 'inline-block' }} />;
 }
