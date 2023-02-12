@@ -18,7 +18,7 @@ registerPainter('canvas', CanvasPainter);
  * @class Schematic
  */
 export class Schematic {
-  private instance;
+  public instance;
   /**
    * 包含所有组件的组合
    *
