@@ -1,5 +1,9 @@
+import { geekblue, volcano } from '@ant-design/colors';
 import { isEmpty, isEqual, uniqWith } from 'lodash';
-import { Circle, Displayable, Group, init, Polygon, Polyline } from 'zrender';
+import { Circle, Displayable, Group, init, Polygon, Polyline, registerPainter } from 'zrender';
+import CanvasPainter from 'zrender/lib/canvas/Painter';
+// 注册绘制器
+registerPainter('canvas', CanvasPainter);
 
 /**
  * 室内地图示意图绘制组件
@@ -47,7 +51,7 @@ export class Schematic {
   constructor(dom: HTMLElement) {
     this.view = new Group();
     if (dom) {
-      this.instance = init(dom);
+      this.instance = init(dom, { renderer: 'canvas' });
       this.instance.add(this.view);
       this.initZoom();
       this.initMove();
@@ -63,7 +67,46 @@ export class Schematic {
   public remove(shape: Displayable) {
     this.view.remove(shape);
   }
-
+  /**
+   * 设置轨迹
+   *
+   * @param {number[][]} path
+   * @memberof Schematic
+   */
+  public setTrack(path: number[][]) {
+    const points = this.transPoints(path);
+    const trackPoints = points.map(([cx, cy]) => {
+      return new Circle({
+        shape: { cx, cy, r: 5 / this.zoom },
+        zlevel: 3,
+        style: {
+          fill: geekblue.primary,
+        },
+      });
+    });
+    trackPoints.forEach((circle) => this.view.add(circle));
+    const trackLine = new Polyline({
+      shape: { points },
+      zlevel: 3,
+      style: {
+        fill: geekblue.primary,
+        stroke: geekblue.primary,
+        strokeNoScale: true,
+        lineDash: 'dashed',
+        lineWidth: 3,
+      },
+    });
+    this.view.add(trackLine);
+    trackLine
+      .animate('style', true)
+      .when(500, { lineDashOffset: 3 })
+      .during(() => {
+        trackPoints.forEach((circle) => {
+          circle.attr('shape', { r: 5 / this.zoom });
+        });
+      })
+      .start();
+  }
   /**
    * 初始化缩放
    *
@@ -90,6 +133,7 @@ export class Schematic {
       this.view.attr('scaleY', this.zoom);
       this.view.attr('x', this.x);
       this.view.attr('y', this.y);
+      // this.trackLine.attr('style',{ strokeNoScale})
     });
   }
 
@@ -153,14 +197,20 @@ export class Schematic {
         points.push(currentPoint);
         this.tempPolygon = new Polyline({
           shape: { points: this.transPoints(points) },
-          style: { fill: 'red', lineDash: 'dashed' },
+          style: {
+            fill: volcano[2],
+            stroke: volcano.primary,
+            lineDash: 'dashed',
+            fillOpacity: 0.4,
+            strokeNoScale: true,
+          },
         });
         this.view.add(this.tempPolygon);
         // 添加吸附点, 由于记录的是真实坐标，这里需要转换一下
         const [cx, cy] = this.transformBack(mousePoint);
         startCircle = new Circle({
           shape: { cx, cy, r: 20 / this.zoom },
-          style: { fill: 'blue', fillOpacity: 0.3 },
+          style: { fill: geekblue.primary, fillOpacity: 0 },
         });
         this.view.add(startCircle);
       } else {
@@ -175,7 +225,12 @@ export class Schematic {
           this.view.add(
             new Polygon({
               shape: { points: this.transPoints(points) },
-              style: { fill: 'red', stroke: 'blue' },
+              style: {
+                fill: volcano[2],
+                stroke: volcano.primary,
+                fillOpacity: 0.4,
+                strokeNoScale: true,
+              },
             }),
           );
 
@@ -198,7 +253,7 @@ export class Schematic {
     this.instance?.on('mousewheel', (ev) => {
       // const [cx, cy] = this.transformBack(currentPoint);
       const [startCx, startCy] = this.transformBack(startPoint);
-      circle.attr('shape', { cx: ev.offsetX, cy: ev.offsetY });
+      circle.attr('shape', { cx: ev.offsetX, cy: ev.offsetY, r: 4 / this.zoom });
       startCircle?.attr('shape', { cx: startCx, cy: startCy, r: 20 / this.zoom });
       this.tempPolygon?.attr('shape', { points: this.transPoints(points) });
     });

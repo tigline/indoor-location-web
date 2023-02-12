@@ -33,6 +33,11 @@ export function ZrenderComponent() {
       // });
       // board.current.add(circle);
       // board.current.add(rect);
+      board.current.setTrack([
+        [10, 10],
+        [20, 20],
+        [30, 30],
+      ]);
       board.current.add(
         zrender.parseSVG(svg, {
           ignoreRootClip: true,
