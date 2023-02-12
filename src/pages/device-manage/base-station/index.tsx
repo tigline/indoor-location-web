@@ -1,3 +1,5 @@
+import { pageGateway } from '@/services/swagger/shebeiguanli';
+import { OK } from '@/utils/global.utils';
 import { PlusOutlined } from '@ant-design/icons';
 import {
   ActionType,
@@ -9,11 +11,12 @@ import {
 import { FormattedMessage, useIntl } from '@umijs/max';
 import { Button, Space, Tag } from 'antd';
 import React from 'react';
+import { AddBaseStationModal } from './components/add-base-station.modal';
 
 export default function Page() {
   const actionRef = React.useRef<ActionType>();
   const intl = useIntl();
-  const columns: ProColumns<any>[] = [
+  const columns: ProColumns<API.GatewayInfo>[] = [
     {
       dataIndex: 'index',
       valueType: 'indexBorder',
@@ -124,17 +127,6 @@ export default function Page() {
       valueType: 'option',
       key: 'option',
       render: (text, record, _, action) => [
-        <a
-          key="editable"
-          onClick={() => {
-            action?.startEditable?.(record.id);
-          }}
-        >
-          编辑
-        </a>,
-        <a href={record.url} target="_blank" rel="noopener noreferrer" key="view">
-          查看
-        </a>,
         <TableDropdown
           key="actionGroup"
           onSelect={() => action?.reload()}
@@ -151,10 +143,21 @@ export default function Page() {
       <ProTable
         actionRef={actionRef}
         columns={columns}
+        request={({ current, pageSize, ...rest }) =>
+          pageGateway({
+            current: '' + current,
+            size: '' + pageSize,
+            ...rest,
+          }).then((res) => {
+            return {
+              data: res.data?.items,
+              total: res.data?.total,
+              success: res.code === OK,
+            };
+          })
+        }
         toolBarRender={() => [
-          <Button key="add" icon={<PlusOutlined />} type="primary">
-            <FormattedMessage id="app.action.add" defaultMessage="新建" />
-          </Button>,
+          <AddBaseStationModal key="add"></AddBaseStationModal>,
           <Button key="batch" icon={<PlusOutlined />} type="primary">
             <FormattedMessage id="app.batch.action" defaultMessage="批量操作" />
           </Button>,

@@ -28,3 +28,22 @@ export async function updateUserInfo(
     ...(options || {}),
   });
 }
+
+/** 分页获取用户列表 GET /api/v1/users */
+export async function pageUser(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.pageUserParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.RestValuePageResultUserInfo>('/api/v1/users', {
+    method: 'GET',
+    params: {
+      // current has a default value: 1
+      current: '1',
+      // size has a default value: 10
+      size: '10',
+      ...params,
+    },
+    ...(options || {}),
+  });
+}

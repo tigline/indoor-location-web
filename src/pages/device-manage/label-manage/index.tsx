@@ -1,59 +1,42 @@
+import { pageBeacon } from '@/services/swagger/shebeiguanli';
+import { OK } from '@/utils/global.utils';
 import { PlusOutlined } from '@ant-design/icons';
-import {
-  ActionType,
-  PageContainer,
-  ProColumns,
-  ProTable,
-  TableDropdown,
-} from '@ant-design/pro-components';
+import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
-import { Button, Space, Tag } from 'antd';
+import { Button, Space } from 'antd';
 import React from 'react';
+import { AddLabelModal } from './components/add-label.modal';
 
 export default function Page() {
   const actionRef = React.useRef<ActionType>();
   const intl = useIntl();
-  const columns: ProColumns<any>[] = [
-    {
-      dataIndex: 'index',
-      valueType: 'indexBorder',
-      width: 48,
-    },
+  const columns: ProColumns<API.BeaconInfo>[] = [
+    // {
+    //   title: intl.formatMessage({
+    //     id: 'pages.device-manage.base-station.device.code',
+    //     defaultMessage: '编号',
+    //   }),
+    //   dataIndex: 'index',
+    //   valueType: 'indexBorder',
+    //   width: 48,
+    // },
     {
       title: intl.formatMessage({
         id: 'pages.device-manage.base-station.device.code',
         defaultMessage: '编号',
       }),
-      dataIndex: 'title',
+      dataIndex: 'deviceId',
       copyable: true,
       ellipsis: true,
-      tip: '标题过长会自动收缩',
-      formItemProps: {
-        rules: [
-          {
-            required: true,
-            message: '此项为必填项',
-          },
-        ],
-      },
     },
     {
       title: intl.formatMessage({
         id: 'pages.device-manage.base-station.device.name',
         defaultMessage: '名称',
       }),
-      dataIndex: 'title',
+      dataIndex: 'name',
       copyable: true,
       ellipsis: true,
-      tip: '标题过长会自动收缩',
-      formItemProps: {
-        rules: [
-          {
-            required: true,
-            message: '此项为必填项',
-          },
-        ],
-      },
     },
 
     {
@@ -62,18 +45,19 @@ export default function Page() {
         id: 'pages.device-manage.base-station.device.type',
         defaultMessage: '类型',
       }),
-      dataIndex: 'labels',
+      dataIndex: 'type',
       search: false,
       renderFormItem: (_, { defaultRender }) => {
         return defaultRender(_);
       },
       render: (_, record: any) => (
         <Space>
-          {record.labels.map(({ name, color }: any) => (
+          {JSON.stringify(record.type)}
+          {/* {record.labels.map(({ name, color }: any) => (
             <Tag color={color} key={name}>
               {name}
             </Tag>
-          ))}
+          ))} */}
         </Space>
       ),
     },
@@ -82,8 +66,8 @@ export default function Page() {
         id: 'pages.device-manage.base-station.device.time',
         defaultMessage: '加入时间',
       }),
-      key: 'showTime',
-      dataIndex: 'created_at',
+      key: 'updateTime',
+      dataIndex: 'updateTime',
       valueType: 'date',
       sorter: true,
       hideInSearch: true,
@@ -94,7 +78,7 @@ export default function Page() {
         id: 'pages.device-manage.base-station.device.state',
         defaultMessage: '状态',
       }),
-      dataIndex: 'state',
+      dataIndex: 'status',
       filters: true,
       onFilter: true,
       ellipsis: true,
@@ -123,15 +107,13 @@ export default function Page() {
       }),
       valueType: 'option',
       key: 'option',
-      render: (text, record, _, action) => [
-        <TableDropdown
-          key="actionGroup"
-          onSelect={() => action?.reload()}
-          menus={[
-            { key: 'copy', name: '复制' },
-            { key: 'delete', name: '删除' },
-          ]}
-        />,
+      render: () => [
+        <Button key="copy">
+          {intl.formatMessage({ id: 'app.copy', defaultMessage: '复制' })}
+        </Button>,
+        <Button key="remove">
+          {intl.formatMessage({ id: 'app.remove', defaultMessage: '删除' })}
+        </Button>,
       ],
     },
   ];
@@ -140,10 +122,21 @@ export default function Page() {
       <ProTable
         actionRef={actionRef}
         columns={columns}
+        request={({ current, pageSize, ...rest }) =>
+          pageBeacon({
+            current: '' + current,
+            size: '' + pageSize,
+            ...rest,
+          }).then((res) => {
+            return {
+              data: res.data?.items,
+              total: res.data?.total,
+              success: res.code === OK,
+            };
+          })
+        }
         toolBarRender={() => [
-          <Button key="add" icon={<PlusOutlined />} type="primary">
-            <FormattedMessage id="app.action.add" defaultMessage="新建" />
-          </Button>,
+          <AddLabelModal key="add" />,
           <Button key="batch" icon={<PlusOutlined />} type="primary">
             <FormattedMessage id="app.batch.action" defaultMessage="批量操作" />
           </Button>,

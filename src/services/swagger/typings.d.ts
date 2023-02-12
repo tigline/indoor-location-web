@@ -1,4 +1,77 @@
 declare namespace API {
+  type AddBeaconInfo = {
+    deviceId: string;
+    gateway?: string;
+    mac?: string;
+    mapId?: string;
+    groupId?: string;
+    name?: string;
+    productName?: string;
+  };
+
+  type AddGatewayInfo = {
+    gateway: string;
+    mapId?: string;
+    groupId?: string;
+    name?: string;
+    productName?: string;
+  };
+
+  type AoaDataInfo = {
+    id?: number;
+    deviceId?: string;
+    mapId?: string;
+    optScale?: number;
+    posX?: number;
+    posY?: number;
+    timestamp?: number;
+  };
+
+  type BeaconInfo = {
+    deviceId?: string;
+    mac?: string;
+    gateway?: string;
+    mapId?: string;
+    groupId?: string;
+    name?: string;
+    productName?: string;
+    systemId?: string;
+    type?: string;
+    status?: string;
+    motion?: string;
+    optScale?: number;
+    positionType?: string;
+    posX?: number;
+    posY?: number;
+    updateTime?: number;
+    extraInfo?: string;
+    efenceIds?: string;
+  };
+
+  type GatewayInfo = {
+    gateway?: string;
+    mapId?: string;
+    groupId?: string;
+    name?: string;
+    productName?: string;
+    systemId?: string;
+    type?: string;
+    status?: string;
+    ip?: string;
+    setX?: number;
+    setY?: number;
+    setZ?: number;
+    updateTime?: number;
+    extraInfo?: string;
+    eFenceIds?: string;
+  };
+
+  type listBeaconLocationParams = {
+    mapId: string;
+    startTime: string;
+    endTime: string;
+  };
+
   type LoginInfo = {
     username: string;
     password: string;
@@ -6,6 +79,54 @@ declare namespace API {
 
   type loginParams = {
     Authorization?: any;
+  };
+
+  type pageBeaconParams = {
+    deviceId?: string;
+    name?: string;
+    /** 当前页码 */
+    current?: string;
+    /** 每页数量 */
+    size?: string;
+  };
+
+  type pageGatewayParams = {
+    gateway?: string;
+    name?: string;
+    /** 当前页码 */
+    current?: string;
+    /** 每页数量 */
+    size?: string;
+  };
+
+  type PageResultBeaconInfo = {
+    current?: number;
+    size?: number;
+    total?: number;
+    items?: BeaconInfo[];
+  };
+
+  type PageResultGatewayInfo = {
+    current?: number;
+    size?: number;
+    total?: number;
+    items?: GatewayInfo[];
+  };
+
+  type PageResultUserInfo = {
+    current?: number;
+    size?: number;
+    total?: number;
+    items?: UserInfo[];
+  };
+
+  type pageUserParams = {
+    username?: string;
+    nickname?: string;
+    /** 当前页码 */
+    current?: string;
+    /** 每页数量 */
+    size?: string;
   };
 
   type refreshTokenParams = {
@@ -29,6 +150,34 @@ declare namespace API {
     code?: number;
     message?: string;
     data?: boolean;
+    errorDetail?: string;
+  };
+
+  type RestValueListAoaDataInfo = {
+    code?: number;
+    message?: string;
+    data?: AoaDataInfo[];
+    errorDetail?: string;
+  };
+
+  type RestValuePageResultBeaconInfo = {
+    code?: number;
+    message?: string;
+    data?: PageResultBeaconInfo;
+    errorDetail?: string;
+  };
+
+  type RestValuePageResultGatewayInfo = {
+    code?: number;
+    message?: string;
+    data?: PageResultGatewayInfo;
+    errorDetail?: string;
+  };
+
+  type RestValuePageResultUserInfo = {
+    code?: number;
+    message?: string;
+    data?: PageResultUserInfo;
     errorDetail?: string;
   };
 
@@ -60,16 +209,16 @@ declare namespace API {
   };
 
   type updateUserInfoParams = {
-    userId: number;
+    userId: string;
   };
 
   type UserInfo = {
-    userId?: number;
+    userId?: string;
     username?: string;
     password?: string;
     nickname?: string;
     email?: string;
     phone?: string;
-    role?: 'Admin' | 'User';
+    role?: 'SuperAdmin' | 'Admin' | 'User';
   };
 }

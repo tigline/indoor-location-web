@@ -99,4 +99,15 @@ export default {
   'pages.device-manage.base-station.device.type': '类型',
   'pages.device-manage.base-station.device.time': '加入时间',
   'pages.device-manage.base-station.device.state': '状态',
+  'pages.device-manage.base-station.device.add': '新建基站',
+
+  'pages.device-manage.label.device.add': '新建标签',
+  'pages.device-manage.label.device.batch': '批量操作',
+
+  'pages.device-manage.label.device.deviceId': '设备ID',
+  'pages.device-manage.label.device.gateway': '网关',
+  'pages.device-manage.label.device.mac': '物理地址',
+  'pages.device-manage.label.device.map': '地图',
+  'pages.device-manage.label.device.name': '设置名称',
+  'pages.device-manage.label.device.productName': '产品名称',
 };
