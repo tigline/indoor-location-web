@@ -58,7 +58,7 @@ export default function Page() {
       }),
       key: 'updateTime',
       dataIndex: 'updateTime',
-      valueType: 'date',
+      valueType: 'dateTime',
       sorter: true,
       hideInSearch: true,
     },
@@ -121,7 +121,14 @@ export default function Page() {
             ...rest,
           }).then((res) => {
             return {
-              data: res.data?.items,
+              data: res.data?.items?.map((item) => {
+                // 后台保存的是10位的时间戳，前端使用的13位的时间戳，这里转换一下
+                const updateTime = item.updateTime ? item.updateTime * 1000 : undefined;
+                return {
+                  ...item,
+                  updateTime,
+                };
+              }),
               total: res.data?.total,
               success: res.code === OK,
             };

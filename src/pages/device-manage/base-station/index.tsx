@@ -1,5 +1,5 @@
 import { pageGateway } from '@/services/swagger/shebeiguanli';
-import { OK } from '@/utils/global.utils';
+import { fmt, OK } from '@/utils/global.utils';
 import { PlusOutlined } from '@ant-design/icons';
 import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
@@ -64,7 +64,7 @@ export default function Page() {
       renderFormItem: (_, { defaultRender }) => {
         return defaultRender(_);
       },
-      render: (_, record: any) => <Tag>{record.type}</Tag>,
+      render: (_, record) => <Tag>{record.type}</Tag>,
     },
     {
       title: intl.formatMessage({
@@ -73,9 +73,12 @@ export default function Page() {
       }),
       key: 'showTime',
       dataIndex: 'updateTime',
-      valueType: 'date',
+      valueType: 'dateTimeRange',
       sorter: true,
       hideInSearch: true,
+      render(_, entity) {
+        return fmt(entity.updateTime);
+      },
     },
     {
       disable: true,
@@ -129,19 +132,26 @@ export default function Page() {
       <ProTable
         actionRef={actionRef}
         columns={columns}
-        request={({ current, pageSize, ...rest }) =>
-          pageGateway({
+        request={({ current, pageSize, ...rest }) => {
+          return pageGateway({
             current: '' + current,
             size: '' + pageSize,
             ...rest,
           }).then((res) => {
             return {
-              data: res.data?.items,
+              data: res.data?.items?.map((item) => {
+                // 后台保存的是10位的时间戳，前端使用的13位的时间戳，这里转换一下
+                const updateTime = item.updateTime ? item.updateTime * 1000 : undefined;
+                return {
+                  ...item,
+                  updateTime,
+                };
+              }),
               total: res.data?.total,
               success: res.code === OK,
             };
-          })
-        }
+          });
+        }}
         toolBarRender={() => [
           <AddBaseStationModal key="add"></AddBaseStationModal>,
           <Button key="batch" icon={<PlusOutlined />} type="primary">
