@@ -1,15 +1,9 @@
 import { pageGateway } from '@/services/swagger/shebeiguanli';
 import { OK } from '@/utils/global.utils';
 import { PlusOutlined } from '@ant-design/icons';
-import {
-  ActionType,
-  PageContainer,
-  ProColumns,
-  ProTable,
-  TableDropdown,
-} from '@ant-design/pro-components';
+import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
-import { Button, Space, Tag } from 'antd';
+import { Button, Tag } from 'antd';
 import React from 'react';
 import { AddBaseStationModal } from './components/add-base-station.modal';
 
@@ -27,10 +21,10 @@ export default function Page() {
         id: 'pages.device-manage.base-station.device.code',
         defaultMessage: '编号',
       }),
-      dataIndex: 'title',
+      dataIndex: 'gateway',
       copyable: true,
       ellipsis: true,
-      tip: '标题过长会自动收缩',
+      // tip: '标题过长会自动收缩',
       formItemProps: {
         rules: [
           {
@@ -45,10 +39,10 @@ export default function Page() {
         id: 'pages.device-manage.base-station.device.name',
         defaultMessage: '名称',
       }),
-      dataIndex: 'title',
+      dataIndex: 'name',
       copyable: true,
       ellipsis: true,
-      tip: '标题过长会自动收缩',
+      // tip: '标题过长会自动收缩',
       formItemProps: {
         rules: [
           {
@@ -65,20 +59,12 @@ export default function Page() {
         id: 'pages.device-manage.base-station.device.type',
         defaultMessage: '类型',
       }),
-      dataIndex: 'labels',
+      dataIndex: 'type',
       search: false,
       renderFormItem: (_, { defaultRender }) => {
         return defaultRender(_);
       },
-      render: (_, record: any) => (
-        <Space>
-          {record.labels.map(({ name, color }: any) => (
-            <Tag color={color} key={name}>
-              {name}
-            </Tag>
-          ))}
-        </Space>
-      ),
+      render: (_, record: any) => <Tag>{record.type}</Tag>,
     },
     {
       title: intl.formatMessage({
@@ -86,7 +72,7 @@ export default function Page() {
         defaultMessage: '加入时间',
       }),
       key: 'showTime',
-      dataIndex: 'created_at',
+      dataIndex: 'updateTime',
       valueType: 'date',
       sorter: true,
       hideInSearch: true,
@@ -126,16 +112,16 @@ export default function Page() {
       }),
       valueType: 'option',
       key: 'option',
-      render: (text, record, _, action) => [
-        <TableDropdown
-          key="actionGroup"
-          onSelect={() => action?.reload()}
-          menus={[
-            { key: 'copy', name: '复制' },
-            { key: 'delete', name: '删除' },
-          ]}
-        />,
-      ],
+      render: () => (
+        <Button.Group>
+          <Button type="link">
+            <FormattedMessage id="app.copy" defaultMessage="复制" />
+          </Button>
+          <Button type="link">
+            <FormattedMessage id="app.remove" defaultMessage="删除" />
+          </Button>
+        </Button.Group>
+      ),
     },
   ];
   return (

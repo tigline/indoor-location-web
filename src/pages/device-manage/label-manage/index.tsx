@@ -3,7 +3,7 @@ import { OK } from '@/utils/global.utils';
 import { PlusOutlined } from '@ant-design/icons';
 import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
-import { Button, Space } from 'antd';
+import { Button, Tag } from 'antd';
 import React from 'react';
 import { AddLabelModal } from './components/add-label.modal';
 
@@ -38,7 +38,6 @@ export default function Page() {
       copyable: true,
       ellipsis: true,
     },
-
     {
       disable: true,
       title: intl.formatMessage({
@@ -50,16 +49,7 @@ export default function Page() {
       renderFormItem: (_, { defaultRender }) => {
         return defaultRender(_);
       },
-      render: (_, record: any) => (
-        <Space>
-          {JSON.stringify(record.type)}
-          {/* {record.labels.map(({ name, color }: any) => (
-            <Tag color={color} key={name}>
-              {name}
-            </Tag>
-          ))} */}
-        </Space>
-      ),
+      render: (_, record: any) => <Tag>{record.type}</Tag>,
     },
     {
       title: intl.formatMessage({
@@ -107,14 +97,16 @@ export default function Page() {
       }),
       valueType: 'option',
       key: 'option',
-      render: () => [
-        <Button key="copy">
-          {intl.formatMessage({ id: 'app.copy', defaultMessage: '复制' })}
-        </Button>,
-        <Button key="remove">
-          {intl.formatMessage({ id: 'app.remove', defaultMessage: '删除' })}
-        </Button>,
-      ],
+      render: () => (
+        <Button.Group>
+          <Button type="link">
+            <FormattedMessage id="app.copy" defaultMessage="复制" />
+          </Button>
+          <Button type="link">
+            <FormattedMessage id="app.remove" defaultMessage="删除" />
+          </Button>
+        </Button.Group>
+      ),
     },
   ];
   return (
