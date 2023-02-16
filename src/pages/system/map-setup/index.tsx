@@ -1,9 +1,14 @@
-import { PageContainer } from '@ant-design/pro-components';
+import { PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
 
+/**
+ * 地图设置页面
+ * @returns
+ */
 export default function Page() {
+  const columns: ProColumns[] = [];
   return (
     <PageContainer>
-      <h1>TODO:</h1>
+      <ProTable columns={columns}></ProTable>
     </PageContainer>
   );
 }

@@ -41,7 +41,7 @@ export function AddBaseStationModal(props: IProps): JSX.Element {
       trigger={
         <Button type="primary">
           <PlusOutlined />
-          {intl.formatMessage({ id: ' app.action', defaultMessage: '新建' })}
+          {intl.formatMessage({ id: 'app.action', defaultMessage: '新建' })}
         </Button>
       }
     >

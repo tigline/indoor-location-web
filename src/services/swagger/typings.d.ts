@@ -17,6 +17,16 @@ declare namespace API {
     productName?: string;
   };
 
+  type AddOrUpdateMapInfo = {
+    name: string;
+    width: number;
+    height: number;
+    pixelWidth: number;
+    pixelHeight: number;
+    picture: string;
+    remark?: string;
+  };
+
   type AoaDataInfo = {
     id?: number;
     deviceId?: string;
@@ -38,6 +48,7 @@ declare namespace API {
     systemId?: string;
     type?: string;
     status?: string;
+    fenceIds?: string;
     motion?: string;
     optScale?: number;
     positionType?: string;
@@ -45,7 +56,10 @@ declare namespace API {
     posY?: number;
     updateTime?: number;
     extraInfo?: string;
-    efenceIds?: string;
+  };
+
+  type deleteMapParams = {
+    mapId: string;
   };
 
   type GatewayInfo = {
@@ -58,18 +72,22 @@ declare namespace API {
     type?: string;
     status?: string;
     ip?: string;
+    fenceIds?: string;
     setX?: number;
     setY?: number;
     setZ?: number;
     updateTime?: number;
     extraInfo?: string;
-    eFenceIds?: string;
   };
 
   type listBeaconLocationParams = {
     mapId: string;
     startTime: string;
     endTime: string;
+  };
+
+  type listMapsParams = {
+    name?: string;
   };
 
   type LoginInfo = {
@@ -79,6 +97,17 @@ declare namespace API {
 
   type loginParams = {
     Authorization?: any;
+  };
+
+  type MapInfo = {
+    mapId?: string;
+    name?: string;
+    width?: number;
+    height?: number;
+    pixelWidth?: number;
+    pixelHeight?: number;
+    picture?: string;
+    remark?: string;
   };
 
   type pageBeaconParams = {
@@ -160,6 +189,13 @@ declare namespace API {
     errorDetail?: string;
   };
 
+  type RestValueListMapInfo = {
+    code?: number;
+    message?: string;
+    data?: MapInfo[];
+    errorDetail?: string;
+  };
+
   type RestValuePageResultBeaconInfo = {
     code?: number;
     message?: string;
@@ -200,6 +236,10 @@ declare namespace API {
     accessExpired?: number;
     refreshToken?: string;
     refreshExpired?: number;
+  };
+
+  type updateMapParams = {
+    mapId: string;
   };
 
   type UpdateUserInfo = {

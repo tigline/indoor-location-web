@@ -99,7 +99,7 @@ export default {
   'pages.device-manage.base-station.device.type': '类型',
   'pages.device-manage.base-station.device.time': '加入时间',
   'pages.device-manage.base-station.device.state': '状态',
-  'pages.device-manage.base-station.device.add': '新建基站',
+  'pages.device-manage.base-station.device.add': '添加基站',
 
   'pages.device-manage.label.device.add': '新建标签',
   'pages.device-manage.label.device.batch': '批量操作',
