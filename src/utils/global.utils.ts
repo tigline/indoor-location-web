@@ -1,3 +1,4 @@
+import { RcFile } from 'antd/es/upload';
 import { isArray, isNumber, isString } from 'lodash';
 import moment, { Moment, unitOfTime } from 'moment';
 
@@ -229,4 +230,38 @@ export function fmtDate(range: any, format: unitOfTime.StartOf = 'ms'): any {
     ];
   }
   return moment.isMoment(range) ? range.valueOf() : range;
+}
+
+/**
+ * 将文件转换为base64
+ *
+ * @export
+ * @param {RcFile} file
+ * @return {*}  {Promise<string>}
+ */
+export function getFileBase64(file: RcFile): Promise<string> {
+  return new Promise((resolve) => {
+    let reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = (e) => {
+      resolve(e.target?.result?.toString() ?? '');
+    };
+  });
+}
+
+/**
+ * 将文件转换为纯文本
+ *
+ * @export
+ * @param {RcFile} file
+ * @return {*}  {Promise<string>}
+ */
+export function getFileText(file: RcFile): Promise<string> {
+  return new Promise((resolve) => {
+    let reader = new FileReader();
+    reader.readAsText(file);
+    reader.onloadend = (e) => {
+      resolve(e.target?.result?.toString() ?? '');
+    };
+  });
 }

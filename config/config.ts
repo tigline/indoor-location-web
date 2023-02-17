@@ -118,6 +118,7 @@ export default defineConfig({
    * @doc https://umijs.org/docs/max/access
    */
   access: {},
+
   /**
    * @name <head> 中额外的 script
    * @description 配置 <head> 中额外的 script
@@ -145,6 +146,7 @@ export default defineConfig({
       requestLibPath: "import { request } from '@umijs/max'",
       schemaPath: 'http://120.78.168.7:9050/v3/api-docs',
       projectName: 'swagger',
+      mock: true,
     },
   ],
   mfsu: {

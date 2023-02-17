@@ -2,34 +2,42 @@ declare namespace API {
   type AddBeaconInfo = {
     deviceId: string;
     gateway?: string;
+    groupId?: string;
     mac?: string;
     mapId?: string;
-    groupId?: string;
     name?: string;
     productName?: string;
+    type: 'Equipment' | 'Personnel' | 'Vehicle' | 'Stuff';
   };
 
   type AddGatewayInfo = {
     gateway: string;
-    mapId?: string;
     groupId?: string;
+    mapId?: string;
     name?: string;
     productName?: string;
+    setX?: number;
+    setY?: number;
+    setZ?: number;
+    type?: 'Gateway';
+  };
+
+  type AddOrUpdateBuilding = {
+    address?: string;
+    name: string;
+    picture?: string;
   };
 
   type AddOrUpdateMapInfo = {
+    buildingId: string;
+    floor: string;
     name: string;
-    width: number;
-    height: number;
-    pixelWidth: number;
-    pixelHeight: number;
     picture: string;
-    remark?: string;
   };
 
   type AoaDataInfo = {
-    id?: number;
     deviceId?: string;
+    id?: number;
     mapId?: string;
     optScale?: number;
     posX?: number;
@@ -39,23 +47,42 @@ declare namespace API {
 
   type BeaconInfo = {
     deviceId?: string;
-    mac?: string;
-    gateway?: string;
-    mapId?: string;
-    groupId?: string;
-    name?: string;
-    productName?: string;
-    systemId?: string;
-    type?: string;
-    status?: string;
+    extraInfo?: string;
     fenceIds?: string;
+    gateway?: string;
+    groupId?: string;
+    mac?: string;
+    mapId?: string;
     motion?: string;
+    name?: string;
     optScale?: number;
-    positionType?: string;
     posX?: number;
     posY?: number;
+    positionType?: string;
+    productName?: string;
+    status?: 'Bound' | 'Unbound';
+    systemId?: string;
+    type?: 'Equipment' | 'Personnel' | 'Vehicle' | 'Stuff';
     updateTime?: number;
-    extraInfo?: string;
+  };
+
+  type BuildingInfo = {
+    address?: string;
+    buildingId?: string;
+    name?: string;
+    picture?: string;
+  };
+
+  type deleteBeaconParams = {
+    deviceId: string;
+  };
+
+  type deleteBuildingParams = {
+    buildingId: string;
+  };
+
+  type deleteGatewayParams = {
+    gateway: string;
   };
 
   type deleteMapParams = {
@@ -63,36 +90,45 @@ declare namespace API {
   };
 
   type GatewayInfo = {
+    extraInfo?: string;
+    fenceIds?: string;
     gateway?: string;
-    mapId?: string;
     groupId?: string;
+    hisX?: number;
+    hisY?: number;
+    hisZ?: number;
+    ip?: string;
+    mapId?: string;
     name?: string;
     productName?: string;
-    systemId?: string;
-    type?: string;
-    status?: string;
-    ip?: string;
-    fenceIds?: string;
     setX?: number;
     setY?: number;
     setZ?: number;
+    status?: 'Online' | 'Offline';
+    systemId?: string;
+    type?: 'Gateway';
     updateTime?: number;
-    extraInfo?: string;
   };
 
   type listBeaconLocationParams = {
     mapId: string;
     startTime: string;
     endTime: string;
+    deviceId?: string;
+  };
+
+  type listBuildingParams = {
+    name?: string;
   };
 
   type listMapsParams = {
+    buildingId: string;
     name?: string;
   };
 
   type LoginInfo = {
-    username: string;
     password: string;
+    username: string;
   };
 
   type loginParams = {
@@ -100,14 +136,11 @@ declare namespace API {
   };
 
   type MapInfo = {
+    buildingId?: string;
+    floor?: string;
     mapId?: string;
     name?: string;
-    width?: number;
-    height?: number;
-    pixelWidth?: number;
-    pixelHeight?: number;
     picture?: string;
-    remark?: string;
   };
 
   type pageBeaconParams = {
@@ -130,23 +163,23 @@ declare namespace API {
 
   type PageResultBeaconInfo = {
     current?: number;
+    items?: BeaconInfo[];
     size?: number;
     total?: number;
-    items?: BeaconInfo[];
   };
 
   type PageResultGatewayInfo = {
     current?: number;
+    items?: GatewayInfo[];
     size?: number;
     total?: number;
-    items?: GatewayInfo[];
   };
 
   type PageResultUserInfo = {
     current?: number;
+    items?: UserInfo[];
     size?: number;
     total?: number;
-    items?: UserInfo[];
   };
 
   type pageUserParams = {
@@ -168,74 +201,106 @@ declare namespace API {
   };
 
   type RegistryInfo = {
-    username: string;
-    password: string;
-    nickname?: string;
     email?: string;
+    nickname?: string;
+    password: string;
     phone?: string;
+    username: string;
   };
 
   type RestValueBoolean = {
     code?: number;
-    message?: string;
     data?: boolean;
     errorDetail?: string;
+    message?: string;
   };
 
   type RestValueListAoaDataInfo = {
     code?: number;
-    message?: string;
     data?: AoaDataInfo[];
     errorDetail?: string;
+    message?: string;
+  };
+
+  type RestValueListBuildingInfo = {
+    code?: number;
+    data?: BuildingInfo[];
+    errorDetail?: string;
+    message?: string;
   };
 
   type RestValueListMapInfo = {
     code?: number;
-    message?: string;
     data?: MapInfo[];
     errorDetail?: string;
+    message?: string;
   };
 
   type RestValuePageResultBeaconInfo = {
     code?: number;
-    message?: string;
     data?: PageResultBeaconInfo;
     errorDetail?: string;
+    message?: string;
   };
 
   type RestValuePageResultGatewayInfo = {
     code?: number;
-    message?: string;
     data?: PageResultGatewayInfo;
     errorDetail?: string;
+    message?: string;
   };
 
   type RestValuePageResultUserInfo = {
     code?: number;
-    message?: string;
     data?: PageResultUserInfo;
     errorDetail?: string;
+    message?: string;
   };
 
   type RestValueTokenInfo = {
     code?: number;
-    message?: string;
     data?: TokenInfo;
     errorDetail?: string;
+    message?: string;
   };
 
   type RestValueUserInfo = {
     code?: number;
-    message?: string;
     data?: UserInfo;
     errorDetail?: string;
+    message?: string;
   };
 
   type TokenInfo = {
-    accessToken?: string;
     accessExpired?: number;
-    refreshToken?: string;
+    accessToken?: string;
     refreshExpired?: number;
+    refreshToken?: string;
+  };
+
+  type UpdateBeacon = {
+    name: string;
+    type: 'Equipment' | 'Personnel' | 'Vehicle' | 'Stuff';
+  };
+
+  type updateBeaconParams = {
+    deviceId: string;
+  };
+
+  type updateBuildingParams = {
+    buildingId: string;
+  };
+
+  type UpdateGateway = {
+    mapId: string;
+    name: string;
+    setX?: number;
+    setY?: number;
+    setZ?: number;
+  };
+
+  type updateGatewayParams = {
+    gateway: string;
   };
 
   type updateMapParams = {
@@ -243,8 +308,8 @@ declare namespace API {
   };
 
   type UpdateUserInfo = {
-    nickname?: string;
     email?: string;
+    nickname?: string;
     phone?: string;
   };
 
@@ -253,12 +318,12 @@ declare namespace API {
   };
 
   type UserInfo = {
-    userId?: string;
-    username?: string;
-    password?: string;
-    nickname?: string;
     email?: string;
+    nickname?: string;
+    password?: string;
     phone?: string;
     role?: 'SuperAdmin' | 'Admin' | 'User';
+    userId?: string;
+    username?: string;
   };
 }

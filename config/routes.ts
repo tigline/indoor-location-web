@@ -182,6 +182,12 @@ export default [
         component: './system/map-setup',
       },
       {
+        path: '/system/map-setup/floor-manager.page/:buildingId',
+        name: 'floor-manager',
+        hideInMenu: true,
+        component: './system/map-setup/floor-manager.page',
+      },
+      {
         path: '/system/general-setting',
         name: 'general-setting',
         component: './system/general-setting',

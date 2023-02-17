@@ -90,6 +90,7 @@ export const errorConfig: RequestConfig = {
   requestInterceptors: [
     (config: RequestOptions) => {
       // 拦截请求配置，进行个性化处理。
+      // 如果要使用mock，那么url就不能改变，因为mock也是自动生成的
       const url = config?.url?.startsWith('/api') ? '/ips' + config.url : config.url;
       return {
         ...config,

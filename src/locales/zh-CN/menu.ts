@@ -39,6 +39,7 @@ export default {
   'menu.system': '系统设置',
   'menu.system.fence-manage': '围栏管理',
   'menu.system.map-setup': '地图设置',
+  'menu.system.floor-manager': '地图管理',
   'menu.system.general-setting': '通用设置',
   // 项目专有菜单
   'menu.exception.403': '403',
