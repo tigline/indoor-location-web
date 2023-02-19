@@ -5,7 +5,6 @@ import { PlusOutlined } from '@ant-design/icons';
 import { ModalForm, ProFormDigit, ProFormText } from '@ant-design/pro-components';
 import { useIntl } from '@umijs/max';
 import { Button, Form } from 'antd';
-import { first } from 'lodash';
 import { FormattedMessage } from 'umi';
 interface IProps {
   // children: JSX.Element;
@@ -23,7 +22,7 @@ export function AddBaseStationModal(props: IProps): JSX.Element {
   const intl = useIntl();
 
   return (
-    <ModalForm<API.AddGatewayInfo>
+    <ModalForm<API.AddGatewayInfo & { mapId: number[] }>
       title={
         <FormattedMessage
           id="pages.device-manage.base-station.device.add"
@@ -36,8 +35,8 @@ export function AddBaseStationModal(props: IProps): JSX.Element {
       wrapperCol={{ xs: 16 }}
       onFinish={(values) => {
         // mapId 由级联菜单选出，表单项中是一个数组
-        const { mapId, ...rest } = values;
-        return addGateway({ mapId: first(mapId), ...rest }).then((res) => {
+        const [, mapId] = values.mapId;
+        return addGateway({ ...values, mapId }).then((res) => {
           props.refresh?.();
           return res.code === OK;
         });

@@ -1,5 +1,6 @@
 import { ZrenderComponent } from '@/components/map-components/zrender-component';
 import { SelectMapCascader } from '@/components/select-map.cascader';
+import { pageGateway } from '@/services/swagger/shebeiguanli';
 import { getMap } from '@/services/swagger/xitongguanli';
 import { OK } from '@/utils/global.utils';
 import {
@@ -22,8 +23,12 @@ export default function Page() {
   const intl = useIntl();
   const { run, data } = useRequest(getMap, {
     manual: true,
+    formatResult: (res) => res,
+  });
+  const { run: query, data: gateways } = useRequest(pageGateway, {
+    manual: true,
     formatResult(res) {
-      return res;
+      return res.data?.items?.map((item) => [item.setX!, item.setY!]);
     },
   });
   return (
@@ -36,7 +41,8 @@ export default function Page() {
           style={{ minWidth: 320 }}
           onValuesChange={(values) => {
             const [, mapId] = values.mapId;
-            return run({ mapId: mapId }).then((res) => res.code === OK);
+            run({ mapId: mapId }).then((res) => res.code === OK);
+            query({ mapId: mapId });
           }}
         >
           <SelectMapCascader label={false}></SelectMapCascader>
@@ -73,7 +79,7 @@ export default function Page() {
         </ProForm>
       </ProCard>
       <Card>
-        <ZrenderComponent map={data?.data?.picture} />
+        <ZrenderComponent map={data?.data?.picture} stations={gateways} />
       </Card>
     </PageContainer>
   );

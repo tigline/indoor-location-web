@@ -1,14 +1,24 @@
-import { pageGateway } from '@/services/swagger/shebeiguanli';
+import { deleteGateway, pageGateway } from '@/services/swagger/shebeiguanli';
 import { fmt, OK } from '@/utils/global.utils';
 import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
-import { FormattedMessage, useIntl } from '@umijs/max';
-import { Button, Tag } from 'antd';
+import { FormattedMessage, useIntl, useRequest } from '@umijs/max';
+import { Button, notification, Tag } from 'antd';
 import React from 'react';
 import { AddBaseStationModal } from './components/add-base-station.modal';
 
 export default function Page() {
   const actionRef = React.useRef<ActionType>();
   const intl = useIntl();
+  const { run: remove } = useRequest(deleteGateway, {
+    manual: true,
+    onSuccess(data) {
+      if (data) {
+        notification.success({
+          message: intl.formatMessage({ id: 'app.remove.success', defaultMessage: '删除成功' }),
+        });
+      }
+    },
+  });
   const columns: ProColumns<API.GatewayInfo>[] = [
     {
       dataIndex: 'index',
@@ -25,12 +35,7 @@ export default function Page() {
       ellipsis: true,
       // tip: '标题过长会自动收缩',
       formItemProps: {
-        rules: [
-          {
-            required: true,
-            message: '此项为必填项',
-          },
-        ],
+        rules: [{ required: true, message: '此项为必填项' }],
       },
     },
     {
@@ -43,12 +48,7 @@ export default function Page() {
       ellipsis: true,
       // tip: '标题过长会自动收缩',
       formItemProps: {
-        rules: [
-          {
-            required: true,
-            message: '此项为必填项',
-          },
-        ],
+        rules: [{ required: true, message: '此项为必填项' }],
       },
     },
 
@@ -108,18 +108,19 @@ export default function Page() {
       },
     },
     {
-      title: intl.formatMessage({
-        id: 'app.action',
-        defaultMessage: '操作',
-      }),
+      title: intl.formatMessage({ id: 'app.action', defaultMessage: '操作' }),
       valueType: 'option',
       key: 'option',
-      render: () => (
+      render: (_, record, __, action) => (
         <Button.Group>
           <Button type="link">
             <FormattedMessage id="app.copy" defaultMessage="复制" />
           </Button>
-          <Button type="link">
+          <Button
+            type="link"
+            disabled={!record.gateway}
+            onClick={() => remove({ gateway: record.gateway! }).then(() => action?.reload())}
+          >
             <FormattedMessage id="app.remove" defaultMessage="删除" />
           </Button>
         </Button.Group>
@@ -132,24 +133,19 @@ export default function Page() {
         actionRef={actionRef}
         columns={columns}
         request={({ current, pageSize, ...rest }) => {
-          return pageGateway({
-            current: '' + current,
-            size: '' + pageSize,
-            ...rest,
-          }).then((res) => {
-            return {
-              data: res.data?.items?.map((item) => {
-                // 后台保存的是10位的时间戳，前端使用的13位的时间戳，这里转换一下
-                const updateTime = item.updateTime ? item.updateTime * 1000 : undefined;
-                return {
-                  ...item,
-                  updateTime,
-                };
-              }),
-              total: res.data?.total,
-              success: res.code === OK,
-            };
-          });
+          return pageGateway({ current: '' + current, size: '' + pageSize, ...rest }).then(
+            (res) => {
+              return {
+                data: res.data?.items?.map((item) => {
+                  // 后台保存的是10位的时间戳，前端使用的13位的时间戳，这里转换一下
+                  const updateTime = item.updateTime ? item.updateTime * 1000 : undefined;
+                  return { ...item, updateTime };
+                }),
+                total: res.data?.total,
+                success: res.code === OK,
+              };
+            },
+          );
         }}
         toolBarRender={(action) => [
           <AddBaseStationModal key="add" refresh={action?.reload}></AddBaseStationModal>,

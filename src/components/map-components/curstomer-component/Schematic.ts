@@ -59,6 +59,15 @@ export class Schematic {
   private x = 0;
   private y = 0;
 
+  /**
+   * 基站图片展示宽度
+   */
+  private stationWidth: number = 20;
+  /**
+   * 基站图片展示高度
+   */
+  private stationHeight: number = 20;
+
   private moveAble = false;
 
   private drawAble = false;
@@ -170,8 +179,7 @@ export class Schematic {
    */
   public setBaseStations(stations: number[][]) {
     const points = this.transPoints(stations);
-    const width = 10;
-    const height = 10;
+
     if (!isEmpty(this.stationPoints)) {
       this.stationPoints.forEach((item) => {
         this.view.remove(item);
@@ -182,14 +190,14 @@ export class Schematic {
       return new Image({
         style: {
           image: station,
-          x: x + width / 2,
-          y: y + height / 2,
-          width: width / this.zoom,
-          height: height / this.zoom,
+          x: x + this.stationWidth / 2,
+          y: y + this.stationHeight / 2,
+          width: this.stationWidth / this.zoom,
+          height: this.stationHeight / this.zoom,
         },
       });
     });
-    this.stationPoints.forEach(this.view.add.bind(this));
+    this.stationPoints.forEach((p) => this.view.add(p));
   }
   /**
    * 初始化缩放
@@ -337,8 +345,15 @@ export class Schematic {
     this.instance?.on('mousewheel', (ev) => {
       // const [cx, cy] = this.transformBack(currentPoint);
       const [startCx, startCy] = this.transformBack(startPoint);
+      // 下面的元素不随着地图的放大而放大
       circle.attr('shape', { cx: ev.offsetX, cy: ev.offsetY, r: 4 / this.zoom });
       startCircle?.attr('shape', { cx: startCx, cy: startCy, r: 20 / this.zoom });
+      this.stationPoints.forEach((item) =>
+        item.attr('style', {
+          width: this.stationWidth / this.zoom,
+          height: this.stationHeight / this.zoom,
+        }),
+      );
       this.tempPolygon?.attr('shape', { points: this.transPoints(points) });
     });
     this.instance?.on('mousemove', (ev) => {
