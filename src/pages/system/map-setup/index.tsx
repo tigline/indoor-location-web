@@ -35,8 +35,8 @@ export default function Page() {
           });
         }}
         search={{}}
-        toolBarRender={() => {
-          return [<AddBuildingModal key="add" />];
+        toolBarRender={(action) => {
+          return [<AddBuildingModal key="add" refresh={action?.reload} />];
         }}
         itemLayout="vertical"
         metas={{
@@ -54,7 +54,7 @@ export default function Page() {
           },
           actions: {
             cardActionProps: 'extra',
-            render: (dom, record) => [
+            render: (dom, record, _, action) => [
               <Button key="add">
                 {intl.formatMessage({ id: 'app.edit', defaultMessage: '编辑' })}
               </Button>,
@@ -66,7 +66,11 @@ export default function Page() {
               <Button
                 key="remove"
                 disabled={!record.buildingId}
-                onClick={() => run({ buildingId: record.buildingId! })}
+                onClick={() =>
+                  run({ buildingId: record.buildingId! }).then(() => {
+                    action?.reload();
+                  })
+                }
                 loading={fetches?.[record.buildingId!]?.loading}
               >
                 {intl.formatMessage({ id: 'app.remove', defaultMessage: '删除' })}
@@ -79,7 +83,7 @@ export default function Page() {
           },
           extra: {
             search: false,
-            render: (_, record: API.BuildingInfo) => (
+            render: (_: any, record: API.BuildingInfo) => (
               <Image width={400} height={200} alt="logo" src={record.picture} />
             ),
           },

@@ -2,7 +2,7 @@
 import { Request, Response } from 'express';
 
 export default {
-  'DELETE /api/v1/maps/:mapId': (req: Request, res: Response) => {
+  'GET /api/v1/online/beacon': (req: Request, res: Response) => {
     res.status(200).send({});
   },
 };

@@ -1,6 +1,5 @@
 import { pageGateway } from '@/services/swagger/shebeiguanli';
 import { fmt, OK } from '@/utils/global.utils';
-import { PlusOutlined } from '@ant-design/icons';
 import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
 import { Button, Tag } from 'antd';
@@ -152,9 +151,9 @@ export default function Page() {
             };
           });
         }}
-        toolBarRender={() => [
-          <AddBaseStationModal key="add"></AddBaseStationModal>,
-          <Button key="batch" icon={<PlusOutlined />} type="primary">
+        toolBarRender={(action) => [
+          <AddBaseStationModal key="add" refresh={action?.reload}></AddBaseStationModal>,
+          <Button key="batch" type="primary">
             <FormattedMessage id="app.batch.action" defaultMessage="批量操作" />
           </Button>,
         ]}

@@ -1,4 +1,7 @@
 import { ZrenderComponent } from '@/components/map-components/zrender-component';
+import { SelectMapCascader } from '@/components/select-map.cascader';
+import { getMap } from '@/services/swagger/xitongguanli';
+import { OK } from '@/utils/global.utils';
 import {
   PageContainer,
   ProCard,
@@ -6,7 +9,7 @@ import {
   ProFormDateTimePicker,
   ProFormSelect,
 } from '@ant-design/pro-components';
-import { useIntl } from '@umijs/max';
+import { useIntl, useRequest } from '@umijs/max';
 import { Card } from 'antd';
 
 /**
@@ -17,6 +20,12 @@ import { Card } from 'antd';
  */
 export default function Page() {
   const intl = useIntl();
+  const { run, data } = useRequest(getMap, {
+    manual: true,
+    formatResult(res) {
+      return res;
+    },
+  });
   return (
     <PageContainer>
       <ProCard>
@@ -25,13 +34,11 @@ export default function Page() {
           submitter={{ resetButtonProps: { style: { display: 'none' } } }}
           layout="inline"
           style={{ minWidth: 320 }}
+          onFinish={(values) => {
+            return run({ mapId: values.mapId }).then((res) => res.code === OK);
+          }}
         >
-          <ProFormSelect
-            placeholder={intl.formatMessage({
-              id: 'pages.position-manage.real-time-location.map-select',
-              defaultMessage: '请选择地图',
-            })}
-          />
+          <SelectMapCascader label={false}></SelectMapCascader>
           <ProFormSelect
             placeholder={intl.formatMessage({
               id: 'pages.position-manage.tracking-manage.person-select',
@@ -65,7 +72,7 @@ export default function Page() {
         </ProForm>
       </ProCard>
       <Card>
-        <ZrenderComponent />
+        <ZrenderComponent map={data?.data?.picture} />
       </Card>
     </PageContainer>
   );

@@ -95,8 +95,8 @@ export default function FloorManagerPage() {
       <ProTable<API.MapInfo>
         pagination={false}
         columns={columns}
-        toolBarRender={() => {
-          return [<AddMapModal buildingId={buildingId} key="add" />];
+        toolBarRender={(action) => {
+          return [<AddMapModal buildingId={buildingId} key="add" refresh={action?.reload} />];
         }}
         request={(param) =>
           listMaps({ buildingId: buildingId!, name: param.name }).then((res) => {

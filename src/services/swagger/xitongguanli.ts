@@ -62,6 +62,70 @@ export async function deleteBuilding(
   });
 }
 
+/** 分页获取电子围栏列表 GET /api/v1/fences */
+export async function pageFence(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.pageFenceParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.RestValuePageResultFenceAndMapInfo>('/api/v1/fences', {
+    method: 'GET',
+    params: {
+      // current has a default value: 1
+      current: '1',
+      // size has a default value: 10
+      size: '10',
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
+/** 添加地理围栏 POST /api/v1/fences */
+export async function addFence(body: API.AddOrUpdateFenceInfo, options?: { [key: string]: any }) {
+  return request<API.RestValueBoolean>('/api/v1/fences', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** 编辑地理围栏 POST /api/v1/fences/${param0} */
+export async function updateFence(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.updateFenceParams,
+  body: API.AddOrUpdateFenceInfo,
+  options?: { [key: string]: any },
+) {
+  const { fenceId: param0, ...queryParams } = params;
+  return request<API.RestValueBoolean>(`/api/v1/fences/${param0}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    params: { ...queryParams },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** 删除地理围栏 DELETE /api/v1/fences/${param0} */
+export async function deleteFence(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.deleteFenceParams,
+  options?: { [key: string]: any },
+) {
+  const { fenceId: param0, ...queryParams } = params;
+  return request<API.RestValueBoolean>(`/api/v1/fences/${param0}`, {
+    method: 'DELETE',
+    params: { ...queryParams },
+    ...(options || {}),
+  });
+}
+
 /** 获取地图列表 GET /api/v1/maps */
 export async function listMaps(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -85,6 +149,20 @@ export async function addMap(body: API.AddOrUpdateMapInfo, options?: { [key: str
       'Content-Type': 'application/json',
     },
     data: body,
+    ...(options || {}),
+  });
+}
+
+/** 获取单个地图信息 GET /api/v1/maps/${param0} */
+export async function getMap(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.getMapParams,
+  options?: { [key: string]: any },
+) {
+  const { mapId: param0, ...queryParams } = params;
+  return request<API.RestValueMapInfo>(`/api/v1/maps/${param0}`, {
+    method: 'GET',
+    params: { ...queryParams },
     ...(options || {}),
   });
 }

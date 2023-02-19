@@ -144,3 +144,11 @@ export async function listBeaconLocation(
     ...(options || {}),
   });
 }
+
+/** 获取标签在线数量 GET /api/v1/online/beacon */
+export async function listBeaconOnlineCounts(options?: { [key: string]: any }) {
+  return request<API.RestValueListOnlineCount>('/api/v1/online/beacon', {
+    method: 'GET',
+    ...(options || {}),
+  });
+}

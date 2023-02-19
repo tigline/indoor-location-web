@@ -28,11 +28,22 @@ declare namespace API {
     picture?: string;
   };
 
+  type AddOrUpdateFenceInfo = {
+    mapId: string;
+    name: string;
+    points: Point[];
+    type: 'In' | 'Out';
+  };
+
   type AddOrUpdateMapInfo = {
     buildingId: string;
     floor: string;
+    length?: number;
+    lengthPx?: number;
     name: string;
     picture: string;
+    width?: number;
+    widthPx?: number;
   };
 
   type AoaDataInfo = {
@@ -55,6 +66,7 @@ declare namespace API {
     mapId?: string;
     motion?: string;
     name?: string;
+    online?: boolean;
     optScale?: number;
     posX?: number;
     posY?: number;
@@ -81,12 +93,26 @@ declare namespace API {
     buildingId: string;
   };
 
+  type deleteFenceParams = {
+    fenceId: string;
+  };
+
   type deleteGatewayParams = {
     gateway: string;
   };
 
   type deleteMapParams = {
     mapId: string;
+  };
+
+  type FenceAndMapInfo = {
+    enabled?: boolean;
+    fenceId?: string;
+    mapId?: string;
+    mapName?: string;
+    name?: string;
+    points?: Point[];
+    type?: 'In' | 'Out';
   };
 
   type GatewayInfo = {
@@ -110,6 +136,10 @@ declare namespace API {
     updateTime?: number;
   };
 
+  type getMapParams = {
+    mapId: string;
+  };
+
   type listBeaconLocationParams = {
     mapId: string;
     startTime: string;
@@ -122,8 +152,9 @@ declare namespace API {
   };
 
   type listMapsParams = {
-    buildingId: string;
+    buildingId?: string;
     name?: string;
+    hidePicture?: boolean;
   };
 
   type LoginInfo = {
@@ -138,9 +169,18 @@ declare namespace API {
   type MapInfo = {
     buildingId?: string;
     floor?: string;
+    length?: number;
+    lengthPx?: number;
     mapId?: string;
     name?: string;
     picture?: string;
+    width?: number;
+    widthPx?: number;
+  };
+
+  type OnlineCount = {
+    count?: number;
+    type?: 'Equipment' | 'Personnel' | 'Vehicle' | 'Stuff';
   };
 
   type pageBeaconParams = {
@@ -152,7 +192,17 @@ declare namespace API {
     size?: string;
   };
 
+  type pageFenceParams = {
+    name?: string;
+    type?: 'In' | 'Out';
+    /** 当前页码 */
+    current?: string;
+    /** 每页数量 */
+    size?: string;
+  };
+
   type pageGatewayParams = {
+    mapId?: string;
     gateway?: string;
     name?: string;
     /** 当前页码 */
@@ -164,6 +214,13 @@ declare namespace API {
   type PageResultBeaconInfo = {
     current?: number;
     items?: BeaconInfo[];
+    size?: number;
+    total?: number;
+  };
+
+  type PageResultFenceAndMapInfo = {
+    current?: number;
+    items?: FenceAndMapInfo[];
     size?: number;
     total?: number;
   };
@@ -189,6 +246,11 @@ declare namespace API {
     current?: string;
     /** 每页数量 */
     size?: string;
+  };
+
+  type Point = {
+    x: number;
+    y: number;
   };
 
   type refreshTokenParams = {
@@ -236,9 +298,30 @@ declare namespace API {
     message?: string;
   };
 
+  type RestValueListOnlineCount = {
+    code?: number;
+    data?: OnlineCount[];
+    errorDetail?: string;
+    message?: string;
+  };
+
+  type RestValueMapInfo = {
+    code?: number;
+    data?: MapInfo;
+    errorDetail?: string;
+    message?: string;
+  };
+
   type RestValuePageResultBeaconInfo = {
     code?: number;
     data?: PageResultBeaconInfo;
+    errorDetail?: string;
+    message?: string;
+  };
+
+  type RestValuePageResultFenceAndMapInfo = {
+    code?: number;
+    data?: PageResultFenceAndMapInfo;
     errorDetail?: string;
     message?: string;
   };
@@ -289,6 +372,10 @@ declare namespace API {
 
   type updateBuildingParams = {
     buildingId: string;
+  };
+
+  type updateFenceParams = {
+    fenceId: string;
   };
 
   type UpdateGateway = {

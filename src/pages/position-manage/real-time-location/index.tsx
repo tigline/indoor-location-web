@@ -1,13 +1,9 @@
 import { ZrenderComponent } from '@/components/map-components/zrender-component';
+import { SelectMapCascader } from '@/components/select-map.cascader';
+import { getMap } from '@/services/swagger/xitongguanli';
 import { fmt } from '@/utils/global.utils';
-import {
-  PageContainer,
-  ProCard,
-  ProForm,
-  ProFormSelect,
-  Statistic,
-} from '@ant-design/pro-components';
-import { useIntl } from '@umijs/max';
+import { PageContainer, ProCard, ProForm, Statistic } from '@ant-design/pro-components';
+import { useIntl, useRequest } from '@umijs/max';
 import { useInterval } from 'ahooks';
 import { Card, Col, Row, Typography } from 'antd';
 import React from 'react';
@@ -41,7 +37,11 @@ export function StatisticOfNow() {
  * @return {*}
  */
 export default function Page() {
-  const intl = useIntl();
+  // const intl = useIntl();
+  const { run, data } = useRequest(getMap, {
+    manual: true,
+    formatResult: (res) => res,
+  });
   return (
     <PageContainer>
       <ProCard>
@@ -50,29 +50,23 @@ export default function Page() {
             <StatisticOfNow />
           </Col>
           <Col span="12">
-            <ProForm
+            <ProForm<{ mapId: string[] }>
               submitter={false}
               layout="inline"
               style={{ minWidth: 320, height: '100%', alignItems: 'end', justifyContent: 'end' }}
+              onValuesChange={(_, val) => {
+                console.log(val);
+                const [, mapId] = val.mapId;
+                run({ mapId });
+              }}
             >
-              <ProFormSelect
-                placeholder={intl.formatMessage({
-                  id: 'pages.position-manage.real-time-location.map-select',
-                  defaultMessage: '请选择地图',
-                })}
-              />
-              <ProFormSelect
-                placeholder={intl.formatMessage({
-                  id: 'pages.position-manage.real-time-location.floor-select',
-                  defaultMessage: '请选择楼层',
-                })}
-              />
+              <SelectMapCascader></SelectMapCascader>
             </ProForm>
           </Col>
         </Row>
       </ProCard>
       <Card>
-        <ZrenderComponent />
+        <ZrenderComponent map={data?.data?.picture} />
       </Card>
     </PageContainer>
   );

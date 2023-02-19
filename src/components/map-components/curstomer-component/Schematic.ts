@@ -1,9 +1,24 @@
+import station from '@/assets/images/station.svg';
 import { geekblue, volcano } from '@ant-design/colors';
 import { isEmpty, isEqual, uniqWith } from 'lodash';
-import { Circle, Displayable, Group, init, Polygon, Polyline, registerPainter } from 'zrender';
+import {
+  Circle,
+  Displayable,
+  Group,
+  Image,
+  init,
+  Polygon,
+  Polyline,
+  registerPainter,
+} from 'zrender';
 import CanvasPainter from 'zrender/lib/canvas/Painter';
 // 注册绘制器
 registerPainter('canvas', CanvasPainter);
+
+// interface Point {
+//   x: number;
+//   y: number;
+// }
 
 /**
  * 室内地图示意图绘制组件
@@ -48,6 +63,27 @@ export class Schematic {
 
   private drawAble = false;
 
+  /**
+   * 轨迹点
+   * 支持多条轨迹展示
+   * 重置轨迹时需要删除之前的轨迹
+   * @private
+   * @type {Circle[]}
+   * @memberof Schematic
+   */
+  private trackPoints: Circle[][] = [];
+  /**
+   * 轨迹线
+   * 支持多条轨迹线
+   * 重置轨迹时需要删除之前的轨迹
+   * @private
+   * @type {Polyline[][]}
+   * @memberof Schematic
+   */
+  private trackLines: Polyline[] = [];
+
+  private stationPoints: Image[] = [];
+
   constructor(dom: HTMLElement) {
     this.view = new Group();
     if (dom) {
@@ -73,39 +109,87 @@ export class Schematic {
    * @param {number[][]} path
    * @memberof Schematic
    */
-  public setTrack(path: number[][]) {
-    const points = this.transPoints(path);
-    const trackPoints = points.map(([cx, cy]) => {
-      return new Circle({
-        shape: { cx, cy, r: 5 / this.zoom },
+  public setTrack(path: number[][][]) {
+    if (isEmpty(path)) {
+      return;
+    }
+    const multiPoints = path?.map((arr) => this.transPoints(arr));
+    if (!isEmpty(this.trackPoints)) {
+      this.trackPoints?.flat()?.forEach(this.view.remove.bind(this));
+      // this.trackPoints.forEach((items) => {
+      //   items.forEach((item) => {
+      //     this.view.remove(item);
+      //   });
+      // });
+    }
+    if (!isEmpty(this.trackLines)) {
+      this.trackLines?.forEach(this.view.remove.bind(this));
+    }
+    this.trackPoints = multiPoints?.map((points) => {
+      return points.map(([cx, cy]) => {
+        return new Circle({
+          shape: { cx, cy, r: 5 / this.zoom },
+          zlevel: 3,
+          style: { fill: geekblue.primary },
+        });
+      });
+    });
+    this.trackPoints.forEach((circles) => circles.forEach((circle) => this.view.add(circle)));
+    this.trackLines = multiPoints.map((points) => {
+      return new Polyline({
+        shape: { points },
         zlevel: 3,
         style: {
           fill: geekblue.primary,
+          stroke: geekblue.primary,
+          strokeNoScale: true,
+          lineDash: 'dashed',
+          lineWidth: 3,
         },
       });
     });
-    trackPoints.forEach((circle) => this.view.add(circle));
-    const trackLine = new Polyline({
-      shape: { points },
-      zlevel: 3,
-      style: {
-        fill: geekblue.primary,
-        stroke: geekblue.primary,
-        strokeNoScale: true,
-        lineDash: 'dashed',
-        lineWidth: 3,
-      },
+    this.trackLines.forEach((trackLine) => {
+      this.view.add(trackLine);
+      trackLine
+        .animate('style', true)
+        .when(500, { lineDashOffset: 3 })
+        .during(() => {
+          this.trackPoints.flat().forEach((circle) => {
+            circle.attr('shape', { r: 5 / this.zoom });
+          });
+        })
+        .start();
     });
-    this.view.add(trackLine);
-    trackLine
-      .animate('style', true)
-      .when(500, { lineDashOffset: 3 })
-      .during(() => {
-        trackPoints.forEach((circle) => {
-          circle.attr('shape', { r: 5 / this.zoom });
-        });
-      })
-      .start();
+  }
+
+  /**
+   * 添加基站内容
+   *
+   * @param {number[][]} stations
+   * @memberof Schematic
+   */
+  public setBaseStations(stations: number[][]) {
+    const points = this.transPoints(stations);
+    const width = 10;
+    const height = 10;
+    if (!isEmpty(this.stationPoints)) {
+      this.stationPoints.forEach((item) => {
+        this.view.remove(item);
+      });
+    }
+    this.stationPoints = points.map((point) => {
+      const [x, y] = point;
+      return new Image({
+        style: {
+          image: station,
+          x: x + width / 2,
+          y: y + height / 2,
+          width: width / this.zoom,
+          height: height / this.zoom,
+        },
+      });
+    });
+    this.stationPoints.forEach(this.view.add.bind(this));
   }
   /**
    * 初始化缩放
