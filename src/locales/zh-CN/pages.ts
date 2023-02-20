@@ -108,11 +108,21 @@ export default {
   'pages.device-manage.label.device.batch': '批量操作',
 
   'pages.device-manage.label.device.deviceId': '设备ID',
-  'pages.device-manage.label.device.gateway': '网关',
+  'pages.device-manage.label.device.gateway': '基站',
   'pages.device-manage.label.device.mac': '物理地址',
+  'pages.device-manage.label.device.mac.required': '物理地址必填',
+  'pages.device-manage.label.device.mac.required.failure': '物理地址必填',
   'pages.device-manage.label.device.map': '地图',
   'pages.device-manage.label.device.name': '设置名称',
   'pages.device-manage.label.device.productName': '产品名称',
+
+  'pages.device-manage.label.type': '类型',
+  'pages.device-manage.label.type.required': '类型',
+  'pages.device-manage.label.type.required.failure': '类型必填',
+  'pages.device-manage.label.type.equipment': '设备',
+  'pages.device-manage.label.type.personnel': '人员',
+  'pages.device-manage.label.type.vehicle': '工具',
+  'pages.device-manage.label.type.stuff': '材料',
 
   'pages.system.map-setup': '地图设置',
   'pages.system.map-setup.building.name': '建筑名',

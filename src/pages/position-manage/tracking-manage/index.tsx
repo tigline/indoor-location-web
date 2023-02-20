@@ -27,9 +27,9 @@ export default function Page() {
   });
   const { run: query, data: gateways } = useRequest(pageGateway, {
     manual: true,
-    formatResult(res) {
-      return res.data?.items?.map((item) => [item.setX!, item.setY!]);
-    },
+    // formatResult(res) {
+    //   return res.data?.items?.map((item) => [item.setX!, item.setY!]);
+    // },
   });
   return (
     <PageContainer>
@@ -79,7 +79,7 @@ export default function Page() {
         </ProForm>
       </ProCard>
       <Card>
-        <ZrenderComponent map={data?.data?.picture} stations={gateways} />
+        <ZrenderComponent map={data?.data?.picture} stations={gateways?.items} />
       </Card>
     </PageContainer>
   );

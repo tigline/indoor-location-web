@@ -1,7 +1,7 @@
 import { addBeacon } from '@/services/swagger/shebeiguanli';
 import { OK } from '@/utils/global.utils';
 import { PlusOutlined } from '@ant-design/icons';
-import { ModalForm, ProFormText } from '@ant-design/pro-components';
+import { ModalForm, ProFormSelect, ProFormText } from '@ant-design/pro-components';
 import { useIntl } from '@umijs/max';
 import { Button, Form } from 'antd';
 import { FormattedMessage } from 'umi';
@@ -27,8 +27,9 @@ export function AddLabelModal(props: IProps): JSX.Element {
       form={form}
       labelCol={{ xs: 6 }}
       wrapperCol={{ xs: 16 }}
+      width={550}
       onFinish={(values) => {
-        return addBeacon(values).then((res) => {
+        return addBeacon({ ...values, deviceId: values.mac! }).then((res) => {
           props.refresh?.();
           return res.code === OK;
         });
@@ -43,22 +44,23 @@ export function AddLabelModal(props: IProps): JSX.Element {
         </Button>
       }
     >
-      <ProFormText
+      {/* <ProFormText
         width="lg"
         name="deviceId"
+        hidden
         label={intl.formatMessage({
           id: 'pages.device-manage.label.device.deviceId',
           defaultMessage: '设备ID',
         })}
-      />
-      <ProFormText
+      /> */}
+      {/* <ProFormText
         width="lg"
         name="name"
         label={intl.formatMessage({
           id: 'pages.device-manage.label.device.name',
           defaultMessage: '设置名称',
         })}
-      />
+      /> */}
       <ProFormText
         width="lg"
         name="mac"
@@ -66,13 +68,22 @@ export function AddLabelModal(props: IProps): JSX.Element {
           id: 'pages.device-manage.label.device.mac',
           defaultMessage: '物理地址',
         })}
+        rules={[
+          {
+            required: true,
+            message: intl.formatMessage({
+              id: 'pages.device-manage.label.device.mac.required.failure',
+              defaultMessage: '物理地址必填',
+            }),
+          },
+        ]}
       />
-      <ProFormText
+      {/* <ProFormText
         width="lg"
         name="gateway"
         label={intl.formatMessage({
           id: 'pages.device-manage.label.device.gateway',
-          defaultMessage: '网关',
+          defaultMessage: '基站',
         })}
       />
       <ProFormText
@@ -84,14 +95,47 @@ export function AddLabelModal(props: IProps): JSX.Element {
         })}
       />
       {/* FIXME: 需要更新地图选择器 */}
-      <ProFormText
+      {/* <ProFormText
         width="lg"
         name="mapId"
         label={intl.formatMessage({
           id: 'pages.device-manage.label.device.map',
           defaultMessage: '地图',
         })}
-      />
+      /> */}
+      {/* <SelectMapCascader /> */}
+      <ProFormSelect
+        name="type"
+        label={intl.formatMessage({ id: 'pages.device-manage.label.type', defaultMessage: '类型' })}
+        initialValue={'Equipment'}
+        valueEnum={{
+          Equipment: intl.formatMessage({
+            id: 'pages.device-manage.label.type.equipment',
+            defaultMessage: '设备',
+          }),
+          Personnel: intl.formatMessage({
+            id: 'pages.device-manage.label.type.personnel',
+            defaultMessage: '人员',
+          }),
+          Vehicle: intl.formatMessage({
+            id: 'pages.device-manage.label.type.vehicle',
+            defaultMessage: '工具',
+          }),
+          Stuff: intl.formatMessage({
+            id: 'pages.device-manage.label.type.stuff',
+            defaultMessage: '材料',
+          }),
+        }}
+        rules={[
+          {
+            required: true,
+            message: intl.formatMessage({
+              id: 'pages.device-manage.label.type.required.failure',
+              defaultMessage: '类型必填',
+            }),
+          },
+        ]}
+      ></ProFormSelect>
     </ModalForm>
   );
 }

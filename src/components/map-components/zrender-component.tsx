@@ -1,4 +1,5 @@
-import { Spin } from 'antd';
+import { useIntl } from '@umijs/max';
+import { Spin, Tooltip } from 'antd';
 import { isEmpty } from 'lodash';
 import React from 'react';
 import * as zrender from 'zrender';
@@ -20,11 +21,12 @@ interface IProps {
    * @type {number[][]}
    * @memberof IProps
    */
-  stations?: number[][];
+  stations?: API.GatewayInfo[];
 }
 export function ZrenderComponent(props: IProps) {
   const ref = React.useRef<HTMLDivElement>(null);
   const board = React.useRef<Schematic>();
+  const intl = useIntl();
   React.useEffect(() => {
     if (ref.current) {
       board.current = new Schematic(ref.current);
@@ -45,7 +47,7 @@ export function ZrenderComponent(props: IProps) {
   }, [props.map]);
   React.useEffect(() => {
     if (props.stations && !isEmpty(props.stations)) {
-      board.current?.setBaseStations(props.stations);
+      board.current?.setStations(props.stations);
     }
   }, [props.stations]);
   React.useEffect(() => {
@@ -56,7 +58,16 @@ export function ZrenderComponent(props: IProps) {
 
   return (
     <Spin spinning={!props.map}>
-      <div id="map" ref={ref} style={{ border: '1px solid', display: 'inline-block' }} />
+      <Tooltip
+        overlayStyle={{
+          left: 100,
+          top: 100,
+        }}
+        open
+        title={intl.formatMessage({ id: '基站', defaultMessage: '基站' })}
+      >
+        <div id="map" ref={ref} style={{ border: '1px solid', display: 'inline-block' }} />
+      </Tooltip>
     </Spin>
   );
 }

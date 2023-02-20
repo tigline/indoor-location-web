@@ -92,6 +92,7 @@ export class Schematic {
   private trackLines: Polyline[] = [];
 
   private stationPoints: Image[] = [];
+  private stationInfo: API.GatewayInfo[] = [];
 
   constructor(dom: HTMLElement) {
     this.view = new Group();
@@ -177,14 +178,14 @@ export class Schematic {
    * @param {number[][]} stations
    * @memberof Schematic
    */
-  public setBaseStations(stations: number[][]) {
-    const points = this.transPoints(stations);
-
+  public setStations(stationInfo: API.GatewayInfo[]) {
+    const points = this.transPoints(stationInfo.map(({ setX, setY }) => [setX!, setY!]));
     if (!isEmpty(this.stationPoints)) {
       this.stationPoints.forEach((item) => {
         this.view.remove(item);
       });
     }
+    this.stationInfo = stationInfo;
     this.stationPoints = points.map((point) => {
       const [x, y] = point;
       return new Image({
@@ -198,6 +199,13 @@ export class Schematic {
       });
     });
     this.stationPoints.forEach((p) => this.view.add(p));
+  }
+
+  private showTip(index: number) {
+    console.log('showTip called', index);
+  }
+  private hideTip(index: number) {
+    console.log('hideTip called', index);
   }
   /**
    * 初始化缩放
@@ -243,6 +251,16 @@ export class Schematic {
         this.view.attr('x', this.x + e.offsetX - startX);
         this.view.attr('y', this.y + e.offsetY - startY);
       }
+      // 添加提示监听
+      this.stationPoints.forEach((item, index) => {
+        if (item.contain(e.offsetX, e.offsetY)) {
+          //  展示提示
+          this.showTip(index);
+        } else {
+          //  隐藏提示
+          this.hideTip(index);
+        }
+      });
     });
     this.instance?.on('mouseup', (e) => {
       this.moveAble = false;
@@ -313,7 +331,6 @@ export class Schematic {
           if (this.tempPolygon) {
             this.view.remove(this.tempPolygon);
           }
-
           this.view.add(
             new Polygon({
               shape: { points: this.transPoints(points) },
@@ -378,18 +395,18 @@ export class Schematic {
       }
       const [cx, cy] = this.transformBack(currentPoint);
       const [startCx, startCy] = this.transformBack(startPoint);
-      console.log(
-        `
-         图上偏移:${this.view.x}:${this.view.y},
-         放大倍率:${this.zoom},
-         真实起点坐标:${startPoint},
-         图上起点坐标:${[startCx, startCy]},
-         真实坐标:${currentPoint},
-         图上坐标:${[cx, cy]},
-         points:${points.length},
-         this.tempPolygon:${this.tempPolygon}
-        `,
-      );
+      // console.log(
+      //   `
+      //    图上偏移:${this.view.x}:${this.view.y},
+      //    放大倍率:${this.zoom},
+      //    真实起点坐标:${startPoint},
+      //    图上起点坐标:${[startCx, startCy]},
+      //    真实坐标:${currentPoint},
+      //    图上坐标:${[cx, cy]},
+      //    points:${points.length},
+      //    this.tempPolygon:${this.tempPolygon}
+      //   `,
+      // );
       circle.attr('shape', { cx, cy });
       startCircle?.attr('shape', { cx: startCx, cy: startCy, r: 20 / this.zoom });
       this.tempPolygon?.attr('shape', { points: this.transPoints(points) });

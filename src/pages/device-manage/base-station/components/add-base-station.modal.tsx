@@ -1,11 +1,9 @@
 import { SelectMapCascader } from '@/components/select-map.cascader';
 import { addGateway } from '@/services/swagger/shebeiguanli';
-import { OK } from '@/utils/global.utils';
 import { PlusOutlined } from '@ant-design/icons';
 import { ModalForm, ProFormDigit, ProFormText } from '@ant-design/pro-components';
-import { useIntl } from '@umijs/max';
-import { Button, Form } from 'antd';
-import { FormattedMessage } from 'umi';
+import { FormattedMessage, useIntl, useRequest } from '@umijs/max';
+import { Button, Form, notification } from 'antd';
 interface IProps {
   // children: JSX.Element;
   refresh?: () => void;
@@ -20,7 +18,17 @@ interface IProps {
 export function AddBaseStationModal(props: IProps): JSX.Element {
   const [form] = Form.useForm();
   const intl = useIntl();
-
+  const { run } = useRequest(addGateway, {
+    manual: true,
+    onSuccess(res) {
+      if (res) {
+        notification.success({
+          message: intl.formatMessage({ id: 'app.add.success', defaultMessage: '新建成功' }),
+        });
+        props.refresh?.();
+      }
+    },
+  });
   return (
     <ModalForm<API.AddGatewayInfo & { mapId: number[] }>
       title={
@@ -36,10 +44,7 @@ export function AddBaseStationModal(props: IProps): JSX.Element {
       onFinish={(values) => {
         // mapId 由级联菜单选出，表单项中是一个数组
         const [, mapId] = values.mapId;
-        return addGateway({ ...values, mapId }).then((res) => {
-          props.refresh?.();
-          return res.code === OK;
-        });
+        return run({ ...values, mapId });
       }}
       trigger={
         <Button type="primary">
@@ -61,7 +66,7 @@ export function AddBaseStationModal(props: IProps): JSX.Element {
         name="gateway"
         label={intl.formatMessage({
           id: 'pages.device-manage.label.device.gateway',
-          defaultMessage: '网关',
+          defaultMessage: '基站',
         })}
       />
       <ProFormText

@@ -134,8 +134,8 @@ export default function Page() {
             };
           })
         }
-        toolBarRender={() => [
-          <AddLabelModal key="add" />,
+        toolBarRender={(action) => [
+          <AddLabelModal key="add" refresh={action?.reload} />,
           <Button key="batch" icon={<PlusOutlined />} type="primary">
             <FormattedMessage id="app.batch.action" defaultMessage="批量操作" />
           </Button>,
