@@ -1,4 +1,4 @@
-import { ZrenderComponent } from '@/components/map-components/zrender-component';
+import { AntdL7Component } from '@/components/map-components/antd-L7-component';
 import { SelectMapCascader } from '@/components/select-map.cascader';
 import { pageGateway } from '@/services/swagger/shebeiguanli';
 import { getMap } from '@/services/swagger/xitongguanli';
@@ -79,7 +79,12 @@ export default function Page() {
         </ProForm>
       </ProCard>
       <Card>
-        <ZrenderComponent map={data?.data?.picture} stations={gateways?.items} />
+        <AntdL7Component
+          map={data?.data?.picture}
+          rect={[data?.data?.width, data?.data?.length]}
+          // drawEnable
+          stations={gateways?.items}
+        />
       </Card>
     </PageContainer>
   );

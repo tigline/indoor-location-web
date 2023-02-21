@@ -15,11 +15,6 @@ import CanvasPainter from 'zrender/lib/canvas/Painter';
 // 注册绘制器
 registerPainter('canvas', CanvasPainter);
 
-// interface Point {
-//   x: number;
-//   y: number;
-// }
-
 /**
  * 室内地图示意图绘制组件
  * 此组件以基于zrender画室内示意图
@@ -93,9 +88,11 @@ export class Schematic {
 
   private stationPoints: Image[] = [];
   private stationInfo: API.GatewayInfo[] = [];
+  // private stationTipsDom: HTMLDivElement;
 
   constructor(dom: HTMLElement) {
     this.view = new Group();
+
     if (dom) {
       this.instance = init(dom, { renderer: 'canvas' });
       this.instance.add(this.view);
@@ -189,6 +186,7 @@ export class Schematic {
     this.stationPoints = points.map((point) => {
       const [x, y] = point;
       return new Image({
+        silent: false,
         style: {
           image: station,
           x: x + this.stationWidth / 2,
@@ -198,15 +196,30 @@ export class Schematic {
         },
       });
     });
-    this.stationPoints.forEach((p) => this.view.add(p));
+    this.stationPoints.forEach((p) => {
+      this.view.add(p);
+    });
   }
 
-  private showTip(index: number) {
-    console.log('showTip called', index);
-  }
-  private hideTip(index: number) {
-    console.log('hideTip called', index);
-  }
+  // private showTip(index: number, x: number, y: number) {
+  //   console.log('showTip called', index);
+  //   console.log('templdate', template);
+  //   if (!this.stationTipsDom) {
+  //     this.stationTipsDom = document.createElement('div');
+  //   }
+  //   if (!document.body.contains(this.stationTipsDom)) {
+  //     document.body.append(this.stationTipsDom);
+  //   }
+  //   this.stationTipsDom.innerHTML = parseString(template, {
+  //     ...this.stationInfo[index],
+  //     left: x,
+  //     top: y,
+  //   });
+  // }
+  // private hideTip(index: number) {
+  //   console.log('hideTip called', index);
+  //   document.body.removeChild(this.stationTipsDom);
+  // }
   /**
    * 初始化缩放
    *
@@ -252,15 +265,15 @@ export class Schematic {
         this.view.attr('y', this.y + e.offsetY - startY);
       }
       // 添加提示监听
-      this.stationPoints.forEach((item, index) => {
-        if (item.contain(e.offsetX, e.offsetY)) {
-          //  展示提示
-          this.showTip(index);
-        } else {
-          //  隐藏提示
-          this.hideTip(index);
-        }
-      });
+      // this.stationPoints.forEach((item, index) => {
+      //   if (item.contain(e.offsetX, e.offsetY)) {
+      //     //  展示提示
+      //     this.showTip(index, e.offsetX, e.offsetY);
+      //   } else {
+      //     //  隐藏提示
+      //     this.hideTip(index);
+      //   }
+      // });
     });
     this.instance?.on('mouseup', (e) => {
       this.moveAble = false;
@@ -435,7 +448,7 @@ export class Schematic {
    */
   public transformBack(point: number[]): number[] {
     const [x, y] = [point[0] * this.zoom + this.view.x, point[1] * this.zoom + this.view.y];
-    return this.view.transformCoordToLocal(x, y) as [number, number];
+    return this.view.transformCoordToLocal(x, y);
   }
 
   public transPoints(points: number[][]): number[][] {

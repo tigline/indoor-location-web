@@ -126,6 +126,20 @@ export async function deleteFence(
   });
 }
 
+/** 切换围栏状态 PUT /api/v1/fences/${param0}/switch */
+export async function switchFenceStatus(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.switchFenceStatusParams,
+  options?: { [key: string]: any },
+) {
+  const { fenceId: param0, ...queryParams } = params;
+  return request<API.RestValueBoolean>(`/api/v1/fences/${param0}/switch`, {
+    method: 'PUT',
+    params: { ...queryParams },
+    ...(options || {}),
+  });
+}
+
 /** 获取地图列表 GET /api/v1/maps */
 export async function listMaps(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)

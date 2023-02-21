@@ -1,5 +1,6 @@
 // https://umijs.org/config/
 import { defineConfig } from '@umijs/max';
+import path from 'path';
 import defaultSettings from './defaultSettings';
 import proxy from './proxy';
 import routes from './routes';
@@ -153,4 +154,16 @@ export default defineConfig({
     strategy: 'normal',
   },
   requestRecord: {},
+  chainWebpack(memo, args) {
+    memo.module
+      .rule('rule')
+      .test(/\.html$/)
+      // .pre()
+      .include.add(path.resolve(__dirname, '../src'))
+      .end()
+      // 还可以创建具名 use (loaders)
+      .use('html')
+      .loader('html-loader');
+    return memo;
+  },
 });

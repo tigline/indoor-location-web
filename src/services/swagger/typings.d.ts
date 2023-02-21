@@ -11,6 +11,7 @@ declare namespace API {
   };
 
   type AddGatewayInfo = {
+    angle?: number;
     gateway: string;
     groupId?: string;
     mapId?: string;
@@ -116,6 +117,7 @@ declare namespace API {
   };
 
   type GatewayInfo = {
+    angle?: number;
     extraInfo?: string;
     fenceIds?: string;
     gateway?: string;
@@ -354,6 +356,10 @@ declare namespace API {
     message?: string;
   };
 
+  type switchFenceStatusParams = {
+    fenceId: string;
+  };
+
   type TokenInfo = {
     accessExpired?: number;
     accessToken?: string;
@@ -379,6 +385,7 @@ declare namespace API {
   };
 
   type UpdateGateway = {
+    angle?: number;
     mapId: string;
     name: string;
     setX?: number;
