@@ -6,9 +6,12 @@ export default {
   'app.batch.action': '批量操作',
   'app.copy': '复制',
   'app.edit': '编辑',
+  'app.edit.success': '更新成功',
   'app.view': '查看',
   'app.remove': '删除',
   'app.add': '新建',
   'app.add.success': '新建成功',
   'app.remove.success': '删除成功',
+  'app.unit.m': '米',
+  'app.unit.cm': '厘米',
 };

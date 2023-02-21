@@ -1,26 +1,21 @@
 import { ImageUploadFormItem } from '@/components/image.upload.form.item';
-import { addBuilding } from '@/services/swagger/xitongguanli';
+import { updateBuilding } from '@/services/swagger/xitongguanli';
 import { OK } from '@/utils/global.utils';
-import { PlusOutlined } from '@ant-design/icons';
+import { EditOutlined } from '@ant-design/icons';
 import { ModalForm, ProFormText } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
-import { Button, Form, notification } from 'antd';
-import { UploadFile } from 'antd/es/upload';
+import { Button, Form, notification, UploadFile } from 'antd';
 import { first } from 'lodash';
+
 interface IProps {
   refresh?: () => void;
+  disabled?: boolean;
+  record?: API.BuildingInfo;
 }
-/**
- * 功能 模态框
- *
- * @export
- * @param {IProps} props
- * @return {JSX.Element}
- */
-export function AddBuildingModal(props: IProps): JSX.Element {
+export function EditBuildingModal(props: IProps) {
   const intl = useIntl();
   const [form] = Form.useForm();
-
+  const buildingId = props.record?.buildingId;
   return (
     <ModalForm<API.AddOrUpdateBuilding & { picture: UploadFile[] }>
       title={
@@ -28,17 +23,23 @@ export function AddBuildingModal(props: IProps): JSX.Element {
       }
       layout="horizontal"
       form={form}
+      disabled={props.disabled}
       labelCol={{ xs: 6 }}
       wrapperCol={{ xs: 16 }}
+      // request={()=>getbu}
       onFinish={(values) => {
         const picture = first(values.picture)?.response;
-        return addBuilding({ ...values, picture }).then((res) => {
+        if (!buildingId) {
+          notification.error({ message: 'building id is null' });
+          return Promise.resolve(false);
+        }
+        return updateBuilding({ buildingId }, { ...values, picture }).then((res) => {
           if (res.code === OK) {
             props.refresh?.();
             notification.success({
               message: intl.formatMessage({
-                id: 'app.add.success',
-                defaultMessage: '新建成功',
+                id: 'app.edit.success',
+                defaultMessage: '更新成功',
               }),
             });
           }
@@ -46,15 +47,16 @@ export function AddBuildingModal(props: IProps): JSX.Element {
         });
       }}
       trigger={
-        <Button type="primary">
-          <PlusOutlined />
-          {intl.formatMessage({ id: 'app.action', defaultMessage: '新建' })}
+        <Button>
+          <EditOutlined />
+          {intl.formatMessage({ id: 'app.edit', defaultMessage: '编辑' })}
         </Button>
       }
     >
       <ProFormText
         width="lg"
         name="name"
+        initialValue={props.record?.name}
         label={intl.formatMessage({
           id: 'pages.system.map-setup.building.name',
           defaultMessage: '建筑名',
@@ -72,6 +74,7 @@ export function AddBuildingModal(props: IProps): JSX.Element {
       <ProFormText
         width="lg"
         name="address"
+        initialValue={props.record?.address}
         label={intl.formatMessage({
           id: 'pages.system.map-setup.building.address',
           defaultMessage: '地址',
@@ -90,6 +93,15 @@ export function AddBuildingModal(props: IProps): JSX.Element {
         width="lg"
         name="picture"
         accept="image/png"
+        initialValue={
+          [
+            {
+              uid: Date.now() + '',
+              response: props.record?.picture,
+              thumbUrl: props.record?.picture,
+            },
+          ] as UploadFile<any>[]
+        }
         label={intl.formatMessage({
           id: 'pages.system.map-setup.building.picture',
           defaultMessage: '示意图',

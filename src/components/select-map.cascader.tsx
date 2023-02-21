@@ -56,6 +56,9 @@ export function SelectMapCascader(props: ProFormItemProps) {
         changeOnSelect: true,
         showSearch: false,
         expandTrigger: 'hover',
+        style: {
+          maxWidth: 240,
+        },
         // onChange: (res) => console.log(res),
         loadData: (selectOptions) => {
           const targetOption = selectOptions[selectOptions.length - 1];

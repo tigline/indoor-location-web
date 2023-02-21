@@ -4,6 +4,7 @@ import { PageContainer, ProList } from '@ant-design/pro-components';
 import { Link, useIntl, useRequest } from '@umijs/max';
 import { Button, Image, notification } from 'antd';
 import { AddBuildingModal } from './components/add-building.modal';
+import { EditBuildingModal } from './components/edit-building.modal';
 /**
  * 地图设置页面
  * 建筑列表页面
@@ -55,9 +56,11 @@ export default function Page() {
           actions: {
             cardActionProps: 'extra',
             render: (dom, record, _, action) => [
-              <Button key="add">
-                {intl.formatMessage({ id: 'app.edit', defaultMessage: '编辑' })}
-              </Button>,
+              <EditBuildingModal
+                key="add"
+                disabled={!record.buildingId}
+                record={record}
+              ></EditBuildingModal>,
               <Button key="view">
                 <Link to={`/system/map-setup/floor-manager.page/${record.buildingId}`}>
                   {intl.formatMessage({ id: 'app.view', defaultMessage: '查看' })}

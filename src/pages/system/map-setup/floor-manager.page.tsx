@@ -4,6 +4,7 @@ import { PageContainer, ProColumns, ProTable } from '@ant-design/pro-components'
 import { FormattedMessage, useIntl, useMatch, useRequest } from '@umijs/max';
 import { Button, notification } from 'antd';
 import { AddMapModal } from './components/add-map.modal';
+import { EditMapModal } from './components/edit-map.modal';
 
 /**
  * 地图管理
@@ -65,10 +66,7 @@ export default function FloorManagerPage() {
       key: 'option',
       render: (_, record, __, action) => (
         <Button.Group>
-          {/* FIXME: 完善功能 */}
-          <Button size="small" type="link">
-            <FormattedMessage id="pages.system.map-setup.map.setting" defaultMessage="配置" />
-          </Button>
+          <EditMapModal disabled={!record.mapId} record={record}></EditMapModal>
           {/* FIXME：完善功能 */}
           <Button size="small" type="link">
             <FormattedMessage id="pages.system.map-setup.map.view" defaultMessage="预览" />

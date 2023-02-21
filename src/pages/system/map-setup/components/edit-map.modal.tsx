@@ -1,15 +1,15 @@
 import { ImageUploadFormItem } from '@/components/image.upload.form.item';
-import { addMap } from '@/services/swagger/xitongguanli';
+import { updateMap } from '@/services/swagger/xitongguanli';
 import { OK } from '@/utils/global.utils';
-import { PlusOutlined } from '@ant-design/icons';
 import { ModalForm, ProFormDigit, ProFormText } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
 import { Button, Form, notification } from 'antd';
 import { UploadFile } from 'antd/es/upload';
 import { first } from 'lodash';
 interface IProps {
-  buildingId?: string;
   refresh?: () => void;
+  disabled?: boolean;
+  record: API.MapInfo;
 }
 /**
  * 功能 模态框
@@ -18,14 +18,14 @@ interface IProps {
  * @param {IProps} props
  * @return {JSX.Element}
  */
-export function AddMapModal(props: IProps): JSX.Element {
+export function EditMapModal(props: IProps): JSX.Element {
   const intl = useIntl();
-  const { buildingId } = props;
+  const { buildingId, mapId } = props.record;
   const [form] = Form.useForm();
 
   return (
-    <ModalForm<API.AddOrUpdateMapInfo & { picture: UploadFile[] }>
-      title={<FormattedMessage id="pages.system.map-setup.map.add" defaultMessage="添加地图" />}
+    <ModalForm<Omit<API.AddOrUpdateMapInfo, 'picture'> & { picture: UploadFile[] }>
+      title={<FormattedMessage id="pages.system.map-setup.map.edit" defaultMessage="添加地图" />}
       layout="horizontal"
       form={form}
       labelCol={{ xs: 6 }}
@@ -33,27 +33,31 @@ export function AddMapModal(props: IProps): JSX.Element {
       disabled={!buildingId}
       onFinish={(values) => {
         const picture = first(values.picture)?.response;
-        return addMap({ ...values, buildingId: buildingId!, picture }).then((res) => {
-          props.refresh?.();
-          notification.success({
-            message: intl.formatMessage({
-              id: 'app.add.success',
-              defaultMessage: '新建成功',
-            }),
-          });
-          return res.code === OK;
-        });
+        return updateMap({ mapId: mapId! }, { ...values, buildingId: buildingId!, picture }).then(
+          (res) => {
+            if (res.code === OK) {
+              props.refresh?.();
+              notification.success({
+                message: intl.formatMessage({
+                  id: 'app.edit.success',
+                  defaultMessage: '更新成功',
+                }),
+              });
+            }
+            return res.code === OK;
+          },
+        );
       }}
       trigger={
-        <Button type="primary">
-          <PlusOutlined />
-          {intl.formatMessage({ id: 'app.action', defaultMessage: '新建' })}
+        <Button type="link" size="small">
+          {intl.formatMessage({ id: 'app.edit', defaultMessage: '编辑' })}
         </Button>
       }
     >
       <ProFormText
         width="lg"
         name="name"
+        initialValue={props.record.name}
         label={intl.formatMessage({
           id: 'pages.system.map-setup.map.name',
           defaultMessage: '地图名称',
@@ -63,7 +67,7 @@ export function AddMapModal(props: IProps): JSX.Element {
             required: true,
             message: intl.formatMessage({
               id: 'pages.system.map-setup.map.name.required.failure',
-              defaultMessage: '建筑名必填',
+              defaultMessage: '地图名必填',
             }),
           },
         ]}
@@ -71,6 +75,7 @@ export function AddMapModal(props: IProps): JSX.Element {
       <ProFormText
         width="lg"
         name="floor"
+        initialValue={props.record.floor}
         label={intl.formatMessage({
           id: 'pages.system.map-setup.map.floor',
           defaultMessage: '楼层',
@@ -106,11 +111,11 @@ export function AddMapModal(props: IProps): JSX.Element {
       <ProFormDigit
         width="lg"
         name="length"
-        addonAfter={intl.formatMessage({ id: 'app.unit.m', defaultMessage: '米' })}
         label={intl.formatMessage({
           id: 'pages.system.map-setup.map.length',
           defaultMessage: '实际长度',
         })}
+        addonAfter={intl.formatMessage({ id: 'app.unit.m', defaultMessage: '米' })}
         rules={[
           {
             required: true,
@@ -124,6 +129,15 @@ export function AddMapModal(props: IProps): JSX.Element {
       <ImageUploadFormItem
         width="lg"
         name="picture"
+        initialValue={
+          [
+            {
+              uid: Date.now() + '',
+              response: props.record?.picture,
+              thumbUrl: props.record?.picture,
+            },
+          ] as UploadFile<any>[]
+        }
         // accept="image/svg+xml"
         label={intl.formatMessage({
           id: 'pages.system.map-setup.building.picture',
@@ -133,7 +147,7 @@ export function AddMapModal(props: IProps): JSX.Element {
           {
             required: true,
             message: intl.formatMessage({
-              id: 'pages.system.map-setup.building.address.required.failure',
+              id: 'pages.system.map-setup.building.picture.required.failure',
               defaultMessage: '示意图必填',
             }),
           },
