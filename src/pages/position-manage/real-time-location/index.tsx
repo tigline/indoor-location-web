@@ -1,10 +1,17 @@
-import { ZrenderComponent } from '@/components/map-components/zrender-component';
+import { AntdL7Component } from '@/components/map-components/antd-L7-component';
 import { SelectMapCascader } from '@/components/select-map.cascader';
+import { pageGateway } from '@/services/swagger/shebeiguanli';
 import { getMap } from '@/services/swagger/xitongguanli';
 import { fmt } from '@/utils/global.utils';
-import { PageContainer, ProCard, ProForm, Statistic } from '@ant-design/pro-components';
-import { useIntl, useRequest } from '@umijs/max';
-import { useInterval } from 'ahooks';
+import {
+  PageContainer,
+  ProCard,
+  ProForm,
+  ProFormInstance,
+  Statistic,
+} from '@ant-design/pro-components';
+import { useIntl, useModel, useRequest } from '@umijs/max';
+import { useInterval, useWebSocket } from 'ahooks';
 import { Card, Col, Row, Typography } from 'antd';
 import React from 'react';
 
@@ -38,10 +45,25 @@ export function StatisticOfNow() {
  */
 export default function Page() {
   // const intl = useIntl();
+  const formRef = React.useRef<ProFormInstance<{ mapId: string[] }>>(null);
   const { run, data } = useRequest(getMap, {
     manual: true,
     formatResult: (res) => res,
   });
+  const { run: query, data: gateways } = useRequest(pageGateway, {
+    manual: true,
+  });
+  const { initialState } = useModel('@@initialState');
+  const { latestMessage } = useWebSocket(
+    `ws://${location.host}/websocket?userld=${initialState?.currentUser?.userId}`,
+  );
+  console.log(latestMessage);
+
+  function submit(mapId: string) {
+    query({ mapId: mapId });
+    return run({ mapId });
+  }
+
   return (
     <PageContainer>
       <ProCard>
@@ -53,20 +75,20 @@ export default function Page() {
             <ProForm<{ mapId: string[] }>
               submitter={false}
               layout="inline"
+              formRef={formRef}
               style={{ minWidth: 320, height: '100%', alignItems: 'end', justifyContent: 'end' }}
-              onValuesChange={(_, val) => {
-                console.log(val);
-                const [, mapId] = val.mapId;
-                run({ mapId });
-              }}
             >
-              <SelectMapCascader></SelectMapCascader>
+              <SelectMapCascader submit={submit} form={formRef.current}></SelectMapCascader>
             </ProForm>
           </Col>
         </Row>
       </ProCard>
       <Card>
-        <ZrenderComponent map={data?.data?.picture} />
+        <AntdL7Component
+          map={data?.data?.picture}
+          rect={[data?.data?.width, data?.data?.length]}
+          stations={gateways?.items}
+        />
       </Card>
     </PageContainer>
   );

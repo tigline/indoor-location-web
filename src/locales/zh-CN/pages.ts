@@ -112,6 +112,7 @@ export default {
   'pages.device-manage.label.device.mac': '物理地址',
   'pages.device-manage.label.device.mac.required': '物理地址必填',
   'pages.device-manage.label.device.mac.required.failure': '物理地址必填',
+  'pages.device-manage.label.device.mac.hex.failure': '物理地址为16进制数',
   'pages.device-manage.label.device.map': '地图',
   'pages.device-manage.label.device.name': '设置名称',
   'pages.device-manage.label.device.productName': '产品名称',

@@ -1,17 +1,19 @@
 import { AntdL7Component } from '@/components/map-components/antd-L7-component';
 import { SelectMapCascader } from '@/components/select-map.cascader';
-import { pageGateway } from '@/services/swagger/shebeiguanli';
+import { listBeaconLocation, pageGateway } from '@/services/swagger/shebeiguanli';
 import { getMap } from '@/services/swagger/xitongguanli';
-import { OK } from '@/utils/global.utils';
+import { fmtDate, OK } from '@/utils/global.utils';
 import {
   PageContainer,
   ProCard,
   ProForm,
   ProFormDateTimeRangePicker,
-  ProFormSelect,
 } from '@ant-design/pro-components';
 import { useIntl, useRequest } from '@umijs/max';
 import { Card } from 'antd';
+import { isNil } from 'lodash';
+import { Moment } from 'moment';
+import React from 'react';
 
 /**
  * 轨迹追踪页面
@@ -21,38 +23,64 @@ import { Card } from 'antd';
  */
 export default function Page() {
   const intl = useIntl();
+  const formRef = React.useRef();
   const { run, data } = useRequest(getMap, {
     manual: true,
     formatResult: (res) => res,
   });
   const { run: query, data: gateways } = useRequest(pageGateway, {
     manual: true,
-    // formatResult(res) {
-    //   return res.data?.items?.map((item) => [item.setX!, item.setY!]);
-    // },
   });
+  const { run: queryBeacon, data: beacons } = useRequest(listBeaconLocation, {
+    manual: true,
+    formatResult: (res) => res,
+  });
+  function submit(mapId: string) {
+    run({ mapId: mapId }).then((res) => res.code === OK);
+    query({ mapId: mapId });
+  }
   return (
     <PageContainer>
       <ProCard>
-        <ProForm
+        <ProForm<API.listBeaconLocationParams>
           // 隐藏重置按钮
           submitter={{ resetButtonProps: { style: { display: 'none' } } }}
+          formRef={formRef}
           layout="inline"
           style={{ minWidth: 320 }}
+          onFinish={(values) => {
+            console.log(values);
+            return queryBeacon(values).then((res) => res.code === OK);
+            return Promise.resolve(false);
+          }}
           onValuesChange={(values) => {
-            const [, mapId] = values.mapId;
-            run({ mapId: mapId }).then((res) => res.code === OK);
-            query({ mapId: mapId });
+            if (!isNil(values.mapId)) {
+              const [, mapId] = values.mapId;
+              submit(mapId);
+            }
           }}
         >
-          <SelectMapCascader label={false}></SelectMapCascader>
-          <ProFormSelect
+          <SelectMapCascader
+            transform={([, mapId]) => ({ mapId })}
+            submit={submit}
+            form={formRef.current}
+            label={false}
+          ></SelectMapCascader>
+          {/* <ProFormSelect
             placeholder={intl.formatMessage({
               id: 'pages.position-manage.tracking-manage.person-select',
               defaultMessage: '请选择人员',
             })}
-          />
+          /> */}
           <ProFormDateTimeRangePicker
+            name="range"
+            transform={(value: [Moment?, Moment?]) => {
+              const [startTime, endTime] = fmtDate(value) ?? [];
+              return {
+                startTime,
+                endTime,
+              };
+            }}
             placeholder={[
               intl.formatMessage({
                 id: 'pages.position-manage.tracking-manage.start.time',
@@ -64,7 +92,7 @@ export default function Page() {
               }),
             ]}
           />
-          <ProFormSelect
+          {/* <ProFormSelect
             placeholder={intl.formatMessage({
               id: 'pages.position-manage.tracking-manage.speed-select',
               defaultMessage: '速率',
@@ -75,7 +103,7 @@ export default function Page() {
               { label: 'x4', value: 4 },
               { label: 'x8', value: 8 },
             ]}
-          />
+          /> */}
         </ProForm>
       </ProCard>
       <Card>
@@ -84,6 +112,7 @@ export default function Page() {
           rect={[data?.data?.width, data?.data?.length]}
           // drawEnable
           stations={gateways?.items}
+          beacons={beacons?.data}
         />
       </Card>
     </PageContainer>

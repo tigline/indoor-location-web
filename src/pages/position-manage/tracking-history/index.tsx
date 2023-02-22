@@ -1,5 +1,6 @@
 import { AntdL7Component } from '@/components/map-components/antd-L7-component';
 import { SelectMapCascader } from '@/components/select-map.cascader';
+import { pageGateway } from '@/services/swagger/shebeiguanli';
 import { getMap } from '@/services/swagger/xitongguanli';
 import { OK } from '@/utils/global.utils';
 import {
@@ -26,6 +27,9 @@ export default function Page() {
       return res;
     },
   });
+  const { run: query, data: gateways } = useRequest(pageGateway, {
+    manual: true,
+  });
   return (
     <PageContainer>
       <ProCard>
@@ -34,8 +38,10 @@ export default function Page() {
           submitter={{ resetButtonProps: { style: { display: 'none' } } }}
           layout="inline"
           style={{ minWidth: 320 }}
-          onFinish={(values) => {
-            return run({ mapId: values.mapId }).then((res) => res.code === OK);
+          onValuesChange={(values) => {
+            const [, mapId] = values.mapId;
+            run({ mapId: mapId }).then((res) => res.code === OK);
+            query({ mapId: mapId });
           }}
         >
           <SelectMapCascader label={false}></SelectMapCascader>
@@ -72,7 +78,12 @@ export default function Page() {
         </ProForm>
       </ProCard>
       <Card>
-        <AntdL7Component map={data?.data?.picture} />
+        <AntdL7Component
+          map={data?.data?.picture}
+          rect={[data?.data?.width, data?.data?.length]}
+          // drawEnable
+          stations={gateways?.items}
+        />
       </Card>
     </PageContainer>
   );

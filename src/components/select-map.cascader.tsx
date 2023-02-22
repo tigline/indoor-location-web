@@ -1,6 +1,7 @@
 import { listBuilding, listMaps } from '@/services/swagger/xitongguanli';
-import { ProFormCascader, ProFormItemProps } from '@ant-design/pro-components';
+import { FormInstance, ProFormCascader, ProFormItemProps } from '@ant-design/pro-components';
 import { useIntl, useRequest } from '@umijs/max';
+import { first } from 'lodash';
 import React from 'react';
 
 interface OptionType {
@@ -10,21 +11,14 @@ interface OptionType {
   children?: OptionType[];
 }
 
-export function SelectMapCascader(props: ProFormItemProps) {
+interface IProps extends ProFormItemProps {
+  submit?: (mapId: string) => void;
+  form?: FormInstance<{ mapId: string[] }> | null;
+}
+export function SelectMapCascader(props: IProps) {
   const intl = useIntl();
   const [options, setOptions] = React.useState<OptionType[]>();
-  const {} = useRequest(listBuilding, {
-    formatResult(res) {
-      return res.data?.map((item) => ({
-        label: item.name,
-        value: item.buildingId,
-        isLeaf: false,
-      }));
-    },
-    onSuccess(res) {
-      setOptions(res);
-    },
-  });
+  const loaded = React.useRef<boolean>();
   const { run } = useRequest(listMaps, {
     manual: true,
     formatResult(res) {
@@ -34,13 +28,34 @@ export function SelectMapCascader(props: ProFormItemProps) {
         isLeaf: true,
       }));
     },
-    onSuccess(data, [params]) {
+    onSuccess(data: any[], [params]) {
       setOptions((pre) => {
+        if (!loaded.current) {
+          const buildingId = first(pre)?.value;
+          const mapId = first(data)?.value;
+          props.form?.setFieldValue('mapId', [buildingId!, mapId!]);
+          props.submit?.(mapId);
+          loaded.current = true;
+        }
         return pre?.map((item) => ({
           ...item,
           children: params.buildingId === item.value ? data : item.children,
         }));
       });
+    },
+  });
+  const {} = useRequest(listBuilding, {
+    formatResult(res) {
+      return res.data?.map((item) => ({
+        label: item.name,
+        value: item.buildingId,
+        isLeaf: false,
+      }));
+    },
+    onSuccess(res: any[]) {
+      setOptions(res);
+      const buildingId = first(res)?.buildingId;
+      run({ buildingId });
     },
   });
   return (
@@ -53,12 +68,10 @@ export function SelectMapCascader(props: ProFormItemProps) {
       })}
       fieldProps={{
         options: options,
-        changeOnSelect: true,
+        changeOnSelect: false,
         showSearch: false,
         expandTrigger: 'hover',
-        style: {
-          maxWidth: 240,
-        },
+        style: { maxWidth: 240 },
         // onChange: (res) => console.log(res),
         loadData: (selectOptions) => {
           const targetOption = selectOptions[selectOptions.length - 1];

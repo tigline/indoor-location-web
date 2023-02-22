@@ -44,23 +44,6 @@ export function AddLabelModal(props: IProps): JSX.Element {
         </Button>
       }
     >
-      {/* <ProFormText
-        width="lg"
-        name="deviceId"
-        hidden
-        label={intl.formatMessage({
-          id: 'pages.device-manage.label.device.deviceId',
-          defaultMessage: '设备ID',
-        })}
-      /> */}
-      {/* <ProFormText
-        width="lg"
-        name="name"
-        label={intl.formatMessage({
-          id: 'pages.device-manage.label.device.name',
-          defaultMessage: '设置名称',
-        })}
-      /> */}
       <ProFormText
         width="lg"
         name="mac"
@@ -76,34 +59,15 @@ export function AddLabelModal(props: IProps): JSX.Element {
               defaultMessage: '物理地址必填',
             }),
           },
+          {
+            pattern: /^[0-9a-fA-F]+$/,
+            message: intl.formatMessage({
+              id: 'pages.device-manage.label.device.mac.hex.failure',
+              defaultMessage: '物理地址必填',
+            }),
+          },
         ]}
       />
-      {/* <ProFormText
-        width="lg"
-        name="gateway"
-        label={intl.formatMessage({
-          id: 'pages.device-manage.label.device.gateway',
-          defaultMessage: '基站',
-        })}
-      />
-      <ProFormText
-        width="lg"
-        name="productName"
-        label={intl.formatMessage({
-          id: 'pages.device-manage.label.device.productName',
-          defaultMessage: '产品名称',
-        })}
-      />
-      {/* FIXME: 需要更新地图选择器 */}
-      {/* <ProFormText
-        width="lg"
-        name="mapId"
-        label={intl.formatMessage({
-          id: 'pages.device-manage.label.device.map',
-          defaultMessage: '地图',
-        })}
-      /> */}
-      {/* <SelectMapCascader /> */}
       <ProFormSelect
         name="type"
         label={intl.formatMessage({ id: 'pages.device-manage.label.type', defaultMessage: '类型' })}
