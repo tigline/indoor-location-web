@@ -1,5 +1,5 @@
 import { AntdL7Component } from '@/components/map-components/antd-L7-component';
-import { SelectMapCascader } from '@/components/select-map.cascader';
+import { SelectMapSelect } from '@/components/select-map.select';
 import { listBeaconLocation, pageGateway } from '@/services/swagger/shebeiguanli';
 import { getMap } from '@/services/swagger/xitongguanli';
 import { fmtDate, OK } from '@/utils/global.utils';
@@ -55,17 +55,17 @@ export default function Page() {
           }}
           onValuesChange={(values) => {
             if (!isNil(values.mapId)) {
-              const [, mapId] = values.mapId;
-              submit(mapId);
+              submit(values.mapId);
             }
           }}
         >
-          <SelectMapCascader
+          <SelectMapSelect />
+          {/* <SelectMapCascader
             transform={([, mapId]) => ({ mapId })}
             submit={submit}
             form={formRef.current}
             label={false}
-          ></SelectMapCascader>
+          ></SelectMapCascader> */}
           {/* <ProFormSelect
             placeholder={intl.formatMessage({
               id: 'pages.position-manage.tracking-manage.person-select',

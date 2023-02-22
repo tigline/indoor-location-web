@@ -1,8 +1,7 @@
 import Footer from '@/components/Footer';
 import RightContent from '@/components/RightContent';
 import { LinkOutlined } from '@ant-design/icons';
-import type { Settings as LayoutSettings } from '@ant-design/pro-components';
-import { SettingDrawer } from '@ant-design/pro-components';
+import { SettingDrawer, Settings as LayoutSettings } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from '@umijs/max';
 import { history, Link } from '@umijs/max';
 import { Location } from 'react-router-dom';

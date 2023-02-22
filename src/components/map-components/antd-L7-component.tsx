@@ -3,21 +3,22 @@ import stationImage from '@/assets/images/station.svg';
 import { green } from '@ant-design/colors';
 import { ILayer, ImageLayer, LineLayer, Mapbox, metersToLngLat, PointLayer, Scene } from '@antv/l7';
 import { DrawPolygon } from '@antv/l7-draw';
-import { Button, Card } from 'antd';
+import { Card } from 'antd';
 import { isEmpty } from 'lodash';
 import React from 'react';
 interface IProps {
   map?: string;
   rect: [number?, number?];
   drawEnable?: boolean;
+  drawRef?: React.MutableRefObject<DrawPolygon | undefined>;
   stations?: API.GatewayInfo[];
   beacons?: API.AoaDataInfo[];
 }
 
 export function AntdL7Component(props: IProps) {
   const [mapWidth, mapLength] = props.rect;
-  const [polygonDrawer, setPolygonDrawer] = React.useState<DrawPolygon | null>(null);
-  const [coord, setCoorde] = React.useState<string>();
+  // const [polygonDrawer, setPolygonDrawer] = React.useState<DrawPolygon | null>(null);
+  // const [coord, setCoorde] = React.useState<string>();
   const [loaded, setLoaded] = React.useState<boolean>();
   const scene = React.useRef<Scene>();
   const drawer = React.useRef<DrawPolygon>();
@@ -68,7 +69,9 @@ export function AntdL7Component(props: IProps) {
         areaOptions: {},
         liveUpdate: true,
       });
-      setPolygonDrawer(drawer.current);
+      if (props.drawRef) {
+        props.drawRef.current = drawer.current;
+      }
     }
   }, [loaded]);
   React.useEffect(() => {
@@ -169,7 +172,7 @@ export function AntdL7Component(props: IProps) {
       <Card bodyStyle={{ padding: 0 }}>
         <div id="map" style={{ minHeight: 600 }}></div>
       </Card>
-      <Card>
+      {/* <Card>
         <div>
           <Button
             onClick={() => {
@@ -180,7 +183,7 @@ export function AntdL7Component(props: IProps) {
           </Button>
           {coord}
         </div>
-      </Card>
+      </Card> */}
     </React.Fragment>
   );
 }

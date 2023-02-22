@@ -1,9 +1,10 @@
 import { AntdL7Component } from '@/components/map-components/antd-L7-component';
-import { SelectMapCascader } from '@/components/select-map.cascader';
+import { SelectMapSelect } from '@/components/select-map.select';
 import { pageGateway } from '@/services/swagger/shebeiguanli';
 import { getMap } from '@/services/swagger/xitongguanli';
 import { fmt } from '@/utils/global.utils';
 import {
+  isNil,
   PageContainer,
   ProCard,
   ProForm,
@@ -76,9 +77,15 @@ export default function Page() {
               submitter={false}
               layout="inline"
               formRef={formRef}
+              onValuesChange={(values) => {
+                if (!isNil(values.mapId)) {
+                  submit(values.mapId);
+                }
+              }}
               style={{ minWidth: 320, height: '100%', alignItems: 'end', justifyContent: 'end' }}
             >
-              <SelectMapCascader submit={submit} form={formRef.current}></SelectMapCascader>
+              {/* <SelectMapCascader submit={submit} form={formRef.current}></SelectMapCascader> */}
+              <SelectMapSelect></SelectMapSelect>
             </ProForm>
           </Col>
         </Row>

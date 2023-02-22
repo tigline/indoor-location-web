@@ -1,9 +1,10 @@
 import { AntdL7Component } from '@/components/map-components/antd-L7-component';
-import { SelectMapCascader } from '@/components/select-map.cascader';
+import { SelectMapSelect } from '@/components/select-map.select';
 import { pageGateway } from '@/services/swagger/shebeiguanli';
 import { getMap } from '@/services/swagger/xitongguanli';
 import { OK } from '@/utils/global.utils';
 import {
+  isNil,
   PageContainer,
   ProCard,
   ProForm,
@@ -30,6 +31,10 @@ export default function Page() {
   const { run: query, data: gateways } = useRequest(pageGateway, {
     manual: true,
   });
+  function submit(mapId: string) {
+    run({ mapId: mapId }).then((res) => res.code === OK);
+    query({ mapId: mapId });
+  }
   return (
     <PageContainer>
       <ProCard>
@@ -39,12 +44,13 @@ export default function Page() {
           layout="inline"
           style={{ minWidth: 320 }}
           onValuesChange={(values) => {
-            const [, mapId] = values.mapId;
-            run({ mapId: mapId }).then((res) => res.code === OK);
-            query({ mapId: mapId });
+            if (!isNil(values.mapId)) {
+              submit(values.mapId);
+            }
           }}
         >
-          <SelectMapCascader label={false}></SelectMapCascader>
+          <SelectMapSelect />
+          {/* <SelectMapCascader label={false}></SelectMapCascader> */}
           <ProFormSelect
             placeholder={intl.formatMessage({
               id: 'pages.position-manage.tracking-manage.person-select',

@@ -28,18 +28,18 @@ export function SelectMapCascader(props: IProps) {
         isLeaf: true,
       }));
     },
-    onSuccess(data: any[], [params]) {
+    onSuccess(res: any[], [params]) {
       setOptions((pre) => {
         if (!loaded.current) {
           const buildingId = first(pre)?.value;
-          const mapId = first(data)?.value;
-          props.form?.setFieldValue('mapId', [buildingId!, mapId!]);
-          props.submit?.(mapId);
+          const map_id = first(res)?.value;
+          props.form?.setFieldValue(['mapId'], [buildingId!, map_id!]);
+          props.submit?.(map_id);
           loaded.current = true;
         }
         return pre?.map((item) => ({
           ...item,
-          children: params.buildingId === item.value ? data : item.children,
+          children: params.buildingId === item.value ? res : item.children,
         }));
       });
     },
