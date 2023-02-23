@@ -1,4 +1,5 @@
 import arrow from '@/assets/images/arrow.svg';
+import person from '@/assets/images/person.svg';
 import stationImage from '@/assets/images/station.svg';
 import { gold, green } from '@ant-design/colors';
 import {
@@ -21,6 +22,7 @@ interface IProps {
   drawEnable?: boolean;
   drawRef?: React.MutableRefObject<DrawPolygon | undefined>;
   stations?: API.GatewayInfo[];
+  locations?: API.AoaDataInfo[];
   beacons?: API.AoaDataInfo[];
   fence?: API.FenceAndMapInfo;
 }
@@ -32,12 +34,21 @@ export function AntdL7Component(props: IProps) {
   const [loaded, setLoaded] = React.useState<boolean>();
   const mapContainer = React.useRef<HTMLDivElement>(null);
   const scene = React.useRef<Scene>();
-  const drawer = React.useRef<DrawPolygon>();
-  const imageLayer = React.useRef<ImageLayer>();
-  const stationLayer = React.useRef<ILayer>();
-  const beaconLayer = React.useRef<ILayer>();
-  const beaconPointLayer = React.useRef<ILayer>();
 
+  /** @type {*} 绘制围栏 图层 */
+  const drawer = React.useRef<DrawPolygon>();
+
+  /** @type {*} 地图图片 图层 */
+  const imageLayer = React.useRef<ImageLayer>();
+  /** @type {*} 基站图层 */
+  const stationLayer = React.useRef<ILayer>();
+  /** @type {*} 轨迹 ‘线’ 图层 */
+  const beaconLayer = React.useRef<ILayer>();
+  /** @type {*} 轨迹 ‘点’ 图层 */
+  const beaconPointLayer = React.useRef<ILayer>();
+  /** @type {*} 实时位置 ‘点’图层 */
+  const locationLayer = React.useRef<ILayer>();
+  /** @type {*} 展示围栏 ‘面’ 图层 */
   const fenceLayer = React.useRef<ILayer>();
 
   React.useEffect(() => {
@@ -55,6 +66,7 @@ export function AntdL7Component(props: IProps) {
     });
     scene.current.addImage('stationIcon', stationImage);
     scene.current.addImage('arrow', arrow);
+    scene.current.addImage('person', person);
     scene.current?.on('loaded', () => setLoaded(true));
   }, []);
   React.useEffect(() => {
@@ -180,6 +192,7 @@ export function AntdL7Component(props: IProps) {
     scene.current?.addLayer(beaconPointLayer.current);
   }, [props.beacons, loaded]);
 
+  // 处理围栏展示内容
   React.useEffect(() => {
     if (!props.fence || isEmpty(props.fence?.points) || !loaded) {
       return;
@@ -210,23 +223,31 @@ export function AntdL7Component(props: IProps) {
     scene.current?.addLayer(fenceLayer.current);
   }, [props.fence, loaded]);
 
+  React.useEffect(() => {
+    if (isEmpty(props.locations) || !loaded) {
+      return;
+    }
+    if (locationLayer.current) {
+      scene.current?.removeLayer(locationLayer.current);
+    }
+    const source = props.locations?.map((item) => {
+      const [lng, lat] = metersToLngLat([item.posX!, item.posY!]);
+      return { ...item, lng, lat };
+    });
+    locationLayer.current = new PointLayer({ zIndex: 3 })
+      .source(source, {
+        parser: { type: 'json', x: 'lng', y: 'lat', name: 'name' },
+      })
+      .shape('name', ['person'])
+      .color(green[3])
+      .size(5);
+  }, [props.locations, loaded]);
+
   return (
     <React.Fragment>
       <Card bodyStyle={{ padding: 0 }}>
         <div id="map" ref={mapContainer} style={{ minHeight: 600 }}></div>
       </Card>
-      {/* <Card>
-        <div>
-          <Button
-            onClick={() => {
-              setCoorde(JSON.stringify(polygonDrawer?.getData()));
-            }}
-          >
-            获取坐标
-          </Button>
-          {coord}
-        </div>
-      </Card> */}
     </React.Fragment>
   );
 }

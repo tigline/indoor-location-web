@@ -14,6 +14,7 @@ import {
 import { useIntl, useModel, useRequest } from '@umijs/max';
 import { useInterval, useWebSocket } from 'ahooks';
 import { Card, Col, Row, Typography } from 'antd';
+import { map } from 'lodash';
 import React from 'react';
 
 /**
@@ -38,6 +39,22 @@ export function StatisticOfNow() {
   );
 }
 
+export interface ILocation {
+  type: string;
+  data: Data;
+}
+
+export interface Data {
+  deviceId: string;
+  id: number;
+  mapId: string;
+  optScale: number;
+  posX: number;
+  posY: number;
+  timestamp: number;
+  type: string;
+}
+
 /**
  * 实时位置页面
  *
@@ -47,6 +64,7 @@ export function StatisticOfNow() {
 export default function Page() {
   // const intl = useIntl();
   const formRef = React.useRef<ProFormInstance<{ mapId: string[] }>>(null);
+  const [beacons, setBeacons] = React.useState<Record<string, API.AoaDataInfo>>();
   const { run, data } = useRequest(getMap, {
     manual: true,
     formatResult: (res) => res,
@@ -55,10 +73,24 @@ export default function Page() {
     manual: true,
   });
   const { initialState } = useModel('@@initialState');
-  const { latestMessage } = useWebSocket(
-    `ws://${location.host}/websocket?userId=${initialState?.currentUser?.userId}`,
+  // const { latestMessage } = useWebSocket(
+  //   `ws://${location.host}/websocket?userId=${initialState?.currentUser?.userId}`,
+  // );
+  const {} = useWebSocket(
+    `ws://120.78.168.7/websocket?userId=${initialState?.currentUser?.userId}`,
+    {
+      onOpen: () => console.log('web socket connected'),
+      onClose: () => console.log('web socket closed'),
+      onMessage(message: MessageEvent<ILocation>) {
+        console.log('Receive:', message);
+        setBeacons((pre) => ({
+          ...pre,
+          [message.data.data.deviceId]: message.data.data,
+        }));
+      },
+      onError: (err) => console.log(err),
+    },
   );
-  console.log(latestMessage);
 
   function submit(mapId: string) {
     query({ mapId: mapId });
@@ -84,7 +116,6 @@ export default function Page() {
               }}
               style={{ minWidth: 320, height: '100%', alignItems: 'end', justifyContent: 'end' }}
             >
-              {/* <SelectMapCascader submit={submit} form={formRef.current}></SelectMapCascader> */}
               <SelectMapSelect></SelectMapSelect>
             </ProForm>
           </Col>
@@ -95,6 +126,7 @@ export default function Page() {
           map={data?.data?.picture}
           rect={[data?.data?.width, data?.data?.length]}
           stations={gateways?.items}
+          locations={map(beacons, (o) => o)}
         />
       </Card>
     </PageContainer>
