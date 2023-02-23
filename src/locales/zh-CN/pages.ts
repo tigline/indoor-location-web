@@ -103,8 +103,16 @@ export default {
   'pages.device-manage.base-station.device.setX': '基站X坐标',
   'pages.device-manage.base-station.device.setY': '基站Y坐标',
   'pages.device-manage.base-station.device.setZ': '基站Z坐标',
+  'pages.device-manage.base-station.device.status.online': '在线',
+  'pages.device-manage.base-station.device.status.offline': '离线',
 
   'pages.device-manage.label.device.add': '新建标签',
+  'pages.device-manage.label.device.bound': '绑定',
+  'pages.device-manage.label.device.unbound': '未绑定',
+  'pages.device-manage.label.device.equipment': '装备',
+  'pages.device-manage.label.device.personnel': '人员',
+  'pages.device-manage.label.device.vehicle': '车辆',
+  'pages.device-manage.label.device.stuff': '材料',
   'pages.device-manage.label.device.batch': '批量操作',
 
   'pages.device-manage.label.device.deviceId': '设备ID',

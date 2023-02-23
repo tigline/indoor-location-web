@@ -85,26 +85,21 @@ export default function Page() {
         id: 'pages.device-manage.base-station.device.state',
         defaultMessage: '状态',
       }),
-      dataIndex: 'state',
+      dataIndex: 'status',
       filters: true,
       onFilter: true,
       ellipsis: true,
+      search: false,
       valueType: 'select',
       valueEnum: {
-        all: { text: '超长'.repeat(50) },
-        open: {
-          text: '未解决',
-          status: 'Error',
-        },
-        closed: {
-          text: '已解决',
-          status: 'Success',
-          disabled: true,
-        },
-        processing: {
-          text: '解决中',
-          status: 'Processing',
-        },
+        Online: intl.formatMessage({
+          id: 'pages.device-manage.base-station.device.status.online',
+          defaultMessage: '在线',
+        }),
+        Offline: intl.formatMessage({
+          id: 'pages.device-manage.base-station.device.status.offline',
+          defaultMessage: '离线',
+        }),
       },
     },
     {

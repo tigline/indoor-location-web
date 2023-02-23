@@ -2,7 +2,7 @@ import { deleteBeacon, pageBeacon } from '@/services/swagger/shebeiguanli';
 import { OK } from '@/utils/global.utils';
 import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl, useRequest } from '@umijs/max';
-import { Button, Tag } from 'antd';
+import { Button } from 'antd';
 import React from 'react';
 import { AddLabelModal } from './components/add-label.modal';
 
@@ -49,10 +49,29 @@ export default function Page() {
       }),
       dataIndex: 'type',
       search: false,
+      valueType: 'select',
       renderFormItem: (_, { defaultRender }) => {
         return defaultRender(_);
       },
-      render: (_, record: any) => <Tag>{record.type}</Tag>,
+      valueEnum: {
+        Equipment: intl.formatMessage({
+          id: 'pages.device-manage.label.device.equipment',
+          defaultMessage: '装备',
+        }),
+        Personnel: intl.formatMessage({
+          id: 'pages.device-manage.label.device.personnel',
+          defaultMessage: '人员',
+        }),
+        Vehicle: intl.formatMessage({
+          id: 'pages.device-manage.label.device.vehicle',
+          defaultMessage: '车辆',
+        }),
+        Stuff: intl.formatMessage({
+          id: 'pages.device-manage.label.device.stuff',
+          defaultMessage: '材料',
+        }),
+      },
+      // render: (_, record: any) => <Tag>{record.type}</Tag>,
     },
     {
       title: intl.formatMessage({
@@ -76,21 +95,16 @@ export default function Page() {
       onFilter: true,
       ellipsis: true,
       valueType: 'select',
+      search: false,
       valueEnum: {
-        all: { text: '超长'.repeat(50) },
-        open: {
-          text: '未解决',
-          status: 'Error',
-        },
-        closed: {
-          text: '已解决',
-          status: 'Success',
-          disabled: true,
-        },
-        processing: {
-          text: '解决中',
-          status: 'Processing',
-        },
+        Bound: intl.formatMessage({
+          id: 'pages.device-manage.label.device.bound',
+          defaultMessage: '绑定',
+        }),
+        Unbound: intl.formatMessage({
+          id: 'pages.device-manage.label.device.unbound',
+          defaultMessage: '未绑定',
+        }),
       },
     },
     {
