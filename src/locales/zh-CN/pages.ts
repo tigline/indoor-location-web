@@ -146,6 +146,7 @@ export default {
 
   'pages.system.map-setup.map.name': '地图名称',
   'pages.system.map-setup.map.add': '添加地图',
+  'pages.system.map-setup.map.view': '查看地图',
   'pages.system.map-setup.map.edit': '更新地图',
   'pages.system.map-setup.map.name.required.failure': '地图名称必填',
   'pages.system.map-setup.map.remark': '备注',

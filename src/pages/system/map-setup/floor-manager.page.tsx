@@ -5,6 +5,7 @@ import { FormattedMessage, useIntl, useMatch, useRequest } from '@umijs/max';
 import { Button, notification } from 'antd';
 import { AddMapModal } from './components/add-map.modal';
 import { EditMapModal } from './components/edit-map.modal';
+import { ViewMapModal } from './components/view-map.modal';
 
 /**
  * 地图管理
@@ -67,10 +68,7 @@ export default function FloorManagerPage() {
       render: (_, record, __, action) => (
         <Button.Group>
           <EditMapModal disabled={!record.mapId} record={record}></EditMapModal>
-          {/* FIXME：完善功能 */}
-          <Button size="small" type="link">
-            <FormattedMessage id="pages.system.map-setup.map.view" defaultMessage="预览" />
-          </Button>
+          <ViewMapModal record={record}></ViewMapModal>
           <Button
             type="link"
             size="small"
