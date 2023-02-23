@@ -66,13 +66,14 @@ export function AntdL7Component(props: IProps) {
     });
     scene.current.addImage('stationIcon', stationImage);
     scene.current.addImage('arrow', arrow);
-    scene.current.addImage('person', person);
+    scene.current.addImage('personImage', person);
     scene.current?.on('loaded', () => setLoaded(true));
   }, []);
   React.useEffect(() => {
     if (props.map && loaded && mapWidth && mapLength) {
       if (imageLayer.current) {
         scene.current?.removeLayer(imageLayer.current);
+        imageLayer.current.destroy();
       }
       imageLayer.current = new ImageLayer({
         zIndex: -1,
@@ -114,6 +115,7 @@ export function AntdL7Component(props: IProps) {
     }
     if (stationLayer.current) {
       scene.current?.removeLayer(stationLayer.current);
+      stationLayer.current.destroy();
     }
     const source = props.stations?.map((item) => {
       const [lng, lat] = metersToLngLat([item.setX!, item.setY!]);
@@ -135,9 +137,11 @@ export function AntdL7Component(props: IProps) {
     }
     if (beaconLayer.current) {
       scene.current?.removeLayer(beaconLayer.current);
+      beaconLayer.current?.destroy();
     }
     if (beaconPointLayer.current) {
       scene.current?.removeLayer(beaconPointLayer.current);
+      beaconPointLayer.current.destroy();
     }
     const beacons = props.beacons ?? [];
 
@@ -199,6 +203,7 @@ export function AntdL7Component(props: IProps) {
     }
     if (fenceLayer.current) {
       scene.current?.removeLayer(fenceLayer.current);
+      fenceLayer.current?.destroy();
     }
     const fences = props.fence.points ?? [];
     const source = {
@@ -227,20 +232,27 @@ export function AntdL7Component(props: IProps) {
     if (isEmpty(props.locations) || !loaded) {
       return;
     }
-    if (locationLayer.current) {
-      scene.current?.removeLayer(locationLayer.current);
-    }
     const source = props.locations?.map((item) => {
       const [lng, lat] = metersToLngLat([item.posX!, item.posY!]);
       return { ...item, lng, lat };
     });
-    locationLayer.current = new PointLayer({ zIndex: 3 })
-      .source(source, {
-        parser: { type: 'json', x: 'lng', y: 'lat', name: 'name' },
-      })
-      .shape('name', ['person'])
-      .color(green[3])
-      .size(5);
+    if (!locationLayer.current) {
+      // scene.current?.removeLayer(locationLayer.current);
+      // locationLayer.current?.destroy();
+      locationLayer.current = new PointLayer({ zIndex: 3, layerType: 'fillImage' })
+        .source(source, {
+          parser: { type: 'json', x: 'lng', y: 'lat', name: 'personImage' },
+        })
+        .color(green[3])
+        .size(15)
+        .shape('personImage', ['personImage'])
+        .animate(true);
+      scene.current?.addLayer(locationLayer.current);
+    } else {
+      locationLayer.current.setData(source);
+      // locationLayer.current.setSource(source ?? []);
+    }
+    return () => locationLayer.current?.destroy();
   }, [props.locations, loaded]);
 
   return (

@@ -41,18 +41,7 @@ export function StatisticOfNow() {
 
 export interface ILocation {
   type: string;
-  data: Data;
-}
-
-export interface Data {
-  deviceId: string;
-  id: number;
-  mapId: string;
-  optScale: number;
-  posX: number;
-  posY: number;
-  timestamp: number;
-  type: string;
+  data: API.AoaDataInfo;
 }
 
 /**
@@ -77,16 +66,19 @@ export default function Page() {
   //   `ws://${location.host}/websocket?userId=${initialState?.currentUser?.userId}`,
   // );
   const {} = useWebSocket(
-    `ws://120.78.168.7/websocket?userId=${initialState?.currentUser?.userId}`,
+    `ws://${location.hostname}:3000/websocket?userId=${initialState?.currentUser?.userId}`,
     {
       onOpen: () => console.log('web socket connected'),
       onClose: () => console.log('web socket closed'),
-      onMessage(message: MessageEvent<ILocation>) {
+      onMessage(message: MessageEvent<string>) {
         console.log('Receive:', message);
-        setBeacons((pre) => ({
-          ...pre,
-          [message.data.data.deviceId]: message.data.data,
-        }));
+        const res = JSON.parse(message.data) as ILocation;
+        setBeacons((pre) => {
+          return {
+            ...pre,
+            [res.data.deviceId!]: res.data,
+          };
+        });
       },
       onError: (err) => console.log(err),
     },
@@ -126,7 +118,7 @@ export default function Page() {
           map={data?.data?.picture}
           rect={[data?.data?.width, data?.data?.length]}
           stations={gateways?.items}
-          locations={map(beacons, (o) => o)}
+          locations={map(beacons, (o) => o).filter((f) => f.mapId === data?.data?.mapId)}
         />
       </Card>
     </PageContainer>
