@@ -1,9 +1,13 @@
 import { ProFormSelect, ProFormSelectProps } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
+import React from 'react';
 
 type IProps = ProFormSelectProps;
 export function SelectMapSelect(props: IProps) {
-  const { options, loading, initialValue } = useModel('mapModel');
+  const { run, options, loading, initialValue } = useModel('mapModel');
+  React.useEffect(() => {
+    run();
+  }, []);
   return (
     <ProFormSelect
       {...props}

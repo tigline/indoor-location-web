@@ -2,6 +2,7 @@ import { AntdL7Component } from '@/components/map-components/antd-L7-component';
 import { ModalForm } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl, useModel } from '@umijs/max';
 import { Button } from 'antd';
+import React from 'react';
 
 interface IProps {
   record: API.FenceAndMapInfo;
@@ -15,7 +16,10 @@ interface IProps {
  */
 export function ViewFenceModal(props: IProps) {
   const intl = useIntl();
-  const { data } = useModel('mapModel');
+  const { run, data } = useModel('mapModel');
+  React.useEffect(() => {
+    run();
+  }, []);
   const map = data?.find((f) => f.mapId === props.record.mapId);
 
   return (

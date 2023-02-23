@@ -20,9 +20,12 @@ interface IProps {
 }
 export function AddFenceModal(props: IProps) {
   const intl = useIntl();
-  const { data } = useModel('mapModel');
+  const { run, data } = useModel('mapModel');
+  React.useEffect(() => {
+    run();
+  }, []);
   const drawRef = React.useRef<DrawPolygon>();
-  const { run } = useRequest(addFence, {
+  const { run: add } = useRequest(addFence, {
     manual: true,
     fetchKey: (o) => o.mapId,
     formatResult: (res) => res,
@@ -60,7 +63,7 @@ export function AddFenceModal(props: IProps) {
         console.log(points);
         return Promise.all(
           points.map((item) => {
-            return run({ ...values, points: item });
+            return add({ ...values, points: item });
           }),
         ).then((arr) => {
           return arr.reduce((prev, next) => prev && next.code === OK, true);
