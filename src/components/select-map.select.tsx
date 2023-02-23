@@ -1,19 +1,9 @@
-import { listMaps } from '@/services/swagger/xitongguanli';
 import { ProFormSelect, ProFormSelectProps } from '@ant-design/pro-components';
-import { useRequest } from '@umijs/max';
+import { useModel } from '@umijs/max';
 
 type IProps = ProFormSelectProps;
 export function SelectMapSelect(props: IProps) {
-  const { data, loading } = useRequest(listMaps, {
-    // manual: true,
-    formatResult(res) {
-      return (res.data ?? []).map((item) => ({
-        label: item.name,
-        value: item.mapId,
-      }));
-    },
-  });
-
+  const { options, loading, initialValue } = useModel('mapModel');
   return (
     <ProFormSelect
       {...props}
@@ -21,7 +11,8 @@ export function SelectMapSelect(props: IProps) {
       name="mapId"
       style={{ width: 240 }}
       fieldProps={{ loading }}
-      options={data}
+      initialValue={initialValue}
+      options={options}
     ></ProFormSelect>
   );
 }

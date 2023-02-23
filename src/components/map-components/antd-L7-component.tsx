@@ -1,7 +1,16 @@
 import arrow from '@/assets/images/arrow.svg';
 import stationImage from '@/assets/images/station.svg';
-import { green } from '@ant-design/colors';
-import { ILayer, ImageLayer, LineLayer, Mapbox, metersToLngLat, PointLayer, Scene } from '@antv/l7';
+import { gold, green } from '@ant-design/colors';
+import {
+  ILayer,
+  ImageLayer,
+  LineLayer,
+  Mapbox,
+  metersToLngLat,
+  PointLayer,
+  PolygonLayer,
+  Scene,
+} from '@antv/l7';
 import { DrawPolygon } from '@antv/l7-draw';
 import { Card } from 'antd';
 import { isEmpty } from 'lodash';
@@ -13,6 +22,7 @@ interface IProps {
   drawRef?: React.MutableRefObject<DrawPolygon | undefined>;
   stations?: API.GatewayInfo[];
   beacons?: API.AoaDataInfo[];
+  fence?: API.FenceAndMapInfo;
 }
 
 export function AntdL7Component(props: IProps) {
@@ -20,6 +30,7 @@ export function AntdL7Component(props: IProps) {
   // const [polygonDrawer, setPolygonDrawer] = React.useState<DrawPolygon | null>(null);
   // const [coord, setCoorde] = React.useState<string>();
   const [loaded, setLoaded] = React.useState<boolean>();
+  const mapContainer = React.useRef<HTMLDivElement>(null);
   const scene = React.useRef<Scene>();
   const drawer = React.useRef<DrawPolygon>();
   const imageLayer = React.useRef<ImageLayer>();
@@ -27,9 +38,11 @@ export function AntdL7Component(props: IProps) {
   const beaconLayer = React.useRef<ILayer>();
   const beaconPointLayer = React.useRef<ILayer>();
 
+  const fenceLayer = React.useRef<ILayer>();
+
   React.useEffect(() => {
     scene.current = new Scene({
-      id: 'map',
+      id: mapContainer.current!,
       map: new Mapbox({
         style: 'blank',
         center: [0, 0],
@@ -167,10 +180,40 @@ export function AntdL7Component(props: IProps) {
     scene.current?.addLayer(beaconPointLayer.current);
   }, [props.beacons, loaded]);
 
+  React.useEffect(() => {
+    if (!props.fence || isEmpty(props.fence?.points) || !loaded) {
+      return;
+    }
+    if (fenceLayer.current) {
+      scene.current?.removeLayer(fenceLayer.current);
+    }
+    const fences = props.fence.points ?? [];
+    const source = {
+      type: 'FeatureCollection',
+      features: [
+        {
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            type: 'Polygon',
+            coordinates: [fences.map((item) => metersToLngLat([item.x, item.y]))],
+          },
+        },
+      ],
+    };
+
+    fenceLayer.current = new PolygonLayer({ zIndex: 4 })
+      .source(source)
+      .shape('fill')
+      .color(props.fence.type === 'In' ? green[4] : gold[4])
+      .style({ opacity: 0.6 });
+    scene.current?.addLayer(fenceLayer.current);
+  }, [props.fence, loaded]);
+
   return (
     <React.Fragment>
       <Card bodyStyle={{ padding: 0 }}>
-        <div id="map" style={{ minHeight: 600 }}></div>
+        <div id="map" ref={mapContainer} style={{ minHeight: 600 }}></div>
       </Card>
       {/* <Card>
         <div>

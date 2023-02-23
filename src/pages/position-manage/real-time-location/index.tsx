@@ -56,7 +56,7 @@ export default function Page() {
   });
   const { initialState } = useModel('@@initialState');
   const { latestMessage } = useWebSocket(
-    `ws://${location.host}/websocket?userld=${initialState?.currentUser?.userId}`,
+    `ws://${location.host}/websocket?userId=${initialState?.currentUser?.userId}`,
   );
   console.log(latestMessage);
 
