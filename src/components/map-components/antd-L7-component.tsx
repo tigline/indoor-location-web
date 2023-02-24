@@ -19,12 +19,22 @@ import { Card } from 'antd';
 import { isEmpty } from 'lodash';
 import React from 'react';
 
-export function convertMtoL(m: Point, length: number = 0) {
+const scale = 10;
+
+/**
+ * 厘米转经纬度，这里是虚构的CM，对应的是M
+ * @export
+ * @param {Point} m
+ * @param {number} [length=0]
+ * @return {*}
+ */
+export function convertCMtoL(m: Point, length: number = 0) {
+  // FIXME: 需要处理 假的 cm 数据
   const [x, prevY] = m;
   const y = length - prevY;
-  return metersToLngLat([x, y]);
+  return metersToLngLat([x * scale, y * scale]);
 }
-export function convertLtoM(l: Point, length: number = 0) {
+export function convertLtoCM(l: Point, length: number = 0) {
   const [x, y] = lngLatToMeters(l);
   return [x, length - y];
 }
@@ -94,7 +104,7 @@ export function AntdL7Component(props: IProps) {
       });
       // layer.source('https://www.arapahoe.edu/sites/default/files/about-acc/acc-annex-2nd-floor.jpg', {
       // layer.source('https://img-blog.csdnimg.cn/20200616175116543.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTM4MjAxMjE=,size_16,color_FFFFFF,t_70', {
-      const maxRange = metersToLngLat([mapWidth, mapLength]);
+      const maxRange = metersToLngLat([mapWidth * scale, mapLength * scale]);
       imageLayer.current.source(props.map!, {
         parser: { type: 'image', extent: [0, 0, ...maxRange] },
       });
@@ -132,7 +142,7 @@ export function AntdL7Component(props: IProps) {
       stationLayer.current.destroy();
     }
     const source = props.stations?.map((item) => {
-      const [lng, lat] = convertMtoL([item.setX!, item.setY!], mapLength);
+      const [lng, lat] = convertCMtoL([item.setX!, item.setY!], mapLength);
       return { ...item, lng, lat };
     });
     stationLayer.current = new PointLayer({ zIndex: 1 })
@@ -162,7 +172,7 @@ export function AntdL7Component(props: IProps) {
     beaconPointLayer.current = new PointLayer({ zIndex: 3 })
       .source(
         beacons?.map((item) => {
-          const [lng, lat] = convertMtoL([item.posX!, item.posY!], mapLength);
+          const [lng, lat] = convertCMtoL([item.posX!, item.posY!], mapLength);
           return { ...item, lng, lat };
         }),
         {
@@ -178,8 +188,8 @@ export function AntdL7Component(props: IProps) {
       const start = beacons[index];
       const end = beacons[index + 1];
       if (end) {
-        const [lng, lat] = convertMtoL([start.posX!, start.posY!], mapLength);
-        const [lng1, lat1] = convertMtoL([end.posX!, end.posY!], mapLength);
+        const [lng, lat] = convertCMtoL([start.posX!, start.posY!], mapLength);
+        const [lng1, lat1] = convertCMtoL([end.posX!, end.posY!], mapLength);
         source.push({ ...start, lng, lat, lng1, lat1 });
       }
     }
@@ -228,7 +238,7 @@ export function AntdL7Component(props: IProps) {
           properties: {},
           geometry: {
             type: 'Polygon',
-            coordinates: [fences.map((item) => convertMtoL([item.x, item.y], mapLength))],
+            coordinates: [fences.map((item) => convertCMtoL([item.x, item.y], mapLength))],
           },
         },
       ],
@@ -246,10 +256,11 @@ export function AntdL7Component(props: IProps) {
     if (isEmpty(props.locations) || !loaded) {
       return;
     }
-    const source = props.locations?.map((item) => {
-      const [lng, lat] = convertMtoL([item.posX!, item.posY!], mapLength);
-      return { ...item, lng, lat };
-    });
+    const source =
+      props.locations?.map((item) => {
+        const [lng, lat] = convertCMtoL([item.posX!, item.posY!], mapLength);
+        return { ...item, lng, lat };
+      }) ?? [];
     if (!locationLayer.current) {
       // scene.current?.removeLayer(locationLayer.current);
       // locationLayer.current?.destroy();
@@ -263,7 +274,20 @@ export function AntdL7Component(props: IProps) {
         .animate(true);
       scene.current?.addLayer(locationLayer.current);
     } else {
-      locationLayer.current.setData(source);
+      scene.current?.removeLayer(locationLayer.current);
+      locationLayer.current.destroy();
+      locationLayer.current = new PointLayer({ zIndex: 3, layerType: 'fillImage' })
+        .source(source, {
+          parser: { type: 'json', x: 'lng', y: 'lat', name: 'personImage' },
+        })
+        .color(green[3])
+        .size(15)
+        .shape('personImage', ['personImage'])
+        .animate(true);
+      scene.current?.addLayer(locationLayer.current);
+
+      // locationLayer.current.setData(source);
+      // locationLayer.current.setData(source)
       // locationLayer.current.setSource(source ?? []);
     }
     return () => locationLayer.current?.destroy();

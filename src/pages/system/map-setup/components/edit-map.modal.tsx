@@ -93,6 +93,7 @@ export function EditMapModal(props: IProps): JSX.Element {
       <ProFormDigit
         width="lg"
         name="width"
+        initialValue={props.record.width}
         label={intl.formatMessage({
           id: 'pages.system.map-setup.map.width',
           defaultMessage: '实际宽度',
@@ -111,6 +112,7 @@ export function EditMapModal(props: IProps): JSX.Element {
       <ProFormDigit
         width="lg"
         name="length"
+        initialValue={props.record.length}
         label={intl.formatMessage({
           id: 'pages.system.map-setup.map.length',
           defaultMessage: '实际长度',
