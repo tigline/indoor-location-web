@@ -1,4 +1,3 @@
-import { QuestionCircleOutlined } from '@ant-design/icons';
 import { useEmotionCss } from '@ant-design/use-emotion-css';
 import { SelectLang, useModel } from '@umijs/max';
 import React from 'react';
@@ -41,14 +40,14 @@ const GlobalHeaderRight: React.FC = () => {
 
   return (
     <div className={className}>
-      <span
+      {/* <span
         className={actionClassName}
         onClick={() => {
           window.open('https://pro.ant.design/docs/getting-started');
         }}
       >
         <QuestionCircleOutlined />
-      </span>
+      </span> */}
       <Avatar menu />
       <SelectLang className={actionClassName} />
     </div>

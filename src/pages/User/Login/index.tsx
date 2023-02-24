@@ -143,7 +143,7 @@ const Login: React.FC = () => {
         <LoginForm
           contentStyle={{ minWidth: 280, maxWidth: '75vw' }}
           logo={<img alt="logo" src="/logo.svg" />}
-          title="Ant Design"
+          title="室内定位平台"
           subTitle={intl.formatMessage({ id: 'pages.layouts.userLayout.title' })}
           initialValues={{ autoLogin: true }}
           // actions={[

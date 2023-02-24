@@ -1,5 +1,5 @@
 export default {
-  'pages.layouts.userLayout.title': 'Ant Design 是西湖区最具影响力的 Web 设计规范',
+  'pages.layouts.userLayout.title': '室内定位管理平台',
   'pages.login.accountLogin.tab': '账户密码登录',
   'pages.login.accountLogin.errorMessage': '错误的用户名和密码(admin/ant.design)',
   'pages.account.update': '更新用户信息',
@@ -146,7 +146,7 @@ export default {
 
   'pages.system.map-setup.map.name': '地图名称',
   'pages.system.map-setup.map.add': '添加地图',
-  'pages.system.map-setup.map.view': '查看地图',
+  // 'pages.system.map-setup.map.view': '查看地图',
   'pages.system.map-setup.map.edit': '更新地图',
   'pages.system.map-setup.map.name.required.failure': '地图名称必填',
   'pages.system.map-setup.map.remark': '备注',
