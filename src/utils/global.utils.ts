@@ -8,6 +8,11 @@ import moment, { Moment, unitOfTime } from 'moment';
 export const OK = 200;
 
 /**
+ * 请求返回401时表示没有权限
+ */
+export const NO_AUTHOR = 401;
+
+/**
  * 自动生成的接口会多一个header中的参数 Authorization
  * 生成时又不好手动去除，就给它填个 undefined吧
  */
