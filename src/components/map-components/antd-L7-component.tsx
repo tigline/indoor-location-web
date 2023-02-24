@@ -6,8 +6,10 @@ import {
   ILayer,
   ImageLayer,
   LineLayer,
+  lngLatToMeters,
   Mapbox,
   metersToLngLat,
+  Point,
   PointLayer,
   PolygonLayer,
   Scene,
@@ -16,6 +18,17 @@ import { DrawPolygon } from '@antv/l7-draw';
 import { Card } from 'antd';
 import { isEmpty } from 'lodash';
 import React from 'react';
+
+export function convertMtoL(m: Point, length: number = 0) {
+  const [x, prevY] = m;
+  const y = length - prevY;
+  return metersToLngLat([x, y]);
+}
+export function convertLtoM(l: Point, length: number = 0) {
+  const [x, y] = lngLatToMeters(l);
+  return [x, length - y];
+}
+
 interface IProps {
   map?: string;
   rect: [number?, number?];
@@ -76,7 +89,8 @@ export function AntdL7Component(props: IProps) {
         imageLayer.current.destroy();
       }
       imageLayer.current = new ImageLayer({
-        zIndex: -1,
+        zIndex: 0,
+        // layerType: 'fillImage'
       });
       // layer.source('https://www.arapahoe.edu/sites/default/files/about-acc/acc-annex-2nd-floor.jpg', {
       // layer.source('https://img-blog.csdnimg.cn/20200616175116543.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTM4MjAxMjE=,size_16,color_FFFFFF,t_70', {
@@ -118,7 +132,7 @@ export function AntdL7Component(props: IProps) {
       stationLayer.current.destroy();
     }
     const source = props.stations?.map((item) => {
-      const [lng, lat] = metersToLngLat([item.setX!, item.setY!]);
+      const [lng, lat] = convertMtoL([item.setX!, item.setY!], mapLength);
       return { ...item, lng, lat };
     });
     stationLayer.current = new PointLayer({ zIndex: 1 })
@@ -148,7 +162,7 @@ export function AntdL7Component(props: IProps) {
     beaconPointLayer.current = new PointLayer({ zIndex: 3 })
       .source(
         beacons?.map((item) => {
-          const [lng, lat] = metersToLngLat([item.posX!, item.posY!]);
+          const [lng, lat] = convertMtoL([item.posX!, item.posY!], mapLength);
           return { ...item, lng, lat };
         }),
         {
@@ -164,8 +178,8 @@ export function AntdL7Component(props: IProps) {
       const start = beacons[index];
       const end = beacons[index + 1];
       if (end) {
-        const [lng, lat] = metersToLngLat([start.posX!, start.posY!]);
-        const [lng1, lat1] = metersToLngLat([end.posX!, end.posY!]);
+        const [lng, lat] = convertMtoL([start.posX!, start.posY!], mapLength);
+        const [lng1, lat1] = convertMtoL([end.posX!, end.posY!], mapLength);
         source.push({ ...start, lng, lat, lng1, lat1 });
       }
     }
@@ -214,7 +228,7 @@ export function AntdL7Component(props: IProps) {
           properties: {},
           geometry: {
             type: 'Polygon',
-            coordinates: [fences.map((item) => metersToLngLat([item.x, item.y]))],
+            coordinates: [fences.map((item) => convertMtoL([item.x, item.y], mapLength))],
           },
         },
       ],
@@ -233,7 +247,7 @@ export function AntdL7Component(props: IProps) {
       return;
     }
     const source = props.locations?.map((item) => {
-      const [lng, lat] = metersToLngLat([item.posX!, item.posY!]);
+      const [lng, lat] = convertMtoL([item.posX!, item.posY!], mapLength);
       return { ...item, lng, lat };
     });
     if (!locationLayer.current) {
