@@ -176,4 +176,14 @@ export default {
   'pages.system.fence-manage.fence.status': '围栏状态',
   'pages.system.fence-manage.fence.status.disable': '禁用',
   'pages.system.fence-manage.fence.status.enable': '启用',
+
+  'pages.system.warning-manage.board.fence': '标签',
+  'pages.system.warning-manage.board.content': '内容',
+  'pages.system.warning-manage.board.status': '状态',
+  'pages.system.warning-manage.board.Unprocessed': '未处理',
+  'pages.system.warning-manage.board.Processed': '已处理',
+  'pages.system.warning-manage.board.Ignored': '忽略',
+  'pages.system.warning-manage.board.type': '类型',
+  'pages.system.warning-manage.board.deal': '处理警告',
+  'pages.system.warning-manage.board.deal.success': '处理警告成功',
 };

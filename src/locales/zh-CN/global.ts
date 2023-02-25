@@ -14,4 +14,6 @@ export default {
   'app.remove.success': '删除成功',
   'app.unit.m': '米',
   'app.unit.cm': '厘米',
+  'app.createTime': '创建时间',
+  'app.updateTime': '更新时间',
 };

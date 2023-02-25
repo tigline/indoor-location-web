@@ -47,6 +47,17 @@ declare namespace API {
     widthPx?: number;
   };
 
+  type AlarmInfo = {
+    alarmId?: number;
+    content?: string;
+    createTime?: number;
+    deviceId?: string;
+    fenceId?: string;
+    status?: 'Unprocessed' | 'Processed' | 'Ignored';
+    type?: 'In' | 'Out';
+    updateTime?: number;
+  };
+
   type AoaDataInfo = {
     deviceId?: string;
     id?: number;
@@ -55,6 +66,7 @@ declare namespace API {
     posX?: number;
     posY?: number;
     timestamp?: number;
+    type?: 'Equipment' | 'Personnel' | 'Vehicle' | 'Stuff';
   };
 
   type BeaconInfo = {
@@ -84,6 +96,16 @@ declare namespace API {
     buildingId?: string;
     name?: string;
     picture?: string;
+  };
+
+  type dealWithAlarmParams = {
+    alarmId: number;
+    status: 'Unprocessed' | 'Processed' | 'Ignored';
+  };
+
+  type deleteAlarmParams = {
+    /** 需要删除的id数组，以逗号分隔 */
+    alarmIds: number[];
   };
 
   type deleteBeaconParams = {
@@ -185,6 +207,19 @@ declare namespace API {
     type?: 'Equipment' | 'Personnel' | 'Vehicle' | 'Stuff';
   };
 
+  type pageAlarmParams = {
+    deviceId?: string;
+    fenceId?: string;
+    type?: 'In' | 'Out';
+    status?: 'Unprocessed' | 'Processed' | 'Ignored';
+    startTime?: number;
+    endTime?: number;
+    /** 当前页码 */
+    current?: string;
+    /** 每页数量 */
+    size?: string;
+  };
+
   type pageBeaconParams = {
     deviceId?: string;
     name?: string;
@@ -195,6 +230,7 @@ declare namespace API {
   };
 
   type pageFenceParams = {
+    mapId?: string;
     name?: string;
     type?: 'In' | 'Out';
     /** 当前页码 */
@@ -211,6 +247,13 @@ declare namespace API {
     current?: string;
     /** 每页数量 */
     size?: string;
+  };
+
+  type PageResultAlarmInfo = {
+    current?: number;
+    items?: AlarmInfo[];
+    size?: number;
+    total?: number;
   };
 
   type PageResultBeaconInfo = {
@@ -314,6 +357,13 @@ declare namespace API {
     message?: string;
   };
 
+  type RestValuePageResultAlarmInfo = {
+    code?: number;
+    data?: PageResultAlarmInfo;
+    errorDetail?: string;
+    message?: string;
+  };
+
   type RestValuePageResultBeaconInfo = {
     code?: number;
     data?: PageResultBeaconInfo;
@@ -368,6 +418,7 @@ declare namespace API {
   };
 
   type UpdateBeacon = {
+    fenceIds?: string;
     name: string;
     type: 'Equipment' | 'Personnel' | 'Vehicle' | 'Stuff';
   };
