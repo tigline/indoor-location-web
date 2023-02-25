@@ -36,7 +36,7 @@ export function convertCMtoL(m: Point, length: number = 0) {
 }
 export function convertLtoCM(l: Point, length: number = 0) {
   const [x, y] = lngLatToMeters(l);
-  return [x, length - y];
+  return [x / scale, length - y / scale];
 }
 
 interface IProps {
@@ -96,12 +96,9 @@ export function AntdL7Component(props: IProps) {
     if (props.map && loaded && mapWidth && mapLength) {
       if (imageLayer.current) {
         scene.current?.removeLayer(imageLayer.current);
-        imageLayer.current.destroy();
+        // imageLayer.current.destroy();
       }
-      imageLayer.current = new ImageLayer({
-        zIndex: 0,
-        // layerType: 'fillImage'
-      });
+      imageLayer.current = new ImageLayer({ zIndex: -1 });
       // layer.source('https://www.arapahoe.edu/sites/default/files/about-acc/acc-annex-2nd-floor.jpg', {
       // layer.source('https://img-blog.csdnimg.cn/20200616175116543.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTM4MjAxMjE=,size_16,color_FFFFFF,t_70', {
       const maxRange = metersToLngLat([mapWidth * scale, mapLength * scale]);
@@ -115,8 +112,18 @@ export function AntdL7Component(props: IProps) {
   React.useEffect(() => {
     if (scene.current && loaded) {
       drawer.current = new DrawPolygon(scene.current, {
-        distanceOptions: {},
-        areaOptions: {},
+        distanceOptions: {
+          showTotalDistance: false,
+          showDashDistance: true,
+          format: (meters: number) => {
+            if (meters >= 1000) {
+              return +(meters / scale / 1000).toFixed(2) + 'km';
+            } else {
+              return +(meters / scale).toFixed(2) + 'm';
+            }
+          },
+        },
+        // areaOptions: {},
         liveUpdate: true,
       });
       if (props.drawRef) {
@@ -175,9 +182,7 @@ export function AntdL7Component(props: IProps) {
           const [lng, lat] = convertCMtoL([item.posX!, item.posY!], mapLength);
           return { ...item, lng, lat };
         }),
-        {
-          parser: { type: 'json', x: 'lng', y: 'lat', name: 'name' },
-        },
+        { parser: { type: 'json', x: 'lng', y: 'lat', name: 'name' } },
       )
       .shape('circle')
       .color(green[3])
@@ -225,10 +230,6 @@ export function AntdL7Component(props: IProps) {
     if (!props.fence || isEmpty(props.fence?.points) || !loaded) {
       return;
     }
-    if (fenceLayer.current) {
-      scene.current?.removeLayer(fenceLayer.current);
-      fenceLayer.current?.destroy();
-    }
     const fences = props.fence.points ?? [];
     const source = {
       type: 'FeatureCollection',
@@ -244,53 +245,50 @@ export function AntdL7Component(props: IProps) {
       ],
     };
 
-    fenceLayer.current = new PolygonLayer({ zIndex: 4 })
-      .source(source)
-      .shape('fill')
-      .color(props.fence.type === 'In' ? green[4] : gold[4])
-      .style({ opacity: 0.6 });
-    scene.current?.addLayer(fenceLayer.current);
+    if (!fenceLayer.current) {
+      fenceLayer.current = new PolygonLayer({ zIndex: 4 })
+        .source(source)
+        .shape('fill')
+        .color(props.fence.type === 'In' ? green[4] : gold[4])
+        .style({ opacity: 0.6 });
+      scene.current?.addLayer(fenceLayer.current);
+      console.log('fenceLayer.current', fenceLayer.current);
+    } else {
+      fenceLayer.current.setData(source);
+    }
   }, [props.fence, loaded]);
 
   React.useEffect(() => {
     if (isEmpty(props.locations) || !loaded) {
       return;
     }
-    const source =
-      props.locations?.map((item) => {
-        const [lng, lat] = convertCMtoL([item.posX!, item.posY!], mapLength);
-        return { ...item, lng, lat };
-      }) ?? [];
+    const coordinates =
+      props.locations?.map((item) => convertCMtoL([item.posX!, item.posY!], mapLength)) ?? [];
+
+    const source = {
+      type: 'FeatureCollection',
+      features: [
+        {
+          type: 'Feature',
+          properties: {},
+          geometry: { type: 'Polygon', coordinates: [coordinates] },
+        },
+      ],
+    };
     if (!locationLayer.current) {
-      // scene.current?.removeLayer(locationLayer.current);
-      // locationLayer.current?.destroy();
       locationLayer.current = new PointLayer({ zIndex: 3, layerType: 'fillImage' })
-        .source(source, {
-          parser: { type: 'json', x: 'lng', y: 'lat', name: 'personImage' },
-        })
+        .source(source)
         .color(green[3])
         .size(15)
         .shape('personImage', ['personImage'])
         .animate(true);
       scene.current?.addLayer(locationLayer.current);
     } else {
-      scene.current?.removeLayer(locationLayer.current);
-      locationLayer.current.destroy();
-      locationLayer.current = new PointLayer({ zIndex: 3, layerType: 'fillImage' })
-        .source(source, {
-          parser: { type: 'json', x: 'lng', y: 'lat', name: 'personImage' },
-        })
-        .color(green[3])
-        .size(15)
-        .shape('personImage', ['personImage'])
-        .animate(true);
-      scene.current?.addLayer(locationLayer.current);
-
-      // locationLayer.current.setData(source);
-      // locationLayer.current.setData(source)
-      // locationLayer.current.setSource(source ?? []);
+      locationLayer.current.setData(source);
     }
-    return () => locationLayer.current?.destroy();
+    return () => {
+      // locationLayer.current?.destroy();
+    };
   }, [props.locations, loaded]);
 
   return (

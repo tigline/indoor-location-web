@@ -1,4 +1,4 @@
-import { AntdL7Component } from '@/components/map-components/antd-L7-component';
+import { AntdL7Component, convertLtoCM } from '@/components/map-components/antd-L7-component';
 import { SelectMapSelect } from '@/components/select-map.select';
 import { addFence } from '@/services/swagger/xitongguanli';
 import { OK } from '@/utils/global.utils';
@@ -9,7 +9,6 @@ import {
   ProFormSelect,
   ProFormText,
 } from '@ant-design/pro-components';
-import { lngLatToMeters } from '@antv/l7';
 import { DrawPolygon } from '@antv/l7-draw';
 import { useIntl, useModel, useRequest } from '@umijs/max';
 import { Button } from 'antd';
@@ -52,11 +51,13 @@ export function AddFenceModal(props: IProps) {
       }
       onFinish={(values) => {
         const polygons = drawRef.current?.getPolygonData();
+        const map = data?.find((s) => s.mapId === values.mapId);
         const points =
           polygons?.map((item) => {
             const coordinate = item.geometry.coordinates?.[0];
             return coordinate.map((v) => {
-              const [x, y] = lngLatToMeters(v);
+              const [lng, lat] = v ?? [];
+              const [x, y] = convertLtoCM([lng, lat], map?.length);
               return { x, y };
             });
           }) ?? [];

@@ -66,7 +66,7 @@ export default function Page() {
   //   `ws://${location.host}/websocket?userId=${initialState?.currentUser?.userId}`,
   // );
   const {} = useWebSocket(
-    `ws://${location.hostname}/websocket?userId=${initialState?.currentUser?.userId}`,
+    `ws://120.78.168.7/websocket?userId=${initialState?.currentUser?.userId}`,
     {
       onOpen: () => console.log('web socket connected'),
       onClose: () => console.log('web socket closed'),
