@@ -26,7 +26,7 @@ export default function Page() {
         defaultMessage: '名称',
       }),
       dataIndex: 'typeName',
-      search: false,
+      // search: false,
     },
     {
       title: intl.formatMessage({

@@ -104,7 +104,6 @@ export default function Page() {
       title: intl.formatMessage({ id: 'app.createTime', defaultMessage: '创建时间' }),
       dataIndex: 'createTime',
       valueType: 'dateTimeRange',
-      proFieldProps: {},
       render(_, record) {
         return fmt(record.createTime);
       },

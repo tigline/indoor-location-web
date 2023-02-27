@@ -2,7 +2,7 @@ import { pageThing } from '@/services/swagger/wupinguanli';
 import { fmtPage } from '@/utils/global.utils';
 import { PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
 import { useIntl } from '@umijs/max';
-import { AddGoodsTypeModal } from '../goods-type/components/add-goods-type.modal';
+import { AddGoodsModal } from './components/add-goods.modal';
 
 export default function Page() {
   const intl = useIntl();
@@ -57,7 +57,7 @@ export default function Page() {
             fmtPage(res),
           );
         }}
-        toolBarRender={(action) => [<AddGoodsTypeModal key="add" refresh={action?.reload} />]}
+        toolBarRender={(action) => [<AddGoodsModal key="add" refresh={action?.reload} />]}
       ></ProTable>
     </PageContainer>
   );

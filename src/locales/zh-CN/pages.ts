@@ -140,6 +140,7 @@ export default {
   'pages.goods-manage.goods.type.add': '添加物品类型',
 
   'pages.goods-manage.goods.info.name': '名称',
+  'pages.goods-manage.goods.info.add': '添加物品',
   'pages.goods-manage.goods.info.type': '物品类型',
   'pages.goods-manage.goods.info.type.required.failure': '请输入物品类型',
   'pages.goods-manage.goods.info.icon': '图标',
