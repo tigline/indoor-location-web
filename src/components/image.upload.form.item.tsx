@@ -34,6 +34,6 @@ export function ImageUploadFormItem(props: ProFormUploadButtonProps) {
           // }
         },
       }}
-    ></ProFormUploadButton>
+    />
   );
 }

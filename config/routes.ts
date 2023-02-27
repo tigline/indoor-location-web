@@ -90,6 +90,27 @@ export default [
     ],
   },
   {
+    path: '/goods-manage',
+    name: 'goods-manage',
+    icon: 'hdd',
+    routes: [
+      {
+        path: '/goods-manage',
+        redirect: '/goods-manage/goods-type',
+      },
+      {
+        path: '/goods-manage/goods-type',
+        name: 'goods-type',
+        component: './goods-manage/goods-type',
+      },
+      {
+        path: '/goods-manage/goods-info',
+        name: 'goods-info',
+        component: './goods-manage/goods-info',
+      },
+    ],
+  },
+  {
     path: '/analyze',
     name: 'analyze',
     icon: 'lineChart',

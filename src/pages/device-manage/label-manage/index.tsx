@@ -5,6 +5,7 @@ import { FormattedMessage, useIntl, useRequest } from '@umijs/max';
 import { Button } from 'antd';
 import React from 'react';
 import { AddLabelModal } from './components/add-label.modal';
+import { EditLabelModal } from './components/edit-label.modal';
 
 export default function Page() {
   const actionRef = React.useRef<ActionType>();
@@ -116,11 +117,10 @@ export default function Page() {
       key: 'option',
       render: (_, record, __, action) => (
         <Button.Group>
-          <Button type="link">
-            <FormattedMessage id="app.copy" defaultMessage="复制" />
-          </Button>
+          <EditLabelModal record={record} refresh={action?.reload} />
           <Button
             type="link"
+            size="small"
             disabled={!record.deviceId}
             onClick={() => remove({ deviceId: record.deviceId! }).then(() => action?.reload())}
             loading={fetches?.[record.deviceId!]?.loading}

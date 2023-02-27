@@ -22,6 +22,10 @@ export default {
   'menu.device-manage.base-station': '基站管理',
   'menu.device-manage.label-manage': '标签管理',
 
+  'menu.goods-manage': '物品管理',
+  'menu.goods-manage.goods-type': '物品类型',
+  'menu.goods-manage.goods-info': '物品信息',
+
   'menu.analyze': '数据分析',
   'menu.analyze.heatmap-analyze': '热图分析',
   'menu.analyze.area-analyze': '区域分析',

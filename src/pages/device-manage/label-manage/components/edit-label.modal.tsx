@@ -1,12 +1,13 @@
-import { addBeacon } from '@/services/swagger/shebeiguanli';
+import { updateBeacon } from '@/services/swagger/shebeiguanli';
+import { pageFence } from '@/services/swagger/xitongguanli';
 import { OK } from '@/utils/global.utils';
-import { PlusOutlined } from '@ant-design/icons';
 import { ModalForm, ProFormSelect, ProFormText } from '@ant-design/pro-components';
-import { useIntl } from '@umijs/max';
+import { FormattedMessage, useIntl, useRequest } from '@umijs/max';
 import { Button, Form, notification } from 'antd';
-import { FormattedMessage } from 'umi';
+import React from 'react';
 interface IProps {
   // children: JSX.Element;
+  record: API.BeaconInfo;
   refresh?: () => void;
 }
 /**
@@ -16,42 +17,56 @@ interface IProps {
  * @param {IProps} props
  * @return {JSX.Element}
  */
-export function AddLabelModal(props: IProps): JSX.Element {
+export function EditLabelModal(props: IProps): JSX.Element {
   const [form] = Form.useForm();
   const intl = useIntl();
-
+  const { run, data } = useRequest(pageFence, {
+    manual: true,
+    formatResult(res) {
+      return res.data?.items?.map((item) => ({
+        label: item.name,
+        value: item.fenceId,
+      }));
+    },
+  });
+  React.useEffect(() => {
+    run({ current: `1`, size: `100` });
+  }, []);
   return (
-    <ModalForm<API.AddBeaconInfo>
-      title={<FormattedMessage id="app.action" defaultMessage="新建" />}
+    <ModalForm<API.UpdateBeacon>
+      title={<FormattedMessage id="app.edit" defaultMessage="编辑" />}
       layout="horizontal"
       form={form}
       labelCol={{ xs: 6 }}
       wrapperCol={{ xs: 16 }}
       width={550}
-      onFinish={(values) => {
-        return addBeacon({ ...values, deviceId: values.mac! }).then((res) => {
-          props.refresh?.();
+      onFinish={({ name, type, fenceIds }) => {
+        return updateBeacon(
+          { deviceId: props.record.deviceId! },
+          { name: name!, type, fenceIds },
+        ).then((res) => {
           if (res.code === OK) {
             notification.success({
-              message: intl.formatMessage({ id: 'app.add.success', defaultMessage: '新建成功' }),
+              message: intl.formatMessage({ id: 'app.edit.success', defaultMessage: '更新成功' }),
             });
           }
+          props.refresh?.();
           return res.code === OK;
         });
       }}
       trigger={
-        <Button type="primary">
-          <PlusOutlined />
+        <Button type="link" size="small">
           {intl.formatMessage({
-            id: 'pages.device-manage.label.device.add',
-            defaultMessage: '新建标签',
+            id: 'pages.device-manage.label.device.edit',
+            defaultMessage: '更新标签',
           })}
         </Button>
       }
     >
       <ProFormText
         width="lg"
-        name="mac"
+        name="name"
+        initialValue={props.record.mac}
         label={intl.formatMessage({
           id: 'pages.device-manage.label.device.mac',
           defaultMessage: '物理地址',
@@ -76,7 +91,7 @@ export function AddLabelModal(props: IProps): JSX.Element {
       <ProFormSelect
         name="type"
         label={intl.formatMessage({ id: 'pages.device-manage.label.type', defaultMessage: '类型' })}
-        initialValue={'Equipment'}
+        initialValue={props.record.type}
         valueEnum={{
           Equipment: intl.formatMessage({
             id: 'pages.device-manage.label.type.equipment',
@@ -104,7 +119,16 @@ export function AddLabelModal(props: IProps): JSX.Element {
             }),
           },
         ]}
-      ></ProFormSelect>
+      />
+      <ProFormSelect
+        name="fenceIds"
+        label={intl.formatMessage({
+          id: 'pages.device-manage.label.device.fence',
+          defaultMessage: '绑定围栏',
+        })}
+        options={data}
+        // mode="multiple"
+      />
     </ModalForm>
   );
 }

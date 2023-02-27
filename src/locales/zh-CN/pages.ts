@@ -107,6 +107,7 @@ export default {
   'pages.device-manage.base-station.device.status.offline': '离线',
 
   'pages.device-manage.label.device.add': '新建标签',
+  'pages.device-manage.label.device.edit': '更新标签',
   'pages.device-manage.label.device.bound': '绑定',
   'pages.device-manage.label.device.unbound': '未绑定',
   'pages.device-manage.label.device.equipment': '装备',
@@ -124,6 +125,7 @@ export default {
   'pages.device-manage.label.device.map': '地图',
   'pages.device-manage.label.device.name': '设置名称',
   'pages.device-manage.label.device.productName': '产品名称',
+  'pages.device-manage.label.device.fence': '绑定围栏',
 
   'pages.device-manage.label.type': '类型',
   'pages.device-manage.label.type.required': '类型',
@@ -132,6 +134,17 @@ export default {
   'pages.device-manage.label.type.personnel': '人员',
   'pages.device-manage.label.type.vehicle': '工具',
   'pages.device-manage.label.type.stuff': '材料',
+
+  'pages.goods-manage.goods.type.name': '类型名称',
+  'pages.goods-manage.goods.type.icon': '类型图标',
+  'pages.goods-manage.goods.type.add': '添加物品类型',
+
+  'pages.goods-manage.goods.info.name': '名称',
+  'pages.goods-manage.goods.info.type': '物品类型',
+  'pages.goods-manage.goods.info.type.required.failure': '请输入物品类型',
+  'pages.goods-manage.goods.info.icon': '图标',
+  'pages.goods-manage.goods.info.label': '绑定标签',
+  'pages.goods-manage.goods.info.deviceId': '设备编码',
 
   'pages.system.map-setup': '地图设置',
   'pages.system.map-setup.building.name': '建筑名',
