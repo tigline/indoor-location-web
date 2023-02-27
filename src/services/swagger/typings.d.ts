@@ -47,6 +47,18 @@ declare namespace API {
     widthPx?: number;
   };
 
+  type AddOrUpdateThing = {
+    name?: string;
+    picture?: string;
+    tag?: string;
+    typeId?: number;
+  };
+
+  type AddOrUpdateThingType = {
+    picture?: string;
+    typeName: string;
+  };
+
   type AlarmInfo = {
     alarmId?: number;
     content?: string;
@@ -126,6 +138,14 @@ declare namespace API {
 
   type deleteMapParams = {
     mapId: string;
+  };
+
+  type deleteThingParams = {
+    thingId: number;
+  };
+
+  type deleteThingTypeParams = {
+    typeId: number;
   };
 
   type FenceAndMapInfo = {
@@ -277,11 +297,39 @@ declare namespace API {
     total?: number;
   };
 
+  type PageResultThingInfo = {
+    current?: number;
+    items?: ThingInfo[];
+    size?: number;
+    total?: number;
+  };
+
+  type PageResultThingTypeInfo = {
+    current?: number;
+    items?: ThingTypeInfo[];
+    size?: number;
+    total?: number;
+  };
+
   type PageResultUserInfo = {
     current?: number;
     items?: UserInfo[];
     size?: number;
     total?: number;
+  };
+
+  type pageThingParams = {
+    /** 当前页码 */
+    current?: string;
+    /** 每页数量 */
+    size?: string;
+  };
+
+  type pageThingTypeParams = {
+    /** 当前页码 */
+    current?: string;
+    /** 每页数量 */
+    size?: string;
   };
 
   type pageUserParams = {
@@ -385,6 +433,20 @@ declare namespace API {
     message?: string;
   };
 
+  type RestValuePageResultThingInfo = {
+    code?: number;
+    data?: PageResultThingInfo;
+    errorDetail?: string;
+    message?: string;
+  };
+
+  type RestValuePageResultThingTypeInfo = {
+    code?: number;
+    data?: PageResultThingTypeInfo;
+    errorDetail?: string;
+    message?: string;
+  };
+
   type RestValuePageResultUserInfo = {
     code?: number;
     data?: PageResultUserInfo;
@@ -410,11 +472,31 @@ declare namespace API {
     fenceId: string;
   };
 
+  type ThingInfo = {
+    name?: string;
+    picture?: string;
+    tag?: string;
+    thingId?: number;
+    typeId?: number;
+  };
+
+  type ThingTypeInfo = {
+    createTime?: number;
+    picture?: string;
+    typeId?: number;
+    typeName?: string;
+  };
+
   type TokenInfo = {
     accessExpired?: number;
     accessToken?: string;
     refreshExpired?: number;
     refreshToken?: string;
+  };
+
+  type unbindTagParams = {
+    thingId: number;
+    tag: string;
   };
 
   type UpdateBeacon = {
@@ -450,6 +532,14 @@ declare namespace API {
 
   type updateMapParams = {
     mapId: string;
+  };
+
+  type updateThingParams = {
+    thingId: number;
+  };
+
+  type updateThingTypeParams = {
+    typeId: number;
   };
 
   type UpdateUserInfo = {

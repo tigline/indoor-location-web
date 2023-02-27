@@ -5,6 +5,7 @@
 import * as dengluxiangguan from './dengluxiangguan';
 import * as gaojingguanli from './gaojingguanli';
 import * as shebeiguanli from './shebeiguanli';
+import * as wupinguanli from './wupinguanli';
 import * as xitongguanli from './xitongguanli';
 import * as yonghuguanli from './yonghuguanli';
 export default {
@@ -12,5 +13,6 @@ export default {
   shebeiguanli,
   xitongguanli,
   dengluxiangguan,
+  wupinguanli,
   yonghuguanli,
 };
