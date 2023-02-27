@@ -4,6 +4,7 @@ import { PageContainer, ProColumns, ProTable } from '@ant-design/pro-components'
 import { FormattedMessage, useIntl, useRequest } from '@umijs/max';
 import { Button } from 'antd';
 import { AddFenceModal } from './components/add-fence.modal';
+import { SwitchFenceButton } from './components/switch-fence.button';
 import { ViewFenceModal } from './components/view-fence.modal';
 
 export default function Page() {
@@ -91,6 +92,7 @@ export default function Page() {
       key: 'option',
       render: (_, record, __, action) => (
         <Button.Group>
+          <SwitchFenceButton record={record} refresh={action?.reload} />
           <ViewFenceModal record={record} />
           <Button
             type="link"
