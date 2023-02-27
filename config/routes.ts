@@ -92,7 +92,7 @@ export default [
   {
     path: '/goods-manage',
     name: 'goods-manage',
-    icon: 'hdd',
+    icon: 'inbox',
     routes: [
       {
         path: '/goods-manage',

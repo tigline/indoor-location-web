@@ -1,5 +1,5 @@
 import { deleteGateway, pageGateway } from '@/services/swagger/shebeiguanli';
-import { fmt, OK } from '@/utils/global.utils';
+import { fmt, fmtPage } from '@/utils/global.utils';
 import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl, useRequest } from '@umijs/max';
 import { Button, notification, Tag } from 'antd';
@@ -130,15 +130,7 @@ export default function Page() {
         request={({ current, pageSize, ...rest }) => {
           return pageGateway({ current: '' + current, size: '' + pageSize, ...rest }).then(
             (res) => {
-              return {
-                data: res.data?.items?.map((item) => {
-                  // 后台保存的是10位的时间戳，前端使用的13位的时间戳，这里转换一下
-                  const updateTime = item.updateTime ? item.updateTime * 1000 : undefined;
-                  return { ...item, updateTime };
-                }),
-                total: res.data?.total,
-                success: res.code === OK,
-              };
+              return fmtPage(res);
             },
           );
         }}

@@ -236,6 +236,28 @@ export function fmtDate(range: any, format: unitOfTime.StartOf = 'ms'): any {
   }
   return moment.isMoment(range) ? range.valueOf() : range;
 }
+export function fmtPage<T = any>(res: {
+  code?: number;
+  data?: {
+    current?: number;
+    items?: T[];
+    size?: number;
+    total?: number;
+  };
+  errorDetail?: string;
+  message?: string;
+}) {
+  return {
+    data: res.data?.items?.map((item: any) => {
+      // 后台保存的是10位的时间戳，前端使用的13位的时间戳，这里转换一下
+      const updateTime = item.updateTime ? item.updateTime * 1000 : undefined;
+      const createTime = item.createTime ? item.createTime * 1000 : undefined;
+      return { ...item, updateTime, createTime };
+    }),
+    total: res.data?.total,
+    success: res.code === OK,
+  };
+}
 
 /**
  * 将文件转换为base64

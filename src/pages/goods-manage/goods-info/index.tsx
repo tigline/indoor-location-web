@@ -1,5 +1,5 @@
 import { pageThing } from '@/services/swagger/wupinguanli';
-import { OK } from '@/utils/global.utils';
+import { fmtPage } from '@/utils/global.utils';
 import { PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
 import { useIntl } from '@umijs/max';
 import { AddGoodsTypeModal } from '../goods-type/components/add-goods-type.modal';
@@ -53,17 +53,9 @@ export default function Page() {
         columns={columns}
         request={(param) => {
           const { current, pageSize, ...rest } = param;
-          return pageThing({
-            current: current + '',
-            size: pageSize + '',
-            ...rest,
-          }).then((res) => {
-            return {
-              data: res.data?.items,
-              total: res.data?.total,
-              success: res.code === OK,
-            };
-          });
+          return pageThing({ current: current + '', size: pageSize + '', ...rest }).then((res) =>
+            fmtPage(res),
+          );
         }}
         toolBarRender={(action) => [<AddGoodsTypeModal key="add" refresh={action?.reload} />]}
       ></ProTable>

@@ -1,5 +1,5 @@
 import { deleteBeacon, pageBeacon } from '@/services/swagger/shebeiguanli';
-import { OK } from '@/utils/global.utils';
+import { fmtPage } from '@/utils/global.utils';
 import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl, useRequest } from '@umijs/max';
 import { Button } from 'antd';
@@ -137,21 +137,9 @@ export default function Page() {
         actionRef={actionRef}
         columns={columns}
         request={({ current, pageSize, ...rest }) =>
-          pageBeacon({
-            current: '' + current,
-            size: '' + pageSize,
-            ...rest,
-          }).then((res) => {
-            return {
-              data: res.data?.items?.map((item) => {
-                // 后台保存的是10位的时间戳，前端使用的13位的时间戳，这里转换一下
-                const updateTime = item.updateTime ? item.updateTime * 1000 : undefined;
-                return { ...item, updateTime };
-              }),
-              total: res.data?.total,
-              success: res.code === OK,
-            };
-          })
+          pageBeacon({ current: '' + current, size: '' + pageSize, ...rest }).then((res) =>
+            fmtPage(res),
+          )
         }
         toolBarRender={(action) => [
           <AddLabelModal key="add" refresh={action?.reload} />,

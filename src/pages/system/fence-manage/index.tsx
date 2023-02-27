@@ -1,5 +1,5 @@
 import { deleteFence, pageFence } from '@/services/swagger/xitongguanli';
-import { OK } from '@/utils/global.utils';
+import { fmtPage } from '@/utils/global.utils';
 import { PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl, useRequest } from '@umijs/max';
 import { Button } from 'antd';
@@ -30,13 +30,7 @@ export default function Page() {
   });
   const { run } = useRequest(pageFence, {
     manual: true,
-    formatResult(res) {
-      return {
-        data: res.data?.items,
-        total: res.data?.total,
-        success: res.code === OK,
-      };
-    },
+    formatResult: (res) => fmtPage(res),
   });
   const columns: ProColumns<API.FenceAndMapInfo>[] = [
     {
@@ -116,11 +110,7 @@ export default function Page() {
         ]}
         request={(param) => {
           const { current, pageSize, ...rest } = param;
-          return run({
-            current: current + '',
-            size: pageSize + '',
-            ...rest,
-          });
+          return run({ current: current + '', size: pageSize + '', ...rest });
         }}
       ></ProTable>
     </PageContainer>
