@@ -1,5 +1,6 @@
 import { AntdL7Component } from '@/components/map-components/antd-L7-component';
 import { SelectMapSelect } from '@/components/select-map.select';
+import { ILocation } from '@/models/messageSocket';
 import { pageGateway } from '@/services/swagger/shebeiguanli';
 import { getMap } from '@/services/swagger/xitongguanli';
 import { fmt } from '@/utils/global.utils';
@@ -12,7 +13,8 @@ import {
   Statistic,
 } from '@ant-design/pro-components';
 import { useIntl, useModel, useRequest } from '@umijs/max';
-import { useInterval, useWebSocket } from 'ahooks';
+import { useInterval } from 'ahooks';
+import { ReadyState } from 'ahooks/lib/useWebSocket';
 import { Card, Col, Row, Typography } from 'antd';
 import { map } from 'lodash';
 import React from 'react';
@@ -39,11 +41,6 @@ export function StatisticOfNow() {
   );
 }
 
-export interface ILocation {
-  type: string;
-  data: API.AoaDataInfo;
-}
-
 /**
  * 实时位置页面
  *
@@ -54,35 +51,30 @@ export default function Page() {
   // const intl = useIntl();
   const formRef = React.useRef<ProFormInstance<{ mapId: string[] }>>(null);
   const [beacons, setBeacons] = React.useState<Record<string, API.AoaDataInfo>>();
-  const { run, data } = useRequest(getMap, {
+  const { run, data: mapInfo } = useRequest(getMap, {
     manual: true,
     formatResult: (res) => res,
   });
   const { run: query, data: gateways } = useRequest(pageGateway, {
     manual: true,
   });
-  const { initialState } = useModel('@@initialState');
-  // const { latestMessage } = useWebSocket(
-  //   `ws://${location.host}/websocket?userId=${initialState?.currentUser?.userId}`,
-  // );
-  const {} = useWebSocket(
-    `ws://120.78.168.7/websocket?userId=${initialState?.currentUser?.userId}`,
-    {
-      onOpen: () => console.log('web socket connected'),
-      onClose: () => console.log('web socket closed'),
-      onMessage(message: MessageEvent<string>) {
-        console.log('Receive:', message);
-        const res = JSON.parse(message.data) as ILocation;
+  const { readyState, connect, data } = useModel('messageSocket');
+  React.useEffect(() => {
+    if (ReadyState.Closed === readyState) {
+      connect?.();
+    }
+  }, [readyState]);
+  React.useEffect(() => {
+    if (data) {
+      const res = JSON.parse(data) as ILocation;
+      // 这里只处理'定位数据'
+      if (res.type === 'AOAData') {
         setBeacons((pre) => {
-          return {
-            ...pre,
-            [res.data.deviceId!]: res.data,
-          };
+          return { ...pre, [res.data.deviceId!]: res.data as API.AoaDataInfo };
         });
-      },
-      onError: (err) => console.log(err),
-    },
-  );
+      }
+    }
+  }, [data]);
 
   function submit(mapId: string) {
     query({ mapId: mapId });
@@ -115,10 +107,10 @@ export default function Page() {
       </ProCard>
       <Card>
         <AntdL7Component
-          map={data?.data?.picture}
-          rect={[data?.data?.width, data?.data?.length]}
+          map={mapInfo?.data?.picture}
+          rect={[mapInfo?.data?.width, mapInfo?.data?.length]}
           stations={gateways?.items}
-          locations={map(beacons, (o) => o).filter((f) => f.mapId === data?.data?.mapId)}
+          locations={map(beacons, (o) => o).filter((f) => f.mapId === mapInfo?.data?.mapId)}
         />
       </Card>
     </PageContainer>

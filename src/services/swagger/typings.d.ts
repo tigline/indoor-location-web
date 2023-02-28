@@ -65,6 +65,9 @@ declare namespace API {
     createTime?: number;
     deviceId?: string;
     fenceId?: string;
+    mapId?: string;
+    name?: string;
+    point?: Point;
     status?: 'Unprocessed' | 'Processed' | 'Ignored';
     type?: 'In' | 'Out';
     updateTime?: number;
@@ -319,6 +322,7 @@ declare namespace API {
   };
 
   type pageThingParams = {
+    name?: string;
     /** 当前页码 */
     current?: string;
     /** 每页数量 */

@@ -1,6 +1,7 @@
 import arrow from '@/assets/images/arrow.svg';
 import person from '@/assets/images/person.svg';
 import stationImage from '@/assets/images/station.svg';
+import warning from '@/assets/images/warning.svg';
 import { gold, green } from '@ant-design/colors';
 import {
   ILayer,
@@ -44,10 +45,36 @@ interface IProps {
   rect: [number?, number?];
   drawEnable?: boolean;
   drawRef?: React.MutableRefObject<DrawPolygon | undefined>;
+  /**
+   * 基站内容
+   *
+   * @type {API.GatewayInfo[]}
+   * @memberof IProps
+   */
   stations?: API.GatewayInfo[];
+  /**
+   * 单个标签内容
+   *
+   * @type {API.AoaDataInfo[]}
+   * @memberof IProps
+   */
   locations?: API.AoaDataInfo[];
+  /**
+   * 轨迹内容
+   *
+   * @type {API.AoaDataInfo[]}
+   * @memberof IProps
+   */
   beacons?: API.AoaDataInfo[];
+  /**
+   * 围栏内容
+   *
+   * @type {API.FenceAndMapInfo}
+   * @memberof IProps
+   */
   fence?: API.FenceAndMapInfo;
+
+  alarms?: API.AlarmInfo[];
 }
 
 export function AntdL7Component(props: IProps) {
@@ -71,6 +98,8 @@ export function AntdL7Component(props: IProps) {
   const beaconPointLayer = React.useRef<ILayer>();
   /** @type {*} 实时位置 ‘点’图层 */
   const locationLayer = React.useRef<ILayer>();
+  /** @type {*} 告警位置 ‘点’图层*/
+  const alarmLayer = React.useRef<ILayer>();
   /** @type {*} 展示围栏 ‘面’ 图层 */
   const fenceLayer = React.useRef<ILayer>();
 
@@ -90,6 +119,7 @@ export function AntdL7Component(props: IProps) {
     scene.current.addImage('stationIcon', stationImage);
     scene.current.addImage('arrow', arrow);
     scene.current.addImage('personImage', person);
+    scene.current.addImage('warning', warning);
     scene.current?.on('loaded', () => setLoaded(true));
   }, []);
   React.useEffect(() => {
@@ -290,6 +320,39 @@ export function AntdL7Component(props: IProps) {
       // locationLayer.current?.destroy();
     };
   }, [props.locations, loaded]);
+  // 处理告警信息
+  React.useEffect(() => {
+    if (isEmpty(props.alarms) || !loaded) {
+      return;
+    }
+    const coordinates =
+      props.alarms?.map((item) => convertCMtoL([item.point!.x!, item.point!.y!], mapLength)) ?? [];
+
+    const source = {
+      type: 'FeatureCollection',
+      features: [
+        {
+          type: 'Feature',
+          properties: {},
+          geometry: { type: 'Polygon', coordinates: [coordinates] },
+        },
+      ],
+    };
+    if (!alarmLayer.current) {
+      alarmLayer.current = new PointLayer({ zIndex: 3, layerType: 'fillImage' })
+        .source(source)
+        .color(green[3])
+        .size(15)
+        .shape('warning', ['warning'])
+        .animate(true);
+      scene.current?.addLayer(alarmLayer.current);
+    } else {
+      alarmLayer.current.setData(source);
+    }
+    return () => {
+      // locationLayer.current?.destroy();
+    };
+  }, [props.alarms, loaded]);
 
   return (
     <React.Fragment>

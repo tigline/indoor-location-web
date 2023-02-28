@@ -1,12 +1,70 @@
-import { dealWithAlarm, deleteAlarm, pageAlarm } from '@/services/swagger/gaojingguanli';
-import { fmt, OK } from '@/utils/global.utils';
+import { ILocation } from '@/models/messageSocket';
+import { deleteAlarm, pageAlarm } from '@/services/swagger/gaojingguanli';
+import { fmt, fmtPage, OK } from '@/utils/global.utils';
 import { PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
-import { FormattedMessage, useIntl, useRequest } from '@umijs/max';
-import { Button, Dropdown, notification } from 'antd';
+import { FormattedMessage, useIntl, useModel, useRequest } from '@umijs/max';
+import { ReadyState } from 'ahooks/lib/useWebSocket';
+import { Button, notification, Space } from 'antd';
 import * as dayjs from 'dayjs';
+import React from 'react';
+import { v4 } from 'uuid';
+import { DealAlarmModal } from './components/deal-alarm.modal';
 
 export default function Page() {
   const intl = useIntl();
+  const [open, setOpen] = React.useState<boolean>(false);
+  const [selected, setSelected] = React.useState<API.AlarmInfo>();
+  const [api, contextHolder] = notification.useNotification();
+  const { readyState, connect, data } = useModel('messageSocket');
+  React.useEffect(() => {
+    if (ReadyState.Closed === readyState) {
+      connect?.();
+    }
+  }, [readyState]);
+  React.useEffect(() => {
+    const key = v4();
+    if (data) {
+      const res = JSON.parse(data) as ILocation;
+      if (res.type === 'Alarm') {
+        const alarm = res.data as API.AlarmInfo;
+        api.warning({
+          message: intl.formatMessage({
+            id: 'pages.system.warning-manage.board.title',
+            defaultMessage: '围栏告警',
+          }),
+          key,
+          description: alarm.content,
+          // description: 'hello 非法闯入',
+          btn: (
+            <Space>
+              <Button type="link" size="small" onClick={() => api.destroy()}>
+                {intl.formatMessage({
+                  id: 'pages.system.warning-manage.board.ignored',
+                  defaultMessage: '忽略',
+                })}
+              </Button>
+              <Button
+                type="primary"
+                size="small"
+                onClick={() => {
+                  api.destroy(key);
+                  setOpen(true);
+                  setSelected(alarm);
+                }}
+              >
+                {intl.formatMessage({
+                  id: 'pages.system.warning-manage.board.deal',
+                  defaultMessage: '处理告警',
+                })}
+              </Button>
+            </Space>
+          ),
+          placement: 'bottomRight',
+          duration: 100,
+        });
+      }
+    }
+  }, [data]);
   const { run: remove, fetches } = useRequest(deleteAlarm, {
     manual: true,
     fetchKey: (o) => o.alarmIds.join('-'),
@@ -17,21 +75,6 @@ export default function Page() {
           message: intl.formatMessage({
             id: 'app.remove.success',
             defaultMessage: '删除成功',
-          }),
-        });
-      }
-    },
-  });
-  const { run: deal, fetches: dealFetches } = useRequest(dealWithAlarm, {
-    manual: true,
-    fetchKey: (o) => o.alarmId + '',
-    formatResult: (res) => res,
-    onSuccess(res) {
-      if (res.code === OK) {
-        notification.success({
-          message: intl.formatMessage({
-            id: 'pages.system.warning-manage.board.deal.success',
-            defaultMessage: '处理警告成功',
           }),
         });
       }
@@ -62,21 +105,21 @@ export default function Page() {
       valueEnum: {
         Unprocessed: {
           text: intl.formatMessage({
-            id: 'pages.system.warning-manage.board.Unprocessed',
+            id: 'pages.system.warning-manage.board.unprocessed',
             defaultMessage: '未处理',
           }),
           status: 'Error',
         },
         Processed: {
           text: intl.formatMessage({
-            id: 'pages.system.warning-manage.board.Processed',
+            id: 'pages.system.warning-manage.board.processed',
             defaultMessage: '已处理',
           }),
           status: 'Success',
         },
         Ignored: {
           text: intl.formatMessage({
-            id: 'pages.system.warning-manage.board.Ignored',
+            id: 'pages.system.warning-manage.board.ignored',
             defaultMessage: '忽略',
           }),
           status: 'Default',
@@ -123,53 +166,10 @@ export default function Page() {
       key: 'option',
       render: (_, record, __, action) => (
         <Button.Group>
-          <Dropdown
-            menu={{
-              onClick: ({ key }) => {
-                deal({
-                  alarmId: record.alarmId!,
-                  status: key as API.dealWithAlarmParams['status'],
-                });
-              },
-              items: [
-                {
-                  key: 'Unprocessed',
-                  label: intl.formatMessage({
-                    id: 'pages.system.warning-manage.board.Unprocessed',
-                    defaultMessage: '未处理',
-                  }),
-                },
-                {
-                  key: 'Processed',
-                  label: intl.formatMessage({
-                    id: 'pages.system.warning-manage.board.Processed',
-                    defaultMessage: '已处理',
-                  }),
-                },
-                {
-                  key: 'Ignored',
-                  label: intl.formatMessage({
-                    id: 'pages.system.warning-manage.board.Ignored',
-                    defaultMessage: '忽略',
-                  }),
-                },
-              ],
-            }}
-          >
-            <Button
-              disabled={!record.alarmId}
-              loading={dealFetches?.[record.alarmId!]?.loading}
-              type="link"
-              onClick={(e) => e.preventDefault()}
-            >
-              <FormattedMessage
-                id="pages.system.warning-manage.board.deal"
-                defaultMessage="处理警告"
-              />
-            </Button>
-          </Dropdown>
+          <DealAlarmModal record={record} />
           <Button
             type="link"
+            size="small"
             disabled={!record.alarmId}
             onClick={() => remove({ alarmIds: [record.alarmId!] }).then(() => action?.reload())}
             loading={fetches?.[record.alarmId!]?.loading}
@@ -182,6 +182,8 @@ export default function Page() {
   ];
   return (
     <PageContainer>
+      {contextHolder}
+      <DealAlarmModal open={open} setOpen={setOpen} record={selected} />
       <ProTable<
         API.AlarmInfo,
         API.pageAlarmParams & { createTime: [dayjs.ConfigType, dayjs.ConfigType] }
@@ -198,16 +200,8 @@ export default function Page() {
         }}
         request={(param) => {
           const { current, pageSize, ...rest } = param ?? {};
-          return pageAlarm({
-            current: current + '',
-            size: pageSize + '',
-            ...rest,
-          }).then((res) => {
-            return {
-              data: res.data?.items,
-              total: res.data?.total,
-              success: res.code === OK,
-            };
+          return pageAlarm({ current: current + '', size: pageSize + '', ...rest }).then((res) => {
+            return fmtPage(res);
           });
         }}
       ></ProTable>
