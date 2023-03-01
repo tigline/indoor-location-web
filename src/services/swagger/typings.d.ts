@@ -29,6 +29,11 @@ declare namespace API {
     picture?: string;
   };
 
+  type AddOrUpdateDepartment = {
+    name: string;
+    parentId?: number;
+  };
+
   type AddOrUpdateFenceInfo = {
     mapId: string;
     name: string;
@@ -45,6 +50,20 @@ declare namespace API {
     picture: string;
     width?: number;
     widthPx?: number;
+  };
+
+  type AddOrUpdatePersonnel = {
+    avatar?: string;
+    depId?: number;
+    name: string;
+    sex: 'Male' | 'Female';
+    tag?: string;
+    typeId: number;
+  };
+
+  type AddOrUpdatePersonnelType = {
+    picture?: string;
+    typeName: string;
   };
 
   type AddOrUpdateThing = {
@@ -131,6 +150,10 @@ declare namespace API {
     buildingId: string;
   };
 
+  type deleteDepartmentParams = {
+    depId: number;
+  };
+
   type deleteFenceParams = {
     fenceId: string;
   };
@@ -143,6 +166,10 @@ declare namespace API {
     mapId: string;
   };
 
+  type deletePersonnelParams = {
+    personnelId: number;
+  };
+
   type deleteThingParams = {
     thingId: number;
   };
@@ -151,11 +178,26 @@ declare namespace API {
     typeId: number;
   };
 
+  type DepartmentTree = {
+    depId?: number;
+    name?: string;
+    parentId?: number;
+  };
+
   type FenceAndMapInfo = {
     enabled?: boolean;
     fenceId?: string;
     mapId?: string;
     mapName?: string;
+    name?: string;
+    points?: Point[];
+    type?: 'In' | 'Out';
+  };
+
+  type FenceInfo = {
+    enabled?: boolean;
+    fenceId?: string;
+    mapId?: string;
     name?: string;
     points?: Point[];
     type?: 'In' | 'Out';
@@ -181,6 +223,10 @@ declare namespace API {
     systemId?: string;
     type?: 'Gateway';
     updateTime?: number;
+  };
+
+  type getFenceParams = {
+    fenceId: string;
   };
 
   type getMapParams = {
@@ -272,6 +318,21 @@ declare namespace API {
     size?: string;
   };
 
+  type pagePersonnelParams = {
+    searchValue?: string;
+    /** 当前页码 */
+    current?: string;
+    /** 每页数量 */
+    size?: string;
+  };
+
+  type pagePersonnelTypeParams = {
+    /** 当前页码 */
+    current?: string;
+    /** 每页数量 */
+    size?: string;
+  };
+
   type PageResultAlarmInfo = {
     current?: number;
     items?: AlarmInfo[];
@@ -296,6 +357,20 @@ declare namespace API {
   type PageResultGatewayInfo = {
     current?: number;
     items?: GatewayInfo[];
+    size?: number;
+    total?: number;
+  };
+
+  type PageResultPersonnelFillInfo = {
+    current?: number;
+    items?: PersonnelFillInfo[];
+    size?: number;
+    total?: number;
+  };
+
+  type PageResultPersonnelTypeInfo = {
+    current?: number;
+    items?: PersonnelTypeInfo[];
     size?: number;
     total?: number;
   };
@@ -345,6 +420,25 @@ declare namespace API {
     size?: string;
   };
 
+  type PersonnelFillInfo = {
+    avatar?: string;
+    depId?: number;
+    depName?: string;
+    name?: string;
+    personnelId?: number;
+    sex?: 'Male' | 'Female';
+    tag?: string;
+    typeId?: number;
+    typeName?: string;
+  };
+
+  type PersonnelTypeInfo = {
+    createTime?: number;
+    picture?: string;
+    typeId?: number;
+    typeName?: string;
+  };
+
   type Point = {
     x: number;
     y: number;
@@ -374,6 +468,13 @@ declare namespace API {
     message?: string;
   };
 
+  type RestValueFenceInfo = {
+    code?: number;
+    data?: FenceInfo;
+    errorDetail?: string;
+    message?: string;
+  };
+
   type RestValueListAoaDataInfo = {
     code?: number;
     data?: AoaDataInfo[];
@@ -384,6 +485,13 @@ declare namespace API {
   type RestValueListBuildingInfo = {
     code?: number;
     data?: BuildingInfo[];
+    errorDetail?: string;
+    message?: string;
+  };
+
+  type RestValueListDepartmentTree = {
+    code?: number;
+    data?: DepartmentTree[];
     errorDetail?: string;
     message?: string;
   };
@@ -433,6 +541,20 @@ declare namespace API {
   type RestValuePageResultGatewayInfo = {
     code?: number;
     data?: PageResultGatewayInfo;
+    errorDetail?: string;
+    message?: string;
+  };
+
+  type RestValuePageResultPersonnelFillInfo = {
+    code?: number;
+    data?: PageResultPersonnelFillInfo;
+    errorDetail?: string;
+    message?: string;
+  };
+
+  type RestValuePageResultPersonnelTypeInfo = {
+    code?: number;
+    data?: PageResultPersonnelTypeInfo;
     errorDetail?: string;
     message?: string;
   };
@@ -498,6 +620,11 @@ declare namespace API {
     refreshToken?: string;
   };
 
+  type unbindTag1Params = {
+    personnelId: number;
+    tag: string;
+  };
+
   type unbindTagParams = {
     thingId: number;
     tag: string;
@@ -515,6 +642,10 @@ declare namespace API {
 
   type updateBuildingParams = {
     buildingId: string;
+  };
+
+  type updateDepartmentParams = {
+    depId: number;
   };
 
   type updateFenceParams = {
@@ -536,6 +667,14 @@ declare namespace API {
 
   type updateMapParams = {
     mapId: string;
+  };
+
+  type updatePersonnelParams = {
+    personnelId: number;
+  };
+
+  type updatePersonnelTypeParams = {
+    typeId: number;
   };
 
   type updateThingParams = {

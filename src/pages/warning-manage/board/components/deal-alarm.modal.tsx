@@ -1,5 +1,6 @@
 import { AntdL7Component } from '@/components/map-components/antd-L7-component';
 import { dealWithAlarm } from '@/services/swagger/gaojingguanli';
+import { getFence } from '@/services/swagger/xitongguanli';
 import { OK } from '@/utils/global.utils';
 import { ModalForm } from '@ant-design/pro-components';
 import { useIntl, useModel, useRequest } from '@umijs/max';
@@ -12,6 +13,7 @@ interface IProps {
   onDestroy?: () => void;
   open?: boolean;
   setOpen?: (e: boolean) => void;
+  refresh?: () => void;
 }
 /**
  * 展示告警坐标
@@ -22,7 +24,7 @@ interface IProps {
  */
 export function DealAlarmModal(props: IProps) {
   const intl = useIntl();
-
+  const { run: getFenceById, data: fence } = useRequest(getFence, { manual: true });
   const { run: deal, fetches: dealFetches } = useRequest(dealWithAlarm, {
     manual: true,
     fetchKey: (o) => o.alarmId + '',
@@ -46,9 +48,12 @@ export function DealAlarmModal(props: IProps) {
   const { run, data } = useModel('mapModel');
   React.useEffect(() => {
     run();
-  }, []);
+    if (open && props.record?.fenceId) {
+      getFenceById({ fenceId: props.record?.fenceId });
+    }
+  }, [open]);
   const map = data?.find((f) => f.mapId === props.record?.mapId);
-  const {} = useRequest(() => {});
+
   if (!props.record) {
     return <></>;
   }
@@ -60,9 +65,7 @@ export function DealAlarmModal(props: IProps) {
         defaultMessage: '处理告警',
       })}
       onOpenChange={(o) => setOpen(o)}
-      modalProps={{
-        maskClosable: false,
-      }}
+      modalProps={{ maskClosable: false }}
       submitter={{
         render() {
           return (
@@ -115,6 +118,7 @@ export function DealAlarmModal(props: IProps) {
         map={map?.picture}
         rect={[map?.width, map?.length]}
         alarms={[props.record]}
+        fence={fence}
         // locations={[]}
       />
     </ModalForm>

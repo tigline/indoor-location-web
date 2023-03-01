@@ -93,6 +93,20 @@ export async function addFence(body: API.AddOrUpdateFenceInfo, options?: { [key:
   });
 }
 
+/** 获取指定围栏信息 GET /api/v1/fences/${param0} */
+export async function getFence(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.getFenceParams,
+  options?: { [key: string]: any },
+) {
+  const { fenceId: param0, ...queryParams } = params;
+  return request<API.RestValueFenceInfo>(`/api/v1/fences/${param0}`, {
+    method: 'GET',
+    params: { ...queryParams },
+    ...(options || {}),
+  });
+}
+
 /** 编辑地理围栏 POST /api/v1/fences/${param0} */
 export async function updateFence(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)

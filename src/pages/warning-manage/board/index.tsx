@@ -166,7 +166,7 @@ export default function Page() {
       key: 'option',
       render: (_, record, __, action) => (
         <Button.Group>
-          <DealAlarmModal record={record} />
+          <DealAlarmModal record={record} refresh={action?.reload} />
           <Button
             type="link"
             size="small"

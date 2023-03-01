@@ -4,6 +4,7 @@
 // API 唯一标识：
 import * as dengluxiangguan from './dengluxiangguan';
 import * as gaojingguanli from './gaojingguanli';
+import * as renyuanguanli from './renyuanguanli';
 import * as shebeiguanli from './shebeiguanli';
 import * as wupinguanli from './wupinguanli';
 import * as xitongguanli from './xitongguanli';
@@ -12,6 +13,7 @@ export default {
   gaojingguanli,
   shebeiguanli,
   xitongguanli,
+  renyuanguanli,
   dengluxiangguan,
   wupinguanli,
   yonghuguanli,
