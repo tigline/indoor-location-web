@@ -298,6 +298,14 @@ declare namespace API {
     size?: string;
   };
 
+  type pageDepPersonnelParams = {
+    depId: number;
+    /** 当前页码 */
+    current?: string;
+    /** 每页数量 */
+    size?: string;
+  };
+
   type pageFenceParams = {
     mapId?: string;
     name?: string;

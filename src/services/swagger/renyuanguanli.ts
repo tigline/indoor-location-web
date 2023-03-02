@@ -2,6 +2,25 @@
 /* eslint-disable */
 import { request } from '@umijs/max';
 
+/** 分页获取部门人员信息 GET /api/v1/dep/personnel */
+export async function pageDepPersonnel(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.pageDepPersonnelParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.RestValuePageResultPersonnelFillInfo>('/api/v1/dep/personnel', {
+    method: 'GET',
+    params: {
+      // current has a default value: 1
+      current: '1',
+      // size has a default value: 10
+      size: '10',
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
 /** 添加部门 POST /api/v1/departments */
 export async function addDepartment(
   body: API.AddOrUpdateDepartment,

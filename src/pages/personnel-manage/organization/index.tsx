@@ -1,19 +1,26 @@
-import { deleteDepartment, treeDepartment } from '@/services/swagger/renyuanguanli';
-import { OK } from '@/utils/global.utils';
-import { PageContainer, ProTable } from '@ant-design/pro-components';
+import {
+  deleteDepartment,
+  pageDepPersonnel,
+  treeDepartment,
+} from '@/services/swagger/renyuanguanli';
+import { fmtPage, OK } from '@/utils/global.utils';
+import { PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
 import { useIntl, useRequest } from '@umijs/max';
 import { Button, Card, Col, notification, Row, Tree } from 'antd';
 import { DataNode } from 'antd/es/tree';
-import { filter, forEach } from 'lodash';
+import { filter, first, forEach } from 'lodash';
 import React from 'react';
 import { AddDepartmentModal } from './components/add-department.modal';
 import { EditDepartmentModal } from './components/edit-department.modal';
+import { EditPersonnelModal } from './components/edit-personnel.modal';
 import './index.less';
 
-type NodeType = DataNode & { parentId?: string | number; value?: string | number };
+export type NodeType = DataNode & { parentId?: string | number; value?: string | number };
+
 export default function Page() {
   const intl = useIntl();
   const [selectedKeys, setSelectedKeys] = React.useState<React.Key[]>();
+  // 获取部门树形列表
   const { run, data } = useRequest(treeDepartment, {
     manual: true,
     formatResult(res) {
@@ -43,6 +50,7 @@ export default function Page() {
   React.useEffect(() => {
     run();
   }, []);
+  // 删除部门
   const { run: remove, fetches } = useRequest(deleteDepartment, {
     manual: true,
     fetchKey: (o) => o.depId + '',
@@ -55,6 +63,75 @@ export default function Page() {
       }
     },
   });
+  const { run: query } = useRequest(pageDepPersonnel, {
+    manual: true,
+    formatResult(res) {
+      return fmtPage(res);
+    },
+  });
+  const columns: ProColumns<API.PersonnelFillInfo>[] = [
+    {
+      title: intl.formatMessage({
+        id: 'pages.personnel-manage.organization.department.person.name',
+        defaultMessage: '姓名',
+      }),
+      dataIndex: 'name',
+    },
+    {
+      title: intl.formatMessage({
+        id: 'pages.personnel-manage.organization.department.person.gender',
+        defaultMessage: '性别',
+      }),
+      dataIndex: 'sex',
+      valueEnum: {
+        Male: intl.formatMessage({
+          id: 'pages.personnel-manage.organization.department.person.gender.male',
+          defaultMessage: '男',
+        }),
+        Female: intl.formatMessage({
+          id: 'pages.personnel-manage.organization.department.person.gender.female',
+          defaultMessage: '女',
+        }),
+      },
+    },
+    {
+      title: intl.formatMessage({
+        id: 'pages.personnel-manage.organization.department.parent',
+        defaultMessage: '所属部门',
+      }),
+      dataIndex: 'depName',
+    },
+    {
+      title: intl.formatMessage({
+        id: 'pages.personnel-manage.organization.department.person.id',
+        defaultMessage: '身份证',
+      }),
+      dataIndex: 'personnelId',
+    },
+    {
+      title: intl.formatMessage({
+        id: 'pages.personnel-manage.organization.department.person.type',
+        defaultMessage: '人员类型',
+      }),
+      dataIndex: 'typeName',
+    },
+    {
+      title: intl.formatMessage({
+        id: 'pages.personnel-manage.organization.department.person.icon',
+        defaultMessage: '头像',
+      }),
+      dataIndex: 'avatar',
+      valueType: 'image',
+    },
+    {
+      title: intl.formatMessage({ id: 'app.action', defaultMessage: '操作' }),
+      render(_, record, __, action) {
+        return (
+          <EditPersonnelModal treeData={data ?? []} record={record} refresh={action?.reload} />
+        );
+      },
+    },
+  ];
   return (
     <PageContainer>
       <Row gutter={[16, 16]}>
@@ -63,7 +140,10 @@ export default function Page() {
             <Tree
               treeData={data}
               blockNode
-              onSelect={(keys) => setSelectedKeys(keys)}
+              onSelect={(keys) => {
+                setSelectedKeys(keys);
+                query({ searchValue: '' });
+              }}
               selectedKeys={selectedKeys}
               titleRender={(item: NodeType) => {
                 // return (
@@ -144,8 +224,16 @@ export default function Page() {
           </Card>
         </Col>
         <Col flex="auto">
-          {/* {JSON.stringify(selectedKeys)} */}
-          <ProTable />
+          <ProTable
+            request={(param) => {
+              const { current, pageSize, ...rest } = param;
+              return query({ current: current + '', size: pageSize + '', ...rest });
+            }}
+            rowKey={(o) => o.personnelId + ''}
+            columns={columns}
+            search={false}
+            params={{ searchValue: first(selectedKeys)?.toString() }}
+          />
         </Col>
       </Row>
     </PageContainer>
