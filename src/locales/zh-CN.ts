@@ -1,4 +1,5 @@
 import component from './zh-CN/component';
+import global from './zh-CN/global';
 import globalHeader from './zh-CN/globalHeader';
 import menu from './zh-CN/menu';
 import pages from './zh-CN/pages';

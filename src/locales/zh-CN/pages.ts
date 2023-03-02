@@ -204,4 +204,12 @@ export default {
   'pages.system.warning-manage.board.deal': '处理告警',
   'pages.system.warning-manage.board.deal.success': '处理告警成功',
   'pages.system.warning-manage.board.title': '围栏告警',
+
+  'pages.personnel-manage.organization': '组织管理',
+  'pages.personnel-manage.organization.department': '部门',
+  'pages.personnel-manage.organization.department.add': '添加部门',
+  'pages.personnel-manage.organization.department.edit': '编辑部门',
+  'pages.personnel-manage.organization.department.name': '部门名称',
+  'pages.personnel-manage.organization.department.name.required.failure': '部门名称必填',
+  'pages.personnel-manage.organization.department.parent': '所属部门',
 };
