@@ -55,7 +55,7 @@ export function SelectMapCascader(props: IProps) {
     onSuccess(res: any[]) {
       setOptions(res);
       const buildingId = first(res)?.buildingId;
-      run({ buildingId });
+      run({ buildingId, hidePicture: true });
     },
   });
   return (
@@ -77,7 +77,7 @@ export function SelectMapCascader(props: IProps) {
           const targetOption = selectOptions[selectOptions.length - 1];
           targetOption.loading = true;
           targetOption.children = [];
-          run({ buildingId: targetOption.value + '' });
+          run({ buildingId: targetOption.value + '', hidePicture: true });
         },
       }}
       {...props}

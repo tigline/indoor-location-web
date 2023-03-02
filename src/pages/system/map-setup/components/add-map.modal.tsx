@@ -3,7 +3,7 @@ import { addMap } from '@/services/swagger/xitongguanli';
 import { OK } from '@/utils/global.utils';
 import { PlusOutlined } from '@ant-design/icons';
 import { ModalForm, ProFormDigit, ProFormText } from '@ant-design/pro-components';
-import { FormattedMessage, useIntl } from '@umijs/max';
+import { FormattedMessage, useIntl, useModel } from '@umijs/max';
 import { Button, Form, notification } from 'antd';
 import { UploadFile } from 'antd/es/upload';
 import { first } from 'lodash';
@@ -22,7 +22,7 @@ export function AddMapModal(props: IProps): JSX.Element {
   const intl = useIntl();
   const { buildingId } = props;
   const [form] = Form.useForm();
-
+  const { run } = useModel('mapModel');
   return (
     <ModalForm<API.AddOrUpdateMapInfo & { picture: UploadFile[] }>
       title={<FormattedMessage id="pages.system.map-setup.map.add" defaultMessage="添加地图" />}
@@ -35,6 +35,8 @@ export function AddMapModal(props: IProps): JSX.Element {
         const picture = first(values.picture)?.response;
         return addMap({ ...values, buildingId: buildingId!, picture }).then((res) => {
           props.refresh?.();
+          // 强制刷新缓存
+          run(true);
           notification.success({
             message: intl.formatMessage({
               id: 'app.add.success',

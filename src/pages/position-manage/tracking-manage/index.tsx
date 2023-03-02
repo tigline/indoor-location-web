@@ -49,7 +49,7 @@ export default function Page() {
           layout="inline"
           style={{ minWidth: 320 }}
           onFinish={(values) => {
-            console.log(values);
+            // console.log(values);
             return queryBeacon(values).then((res) => res.code === OK);
             return Promise.resolve(false);
           }}

@@ -142,7 +142,10 @@ export default function Page() {
               blockNode
               onSelect={(keys) => {
                 setSelectedKeys(keys);
-                query({ searchValue: '' });
+                const depId = first(keys) as number;
+                if (depId) {
+                  query({ depId });
+                }
               }}
               selectedKeys={selectedKeys}
               titleRender={(item: NodeType) => {
@@ -227,7 +230,8 @@ export default function Page() {
           <ProTable
             request={(param) => {
               const { current, pageSize, ...rest } = param;
-              return query({ current: current + '', size: pageSize + '', ...rest });
+              const depId = first(selectedKeys) as number;
+              return query({ current: current + '', size: pageSize + '', depId, ...rest });
             }}
             rowKey={(o) => o.personnelId + ''}
             columns={columns}

@@ -2,7 +2,7 @@ import { ImageUploadFormItem } from '@/components/image.upload.form.item';
 import { updateMap } from '@/services/swagger/xitongguanli';
 import { OK } from '@/utils/global.utils';
 import { ModalForm, ProFormDigit, ProFormText } from '@ant-design/pro-components';
-import { FormattedMessage, useIntl } from '@umijs/max';
+import { FormattedMessage, useIntl, useModel } from '@umijs/max';
 import { Button, Form, notification } from 'antd';
 import { UploadFile } from 'antd/es/upload';
 import { first } from 'lodash';
@@ -22,7 +22,7 @@ export function EditMapModal(props: IProps): JSX.Element {
   const intl = useIntl();
   const { buildingId, mapId } = props.record;
   const [form] = Form.useForm();
-
+  const { run } = useModel('mapModel');
   return (
     <ModalForm<Omit<API.AddOrUpdateMapInfo, 'picture'> & { picture: UploadFile[] }>
       title={<FormattedMessage id="pages.system.map-setup.map.edit" defaultMessage="添加地图" />}
@@ -37,6 +37,8 @@ export function EditMapModal(props: IProps): JSX.Element {
           (res) => {
             if (res.code === OK) {
               props.refresh?.();
+              // 强制刷新缓存
+              run(true);
               notification.success({
                 message: intl.formatMessage({
                   id: 'app.edit.success',

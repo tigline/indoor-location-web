@@ -215,28 +215,28 @@ export default [
       },
     ],
   },
-  {
-    path: '/map-manage',
-    name: 'map-manage',
-    icon: 'crown',
-    // access: 'canAdmin',
-    routes: [
-      {
-        path: '/map-manage',
-        redirect: '/map-manage/fence-manage',
-      },
-      {
-        path: '/map-manage/fence-manage',
-        name: 'fence-manage',
-        component: './map-manage/fence-manage',
-      },
-      {
-        path: '/map-manage/track-manage',
-        name: 'track-manage',
-        component: './map-manage/track-manage',
-      },
-    ],
-  },
+  // {
+  //   path: '/map-manage',
+  //   name: 'map-manage',
+  //   icon: 'crown',
+  //   // access: 'canAdmin',
+  //   routes: [
+  //     {
+  //       path: '/map-manage',
+  //       redirect: '/map-manage/fence-manage',
+  //     },
+  //     {
+  //       path: '/map-manage/fence-manage',
+  //       name: 'fence-manage',
+  //       component: './map-manage/fence-manage',
+  //     },
+  //     {
+  //       path: '/map-manage/track-manage',
+  //       name: 'track-manage',
+  //       component: './map-manage/track-manage',
+  //     },
+  //   ],
+  // },
   {
     path: '/',
     redirect: '/dashboard',

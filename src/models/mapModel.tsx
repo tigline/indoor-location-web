@@ -6,8 +6,8 @@ import React, { useEffect } from 'react';
 export default () => {
   const [initialValue, setInitialValue] = React.useState<string>();
   const { run, data, loading } = useRequest(
-    (): Promise<API.RestValueListMapInfo> => {
-      if (!isEmpty(data)) {
+    (flag?: boolean): Promise<API.RestValueListMapInfo> => {
+      if (!isEmpty(data) && !flag) {
         return Promise.resolve<API.RestValueListMapInfo>({ data, code: 200 });
       }
       return listMaps({});
