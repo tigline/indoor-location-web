@@ -2,7 +2,7 @@ import { deletePersonnel, pagePersonnel } from '@/services/swagger/renyuanguanli
 import { fmtPage } from '@/utils/global.utils';
 import { PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
 import { useIntl, useRequest } from '@umijs/max';
-import { Button, notification } from 'antd';
+import { Button, Input, notification } from 'antd';
 import { AddPersonnelInfoModal } from './components/add-personnel-info.modal';
 import { EditPersonnelInfoModal } from './components/edit-personnel-info.modal';
 
@@ -33,6 +33,32 @@ export default function Page() {
         defaultMessage: '姓名',
       }),
       dataIndex: 'name',
+      formItemProps: {
+        name: 'searchValue',
+        label: null,
+      },
+      renderFormItem: (_, { type, defaultRender, fieldProps }: any, form) => {
+        if (type === 'form') {
+          return null;
+        }
+        const status = form.getFieldValue('state');
+        if (status !== 'open') {
+          return (
+            // value 和 onchange 会通过 form 自动注入。
+            // 组件的配置
+            <Input
+              {...fieldProps}
+              // 自定义配置
+              allowClear
+              placeholder={intl.formatMessage({
+                id: 'pages.personnel-manage.organization.department.person.search.value',
+                defaultMessage: '输入名字，标签地址等等',
+              })}
+            />
+          );
+        }
+        return defaultRender(_);
+      },
       // search: false,
     },
     {
@@ -51,14 +77,14 @@ export default function Page() {
       dataIndex: 'tag',
       search: false,
     },
-    {
-      title: intl.formatMessage({
-        id: 'pages.personnel-manage.organization.department.person.id',
-        defaultMessage: '身份证',
-      }),
-      dataIndex: 'personnelId',
-      search: false,
-    },
+    // {
+    //   title: intl.formatMessage({
+    //     id: 'pages.personnel-manage.organization.department.person.id',
+    //     defaultMessage: '身份证',
+    //   }),
+    //   dataIndex: 'personnelId',
+    //   search: false,
+    // },
     {
       title: intl.formatMessage({
         id: 'pages.personnel-manage.organization.department.person.type',

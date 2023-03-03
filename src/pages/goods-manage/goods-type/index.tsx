@@ -19,6 +19,12 @@ export default function Page() {
       }
     },
   });
+  const { run: query } = useRequest(pageThingType, {
+    manual: true,
+    formatResult(res) {
+      return fmtPage(res);
+    },
+  });
   const columns: ProColumns<API.ThingTypeInfo>[] = [
     {
       title: intl.formatMessage({
@@ -26,7 +32,7 @@ export default function Page() {
         defaultMessage: '名称',
       }),
       dataIndex: 'typeName',
-      // search: false,
+      search: false,
     },
     {
       title: intl.formatMessage({
@@ -70,11 +76,10 @@ export default function Page() {
     <PageContainer>
       <ProTable
         columns={columns}
+        search={false}
         request={(param) => {
           const { current, pageSize, ...rest } = param;
-          return pageThingType({ current: current + '', size: pageSize + '', ...rest }).then(
-            (res) => fmtPage(res),
-          );
+          return query({ current: current + '', size: pageSize + '', ...rest });
         }}
         toolBarRender={(action) => [<AddGoodsTypeModal key="add" refresh={action?.reload} />]}
       ></ProTable>

@@ -58,20 +58,6 @@ export function AddPersonnelInfoModal(props: IProps) {
           },
         ]}
       />
-      {/* <ProFormText
-        name=""
-        label={intl.formatMessage({
-          id: 'pages.personnel-manage.organization.department.person.phone',
-          defaultMessage: '手机号',
-        })}
-      /> */}
-      {/* <ProFormText
-        name=""
-        label={intl.formatMessage({
-          id: 'pages.personnel-manage.organization.department.person.id',
-          defaultMessage: '身份证',
-        })}
-      /> */}
       <ProFormRadio.Group
         name="sex"
         label={intl.formatMessage({

@@ -1,11 +1,28 @@
-import { pageThing } from '@/services/swagger/wupinguanli';
+import { pageThing, pageThingType } from '@/services/swagger/wupinguanli';
 import { fmtPage } from '@/utils/global.utils';
 import { PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
-import { useIntl } from '@umijs/max';
+import { useIntl, useRequest } from '@umijs/max';
 import { AddGoodsModal } from './components/add-goods.modal';
 
 export default function Page() {
   const intl = useIntl();
+  const { run: queryType } = useRequest(pageThingType, {
+    manual: true,
+    formatResult(res) {
+      return (
+        fmtPage(res).data?.map((item) => ({
+          label: item.typeName,
+          value: item.typeId,
+        })) ?? []
+      );
+    },
+  });
+  const { run: query } = useRequest(pageThing, {
+    manual: true,
+    formatResult(res) {
+      return fmtPage(res);
+    },
+  });
   const columns: ProColumns<API.ThingInfo>[] = [
     {
       title: intl.formatMessage({
@@ -20,6 +37,7 @@ export default function Page() {
         defaultMessage: '物品类型',
       }),
       dataIndex: 'typeId',
+      request: () => queryType({ current: '1', size: '1000' }),
     },
     {
       title: intl.formatMessage({
@@ -38,6 +56,7 @@ export default function Page() {
     {
       title: intl.formatMessage({ id: 'app.createTime', defaultMessage: '创建时间' }),
       dataIndex: 'createtime',
+      valueType: 'dateTime',
     },
     {
       title: intl.formatMessage({
@@ -53,9 +72,7 @@ export default function Page() {
         columns={columns}
         request={(param) => {
           const { current, pageSize, ...rest } = param;
-          return pageThing({ current: current + '', size: pageSize + '', ...rest }).then((res) =>
-            fmtPage(res),
-          );
+          return query({ current: current + '', size: pageSize + '', ...rest });
         }}
         toolBarRender={(action) => [<AddGoodsModal key="add" refresh={action?.reload} />]}
       ></ProTable>

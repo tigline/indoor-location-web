@@ -8,7 +8,7 @@ import { PageContainer, ProColumns, ProTable } from '@ant-design/pro-components'
 import { useIntl, useRequest } from '@umijs/max';
 import { Button, Card, Col, notification, Row, Tree } from 'antd';
 import { DataNode } from 'antd/es/tree';
-import { filter, first, forEach } from 'lodash';
+import { first, isEmpty } from 'lodash';
 import React from 'react';
 import { AddDepartmentModal } from './components/add-department.modal';
 import { EditDepartmentModal } from './components/edit-department.modal';
@@ -20,39 +20,21 @@ export type NodeType = DataNode & { parentId?: string | number; value?: string |
 export default function Page() {
   const intl = useIntl();
   const [selectedKeys, setSelectedKeys] = React.useState<React.Key[]>();
-  // function convert(list?: API.DepartmentTree[]) {
-  //   return list?.map((item) => ({
-  //     label: item.name,
-  //     value: item.depId,
-  //     key: item.depId,
-  //     parentId: item.parentId,
-  //     children: convert(item.children),
-  //   }));
-  // }
+  function convert(list?: API.DepartmentTree[]): NodeType[] | undefined {
+    return list?.map((item) => ({
+      title: item.name,
+      value: item.depId,
+      key: item.depId + '',
+      parentId: item.parentId,
+      children: convert((item as any).children),
+    }));
+  }
   // 获取部门树形列表
   const { run, data } = useRequest(treeDepartment, {
     manual: true,
     formatResult(res) {
       if (res.code === OK) {
-        const record: Record<string, NodeType> = {};
-        forEach(res.data, (val) => {
-          if (val.depId) {
-            record[val.depId] = {
-              title: val.name,
-              key: val.depId,
-              value: val.depId,
-              parentId: val.parentId,
-              children: [],
-            };
-          }
-        });
-        forEach(res.data, (val) => {
-          if (val.parentId && val.depId) {
-            record[val.parentId].children?.push(record[val.depId]);
-          }
-        });
-        const result = filter(record, (val) => !val.parentId);
-        return result;
+        return convert(res.data);
       }
     },
   });
@@ -147,16 +129,15 @@ export default function Page() {
         <Col flex="320px">
           <Card
             bodyStyle={{ minHeight: 600, overflow: 'auto', maxWidth: '100%' }}
-            extra={
-              <AddDepartmentModal refresh={run} />
-              // <Button size='small' type='link' icon={<PlusOutlined />} />
-            }
+            extra={<AddDepartmentModal refresh={run} />}
           >
             <Tree
               treeData={data}
               blockNode
               onSelect={(keys) => {
-                setSelectedKeys(keys);
+                if (!isEmpty(keys)) {
+                  setSelectedKeys(keys);
+                }
                 const depId = first(keys) as number;
                 if (depId) {
                   query({ depId });
@@ -164,52 +145,6 @@ export default function Page() {
               }}
               selectedKeys={selectedKeys}
               titleRender={(item: NodeType) => {
-                // return (
-                //   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                //     <span style={{ whiteSpace: 'nowrap' }}>{item.title as React.ReactNode}</span>
-                //     <Dropdown
-                //       className="department-action"
-                //       menu={{
-                //         items: [
-                //           {
-                //             key: 'add',
-                //             label: (
-                //               <AddDepartmentModal
-                //                 parentId={item.key as string}
-                //                 parentName={item.title as string}
-                //                 refresh={run}
-                //               />
-                //             ),
-                //           },
-                //           {
-                //             key: 'edit',
-                //             label: (
-                //               <EditDepartmentModal
-                //                 treeData={data}
-                //                 name={item.title as string}
-                //                 depId={item.key as number}
-                //                 parentId={item.parentId as string}
-                //                 refresh={run}
-                //               />
-                //             ),
-                //           },
-                //           {
-                //             key: 'remove',
-                //             label: (
-                //               <span onClick={() => remove({ depId: item.key as number })}>
-                //                 {intl.formatMessage({ id: 'app.remove', defaultMessage: '删除' })}
-                //               </span>
-                //             ),
-                //           },
-                //         ],
-                //       }}
-                //     >
-                //       <Button size="small" type="link" onClick={(e) => e.preventDefault()}>
-                //         {intl.formatMessage({ id: 'app.action', defaultMessage: '操作' })}
-                //       </Button>
-                //     </Dropdown>
-                //   </div>
-                // );
                 return (
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <span style={{ whiteSpace: 'nowrap' }}>{item.title as React.ReactNode}</span>
@@ -247,14 +182,22 @@ export default function Page() {
         <Col flex="auto">
           <ProTable
             request={(param) => {
-              const { current, pageSize, ...rest } = param;
-              const depId = first(selectedKeys) as number;
-              return query({ current: current + '', size: pageSize + '', depId, ...rest });
+              const { current, pageSize, depId, ...rest } = param;
+              if (depId) {
+                return query({
+                  current: current + '',
+                  size: pageSize + '',
+                  depId: depId as number,
+                  ...rest,
+                });
+              } else {
+                return Promise.resolve({ code: OK });
+              }
             }}
             rowKey={(o) => o.personnelId + ''}
             columns={columns}
             search={false}
-            // params={{ searchValue: first(selectedKeys)?.toString() }}
+            params={{ depId: first(selectedKeys) }}
           />
         </Col>
       </Row>

@@ -239,4 +239,5 @@ export default {
   'pages.personnel-manage.organization.department.person.type.edit': '编辑人员类型',
 
   'pages.personnel-manage.organization.department.person.info.add': '添加人员',
+  'pages.personnel-manage.organization.department.person.search.value': '输入名字，标签地址等等',
 };

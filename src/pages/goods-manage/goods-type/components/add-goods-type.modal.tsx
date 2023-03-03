@@ -31,7 +31,7 @@ export function AddGoodsTypeModal(props: IProps) {
       labelCol={{ xs: 6 }}
       wrapperCol={{ xs: 16 }}
       trigger={
-        <Button icon={<PlusOutlined />}>
+        <Button type="primary" icon={<PlusOutlined />}>
           {intl.formatMessage({ id: 'app.action.add', defaultMessage: '新建' })}
         </Button>
       }

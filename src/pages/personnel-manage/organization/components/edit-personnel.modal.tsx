@@ -1,4 +1,5 @@
 import { ImageUploadFormItem } from '@/components/image.upload.form.item';
+import { SelectPersonnelTypeSelect } from '@/components/select-personnel-type.select';
 import { updatePersonnel } from '@/services/swagger/renyuanguanli';
 import {
   ModalForm,
@@ -29,6 +30,7 @@ export function EditPersonnelModal(props: IProps) {
     manual: true,
     onSuccess(data) {
       if (data) {
+        props.refresh?.();
         notification.success({
           message: intl.formatMessage({ id: 'app.edit.success', defaultMessage: '更新成功' }),
         });
@@ -113,8 +115,7 @@ export function EditPersonnelModal(props: IProps) {
           }),
         }}
       />
-      {/* TODO: 需要完善人员类型后填充 */}
-      <ProFormText
+      <SelectPersonnelTypeSelect
         label={intl.formatMessage({
           id: 'pages.personnel-manage.organization.department.person.type',
           defaultMessage: '人员类型',
