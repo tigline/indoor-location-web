@@ -112,7 +112,7 @@ export function AntdL7Component(props: IProps) {
         pitch: 0,
         zoom: 20,
         // maxZoom: 20,
-        // minZoom: 12,
+        minZoom: 18,
         // rotation: 19.313180925794313
       }),
     });

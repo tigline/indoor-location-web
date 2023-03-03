@@ -4,7 +4,6 @@ import { PlusOutlined } from '@ant-design/icons';
 import { ModalForm, ProFormText } from '@ant-design/pro-components';
 import { useIntl, useRequest } from '@umijs/max';
 import { Button, notification, UploadFile } from 'antd';
-import { first } from 'lodash';
 
 interface IProps {
   refresh?: () => void;
@@ -37,8 +36,7 @@ export function AddGoodsTypeModal(props: IProps) {
         </Button>
       }
       onFinish={(values) => {
-        const picture = first(values.picture)?.response;
-        return run({ ...values, picture });
+        return run(values);
       }}
     >
       <ProFormText
@@ -63,7 +61,7 @@ export function AddGoodsTypeModal(props: IProps) {
           id: 'pages.goods-manage.goods.type.icon',
           defaultMessage: '类型图标',
         })}
-      ></ImageUploadFormItem>
+      />
     </ModalForm>
   );
 }

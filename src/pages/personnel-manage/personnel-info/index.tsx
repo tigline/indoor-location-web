@@ -1,9 +1,123 @@
-import { PageContainer } from '@ant-design/pro-components';
+import { deletePersonnel, pagePersonnel } from '@/services/swagger/renyuanguanli';
+import { fmtPage } from '@/utils/global.utils';
+import { PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
+import { useIntl, useRequest } from '@umijs/max';
+import { Button, notification } from 'antd';
+import { AddPersonnelInfoModal } from './components/add-personnel-info.modal';
+import { EditPersonnelInfoModal } from './components/edit-personnel-info.modal';
 
 export default function Page() {
+  const intl = useIntl();
+  const { run } = useRequest(pagePersonnel, {
+    manual: true,
+    formatResult(res) {
+      return fmtPage(res);
+    },
+  });
+  const { run: remove, fetches } = useRequest(deletePersonnel, {
+    manual: true,
+    fetchKey: (o) => o.personnelId + '',
+    onSuccess(data) {
+      if (data) {
+        // refresh?.();
+        notification.success({
+          message: intl.formatMessage({ id: 'app.remove.success', defaultMessage: '删除成功' }),
+        });
+      }
+    },
+  });
+  const columns: ProColumns<API.PersonnelFillInfo>[] = [
+    {
+      title: intl.formatMessage({
+        id: 'pages.personnel-manage.organization.department.person.name',
+        defaultMessage: '姓名',
+      }),
+      dataIndex: 'name',
+      // search: false,
+    },
+    {
+      title: intl.formatMessage({
+        id: 'pages.personnel-manage.organization.department.person.gender',
+        defaultMessage: '性别',
+      }),
+      dataIndex: 'sex',
+      search: false,
+    },
+    {
+      title: intl.formatMessage({
+        id: 'pages.personnel-manage.organization.department.person.tag',
+        defaultMessage: '绑定标签',
+      }),
+      dataIndex: 'tag',
+      search: false,
+    },
+    {
+      title: intl.formatMessage({
+        id: 'pages.personnel-manage.organization.department.person.id',
+        defaultMessage: '身份证',
+      }),
+      dataIndex: 'personnelId',
+      search: false,
+    },
+    {
+      title: intl.formatMessage({
+        id: 'pages.personnel-manage.organization.department.person.type',
+        defaultMessage: '人员类型',
+      }),
+      dataIndex: 'typeName',
+      search: false,
+    },
+    {
+      title: intl.formatMessage({
+        id: 'pages.personnel-manage.organization.department.parent',
+        defaultMessage: '所属部门',
+      }),
+      dataIndex: 'depName',
+      search: false,
+    },
+    {
+      title: intl.formatMessage({
+        id: 'pages.personnel-manage.organization.department.person.icon',
+        defaultMessage: '头像',
+      }),
+      dataIndex: 'avatar',
+      valueType: 'image',
+      search: false,
+    },
+    {
+      title: intl.formatMessage({ id: 'app.action', defaultMessage: '操作' }),
+      search: false,
+      render(_, record, __, action) {
+        return (
+          <Button.Group>
+            <EditPersonnelInfoModal record={record} refresh={action?.reload} />
+            <Button
+              type="link"
+              size="small"
+              disabled={!record.personnelId}
+              loading={fetches?.[record.personnelId!]?.loading}
+              onClick={() =>
+                remove({ personnelId: record.personnelId! }).then(() => action?.reload())
+              }
+            >
+              {intl.formatMessage({ id: 'app.remove', defaultMessage: '删除' })}
+            </Button>
+          </Button.Group>
+        );
+      },
+    },
+  ];
+
   return (
     <PageContainer>
-      <h1>TODO:</h1>
+      <ProTable
+        columns={columns}
+        toolBarRender={(action) => [<AddPersonnelInfoModal key="add" refresh={action?.reload} />]}
+        request={(param) => {
+          const { current, pageSize, ...rest } = param;
+          return run({ current: current + '', size: pageSize + '', ...rest });
+        }}
+      />
     </PageContainer>
   );
 }

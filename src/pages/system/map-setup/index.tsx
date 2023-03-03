@@ -55,12 +55,13 @@ export default function Page() {
           },
           actions: {
             cardActionProps: 'extra',
-            render: (dom, record, _, action) => [
+            render: (_, record, __, action) => [
               <EditBuildingModal
                 key="add"
                 disabled={!record.buildingId}
                 record={record}
-              ></EditBuildingModal>,
+                refresh={action?.reload}
+              />,
               <Button key="view">
                 <Link to={`/system/map-setup/floor-manager.page/${record.buildingId}`}>
                   {intl.formatMessage({ id: 'app.view', defaultMessage: '查看' })}

@@ -8,8 +8,8 @@ interface FormType extends API.DepartmentTree {
   name: string;
 }
 interface IProps {
-  parentId: string;
-  parentName: string;
+  parentId?: string;
+  parentName?: string;
   refresh?: () => void;
 }
 /**

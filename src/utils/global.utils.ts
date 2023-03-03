@@ -247,12 +247,16 @@ export function fmtPage<T = any>(res: {
   errorDetail?: string;
   message?: string;
 }) {
+  type ResType = typeof res;
+  type DataType = Required<ResType>['data'];
+  type ItemsType = Required<DataType>['items'];
+  type ItemType = ItemsType[number];
   return {
     data: res.data?.items?.map((item: any) => {
       // 后台保存的是10位的时间戳，前端使用的13位的时间戳，这里转换一下
       const updateTime = item.updateTime ? item.updateTime * 1000 : undefined;
       const createTime = item.createTime ? item.createTime * 1000 : undefined;
-      return { ...item, updateTime, createTime };
+      return { ...item, updateTime, createTime } as ItemType;
     }),
     total: res.data?.total,
     success: res.code === OK,

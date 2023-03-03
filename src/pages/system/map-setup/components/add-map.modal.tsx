@@ -6,7 +6,6 @@ import { ModalForm, ProFormDigit, ProFormText } from '@ant-design/pro-components
 import { FormattedMessage, useIntl, useModel } from '@umijs/max';
 import { Button, Form, notification } from 'antd';
 import { UploadFile } from 'antd/es/upload';
-import { first } from 'lodash';
 interface IProps {
   buildingId?: string;
   refresh?: () => void;
@@ -32,8 +31,7 @@ export function AddMapModal(props: IProps): JSX.Element {
       wrapperCol={{ xs: 16 }}
       disabled={!buildingId}
       onFinish={(values) => {
-        const picture = first(values.picture)?.response;
-        return addMap({ ...values, buildingId: buildingId!, picture }).then((res) => {
+        return addMap({ ...values, buildingId: buildingId! }).then((res) => {
           props.refresh?.();
           // 强制刷新缓存
           run(true);

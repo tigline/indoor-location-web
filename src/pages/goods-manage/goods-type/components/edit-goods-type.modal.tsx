@@ -3,7 +3,6 @@ import { updateThingType } from '@/services/swagger/wupinguanli';
 import { ModalForm, ProFormText } from '@ant-design/pro-components';
 import { useIntl, useRequest } from '@umijs/max';
 import { Button, notification, UploadFile } from 'antd';
-import { first } from 'lodash';
 
 interface IProps {
   refresh?: () => void;
@@ -37,8 +36,7 @@ export function EditGoodsTypeModal(props: IProps) {
         </Button>
       }
       onFinish={(values) => {
-        const picture = first(values.picture)?.response;
-        return run({ typeId: props.record.typeId! }, { ...values, picture });
+        return run({ typeId: props.record.typeId! }, { ...values });
       }}
     >
       <ProFormText

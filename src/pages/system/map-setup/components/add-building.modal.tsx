@@ -6,7 +6,6 @@ import { ModalForm, ProFormText } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
 import { Button, Form, notification } from 'antd';
 import { UploadFile } from 'antd/es/upload';
-import { first } from 'lodash';
 interface IProps {
   refresh?: () => void;
 }
@@ -31,8 +30,7 @@ export function AddBuildingModal(props: IProps): JSX.Element {
       labelCol={{ xs: 6 }}
       wrapperCol={{ xs: 16 }}
       onFinish={(values) => {
-        const picture = first(values.picture)?.response;
-        return addBuilding({ ...values, picture }).then((res) => {
+        return addBuilding(values).then((res) => {
           if (res.code === OK) {
             props.refresh?.();
             notification.success({

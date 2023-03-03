@@ -1,9 +1,66 @@
-import { PageContainer } from '@ant-design/pro-components';
+import { pagePersonnelType } from '@/services/swagger/renyuanguanli';
+import { fmtPage } from '@/utils/global.utils';
+import { PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
+import { useIntl, useRequest } from '@umijs/max';
+import { AddPersonnelModal } from './components/add-personnel.modal';
+import { EditPersonnelModal } from './components/edit-personnel.modal';
 
 export default function Page() {
+  const intl = useIntl();
+  const { run: query } = useRequest(pagePersonnelType, {
+    manual: true,
+    formatResult(res) {
+      return fmtPage(res);
+    },
+  });
+
+  const columns: ProColumns<API.PersonnelTypeInfo>[] = [
+    {
+      title: intl.formatMessage({
+        id: 'pages.personnel-manage.organization.department.person.type.name',
+        defaultMessage: '人员类型名称',
+      }),
+      dataIndex: 'typeName',
+    },
+    {
+      title: intl.formatMessage({
+        id: 'pages.personnel-manage.organization.department.person.type.icon',
+        defaultMessage: '图标',
+      }),
+      // width: 100,
+      dataIndex: 'picture',
+      valueType: 'image',
+    },
+    {
+      title: intl.formatMessage({ id: 'app.createTime', defaultMessage: '创建时间' }),
+      dataIndex: 'createTime',
+      valueType: 'dateTime',
+    },
+    {
+      title: intl.formatMessage({ id: 'app.action', defaultMessage: '操作' }),
+      render(_, record, __, action) {
+        return (
+          <EditPersonnelModal record={record} refresh={action?.reload} />
+          // <Button.Group>
+          //   <Button size="small" type="link">
+          //     {intl.formatMessage({ id: 'app.remove', defaultMessage: '删除' })}
+          //   </Button>
+          // </Button.Group>
+        );
+      },
+    },
+  ];
   return (
     <PageContainer>
-      <h1>TODO:</h1>
+      <ProTable
+        columns={columns}
+        search={false}
+        toolBarRender={(action) => [<AddPersonnelModal key="add" refresh={action?.reload} />]}
+        request={(parma) => {
+          const { current, pageSize, ...rest } = parma;
+          return query({ current: current + '', size: pageSize + '', ...rest });
+        }}
+      />
     </PageContainer>
   );
 }

@@ -212,14 +212,31 @@ export default {
   'pages.personnel-manage.organization.department.name': '部门名称',
   'pages.personnel-manage.organization.department.name.required.failure': '部门名称必填',
   'pages.personnel-manage.organization.department.parent': '所属部门',
+  'pages.personnel-manage.organization.department.parent.required.failure': '请选择所属部门',
 
   'pages.personnel-manage.organization.department.person.update': '更新人员信息',
   'pages.personnel-manage.organization.department.person.name': '姓名',
+  'pages.personnel-manage.organization.department.person.name.required.failure': '姓名必填',
+  'pages.personnel-manage.organization.department.person.phone': '手机号',
   'pages.personnel-manage.organization.department.person.gender': '性别',
   'pages.personnel-manage.organization.department.person.gender.male': '男',
   'pages.personnel-manage.organization.department.person.gender.female': '女',
   'pages.personnel-manage.organization.department.person.id': '身份证',
   'pages.personnel-manage.organization.department.person.type': '人员类型',
+  'pages.personnel-manage.organization.department.person.type.required.failure': '请选择人员类型',
   'pages.personnel-manage.organization.department.person.icon': '头像',
+  'pages.personnel-manage.organization.department.person.icon.required.failure': '请选择头像',
+  'pages.personnel-manage.organization.department.person.tag': '绑定标签',
+  'pages.personnel-manage.organization.department.person.tag.required.failure': '请选择绑定标签',
   'pages.personnel-manage.organization.department.person.edit': '更换部门',
+
+  'pages.personnel-manage.organization.department.person.type.name': '人员类型名称',
+  'pages.personnel-manage.organization.department.person.type.name.required.failure':
+    '人员类型名称必填',
+  'pages.personnel-manage.organization.department.person.type.icon': '图标',
+  'pages.personnel-manage.organization.department.person.type.icon.required.failure': '请上传图标',
+  'pages.personnel-manage.organization.department.person.type.add': '添加人员类型',
+  'pages.personnel-manage.organization.department.person.type.edit': '编辑人员类型',
+
+  'pages.personnel-manage.organization.department.person.info.add': '添加人员',
 };

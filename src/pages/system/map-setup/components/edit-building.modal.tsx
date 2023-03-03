@@ -5,7 +5,6 @@ import { EditOutlined } from '@ant-design/icons';
 import { ModalForm, ProFormText } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
 import { Button, Form, notification, UploadFile } from 'antd';
-import { first } from 'lodash';
 
 interface IProps {
   refresh?: () => void;
@@ -28,12 +27,11 @@ export function EditBuildingModal(props: IProps) {
       wrapperCol={{ xs: 16 }}
       // request={()=>getbu}
       onFinish={(values) => {
-        const picture = first(values.picture)?.response;
         if (!buildingId) {
           notification.error({ message: 'building id is null' });
           return Promise.resolve(false);
         }
-        return updateBuilding({ buildingId }, { ...values, picture }).then((res) => {
+        return updateBuilding({ buildingId }, values).then((res) => {
           if (res.code === OK) {
             props.refresh?.();
             notification.success({

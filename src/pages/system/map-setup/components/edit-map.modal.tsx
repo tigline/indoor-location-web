@@ -5,7 +5,6 @@ import { ModalForm, ProFormDigit, ProFormText } from '@ant-design/pro-components
 import { FormattedMessage, useIntl, useModel } from '@umijs/max';
 import { Button, Form, notification } from 'antd';
 import { UploadFile } from 'antd/es/upload';
-import { first } from 'lodash';
 interface IProps {
   refresh?: () => void;
   disabled?: boolean;
@@ -24,7 +23,7 @@ export function EditMapModal(props: IProps): JSX.Element {
   const [form] = Form.useForm();
   const { run } = useModel('mapModel');
   return (
-    <ModalForm<Omit<API.AddOrUpdateMapInfo, 'picture'> & { picture: UploadFile[] }>
+    <ModalForm<API.AddOrUpdateMapInfo>
       title={<FormattedMessage id="pages.system.map-setup.map.edit" defaultMessage="添加地图" />}
       layout="horizontal"
       form={form}
@@ -32,23 +31,20 @@ export function EditMapModal(props: IProps): JSX.Element {
       wrapperCol={{ xs: 16 }}
       disabled={!buildingId}
       onFinish={(values) => {
-        const picture = first(values.picture)?.response;
-        return updateMap({ mapId: mapId! }, { ...values, buildingId: buildingId!, picture }).then(
-          (res) => {
-            if (res.code === OK) {
-              props.refresh?.();
-              // 强制刷新缓存
-              run(true);
-              notification.success({
-                message: intl.formatMessage({
-                  id: 'app.edit.success',
-                  defaultMessage: '更新成功',
-                }),
-              });
-            }
-            return res.code === OK;
-          },
-        );
+        return updateMap({ mapId: mapId! }, { ...values, buildingId: buildingId! }).then((res) => {
+          if (res.code === OK) {
+            props.refresh?.();
+            // 强制刷新缓存
+            run(true);
+            notification.success({
+              message: intl.formatMessage({
+                id: 'app.edit.success',
+                defaultMessage: '更新成功',
+              }),
+            });
+          }
+          return res.code === OK;
+        });
       }}
       trigger={
         <Button type="link" size="small">

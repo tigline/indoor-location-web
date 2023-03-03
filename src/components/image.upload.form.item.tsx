@@ -2,7 +2,8 @@ import { getFileBase64 } from '@/utils/global.utils';
 import { ProFormUploadButton, ProFormUploadButtonProps } from '@ant-design/pro-components';
 import { useIntl } from '@umijs/max';
 import { notification } from 'antd';
-import { RcFile } from 'antd/es/upload';
+import { RcFile, UploadFile } from 'antd/es/upload';
+import { first, set } from 'lodash';
 
 export function ImageUploadFormItem(props: ProFormUploadButtonProps) {
   const intl = useIntl();
@@ -10,6 +11,11 @@ export function ImageUploadFormItem(props: ProFormUploadButtonProps) {
     <ProFormUploadButton
       accept="image/png"
       max={1}
+      transform={(value: any) => {
+        const obj = {};
+        set(obj, props.name ?? 'picture', first<UploadFile>(value)?.response);
+        return obj;
+      }}
       {...props}
       fieldProps={{
         listType: 'picture-card',

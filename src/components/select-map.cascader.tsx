@@ -81,6 +81,6 @@ export function SelectMapCascader(props: IProps) {
         },
       }}
       {...props}
-    ></ProFormCascader>
+    />
   );
 }

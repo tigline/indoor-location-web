@@ -20,6 +20,15 @@ export type NodeType = DataNode & { parentId?: string | number; value?: string |
 export default function Page() {
   const intl = useIntl();
   const [selectedKeys, setSelectedKeys] = React.useState<React.Key[]>();
+  // function convert(list?: API.DepartmentTree[]) {
+  //   return list?.map((item) => ({
+  //     label: item.name,
+  //     value: item.depId,
+  //     key: item.depId,
+  //     parentId: item.parentId,
+  //     children: convert(item.children),
+  //   }));
+  // }
   // 获取部门树形列表
   const { run, data } = useRequest(treeDepartment, {
     manual: true,
@@ -136,7 +145,13 @@ export default function Page() {
     <PageContainer>
       <Row gutter={[16, 16]}>
         <Col flex="320px">
-          <Card bodyStyle={{ minHeight: 600, overflow: 'auto', maxWidth: '100%' }}>
+          <Card
+            bodyStyle={{ minHeight: 600, overflow: 'auto', maxWidth: '100%' }}
+            extra={
+              <AddDepartmentModal refresh={run} />
+              // <Button size='small' type='link' icon={<PlusOutlined />} />
+            }
+          >
             <Tree
               treeData={data}
               blockNode
@@ -215,7 +230,10 @@ export default function Page() {
                         size="small"
                         type="link"
                         loading={fetches?.[item.key!]?.loading}
-                        onClick={() => remove({ depId: item.key as number })}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          return remove({ depId: item.key as number });
+                        }}
                       >
                         {intl.formatMessage({ id: 'app.remove', defaultMessage: '删除' })}
                       </Button>
@@ -236,7 +254,7 @@ export default function Page() {
             rowKey={(o) => o.personnelId + ''}
             columns={columns}
             search={false}
-            params={{ searchValue: first(selectedKeys)?.toString() }}
+            // params={{ searchValue: first(selectedKeys)?.toString() }}
           />
         </Col>
       </Row>
