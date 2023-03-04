@@ -1,4 +1,4 @@
-import { Pie } from '@antv/g2plot';
+import { Pie, PieOptions } from '@antv/g2plot';
 import { useIntl } from '@umijs/max';
 import { reduce } from 'lodash';
 import React from 'react';
@@ -15,6 +15,7 @@ interface IProps {
  */
 export function LabelDistributionChart(props: IProps) {
   const ref = React.useRef<HTMLDivElement>(null);
+  const piePlotRef = React.useRef<Pie>();
   const intl = useIntl();
   React.useEffect(() => {
     const data = [
@@ -44,8 +45,7 @@ export function LabelDistributionChart(props: IProps) {
         value: props.data?.Vehicle.online,
       },
     ];
-
-    const piePlot = new Pie(ref.current!, {
+    const config: PieOptions = {
       // appendPadding: 10,
       data,
       height: 400 - 48,
@@ -79,10 +79,15 @@ export function LabelDistributionChart(props: IProps) {
           content: reduce(props.data, (prev, next) => prev + (next.online ?? 0), 0) + '',
         },
       },
-    });
+    };
 
-    piePlot.render();
-    return () => piePlot.destroy();
+    if (!piePlotRef.current) {
+      piePlotRef.current = new Pie(ref.current!, config);
+      piePlotRef.current.render();
+    } else {
+      piePlotRef.current?.update(config);
+    }
+    // return () => piePlotRef.current?.destroy();
   }, [props.data]);
   return <div ref={ref} style={{ height: '100%' }}></div>;
 }

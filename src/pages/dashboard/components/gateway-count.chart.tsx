@@ -19,7 +19,7 @@ const imageCardStyle: React.CSSProperties = {
 export function GatewayCountChart() {
   const ref = React.useRef<HTMLDivElement>(null);
   const intl = useIntl();
-  const { data } = useRequest(getGatewayOnlineStatusCount, {});
+  const { data, loading } = useRequest(getGatewayOnlineStatusCount, {});
   const piePlot = React.useRef<Pie>();
   function transform() {
     return [
@@ -69,15 +69,17 @@ export function GatewayCountChart() {
     };
   }
   React.useEffect(() => {
-    const source = transform();
-    piePlot.current = new Pie(ref.current!, transConfig(source));
-    piePlot.current.render();
-  }, []);
+    if (ref.current) {
+      const source = transform();
+      piePlot.current = new Pie(ref.current, transConfig(source));
+      piePlot.current.render();
+    }
+  }, [loading]);
   React.useEffect(() => {
     piePlot.current?.update(transConfig(transform()));
   }, [data?.total]);
   return (
-    <ProCard split="horizontal">
+    <ProCard split="horizontal" loading={loading}>
       <ProCard bodyStyle={imageCardStyle}>
         <div ref={ref} style={{ width: '100%', height: 220 }}></div>
       </ProCard>
