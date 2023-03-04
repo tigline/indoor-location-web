@@ -51,8 +51,13 @@ export default {
   'pages.dashboard.stuff.count': '物资数量',
 
   'pages.dashboard.goods.count': '物资数量',
+  'pages.dashboard.gateway.count': '基站数量',
   'pages.dashboard.online.count': '在线数量',
   'pages.dashboard.offline.count': '离线数量',
+  'pages.alarm.total': '告警数量',
+  'pages.alarm.ranking': '排名',
+  'pages.alarm.label': '告警标签',
+  'pages.alarm.label.count': '告警数量',
 
   'pages.welcome.link': '欢迎使用',
   'pages.welcome.alertMessage': '更快更强的重型组件，已经发布。',

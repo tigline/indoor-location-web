@@ -10,6 +10,12 @@ import { Card } from 'antd';
 import { isNil, map } from 'lodash';
 import React from 'react';
 
+/**
+ * 实时地图组件，概览页面应用
+ *
+ * @export
+ * @return {*}
+ */
 export function RealTimeMap() {
   const intl = useIntl();
   const formRef = React.useRef<ProFormInstance<{ mapId: string[] }>>(null);

@@ -76,7 +76,7 @@ export function LabelDistributionChart(props: IProps) {
             overflow: 'hidden',
             textOverflow: 'ellipsis',
           },
-          content: reduce(props.data, (prev, next) => prev + next.online ?? 0, 0) + '',
+          content: reduce(props.data, (prev, next) => prev + (next.online ?? 0), 0) + '',
         },
       },
     });

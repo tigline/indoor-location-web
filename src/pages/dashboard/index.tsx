@@ -4,10 +4,14 @@ import { useIntl, useRequest } from '@umijs/max';
 import { Card, Col, Row, theme } from 'antd';
 import React from 'react';
 import { AlarmAnalogyRatioChart } from './components/alarm-analogy-ratio.chart';
+import { AlarmLast_24HoursChart } from './components/alarm-last-24-hours.chart';
+import { GatewayCountChart } from './components/gateway-count.chart';
 import { GoodsCountStatistic } from './components/goods-count.statistic';
+import { LabelCountChart } from './components/label-count.chart';
 import { LabelDistributionChart } from './components/label-distribution.chart';
 import { RealTimeMap } from './components/real-time.map';
 import { SystemRunningTimeChart } from './components/system-running-time.chart';
+import { WarningOfTodayTable } from './components/warning-of-today.table';
 
 type keyType = Required<API.BeaconInfo>['type'];
 export type LabelDistribution = Record<keyType, { offline: number; online: number; total: number }>;
@@ -50,12 +54,6 @@ const Welcome: React.FC = () => {
           </Card>
         </Col>
         <Col span="12">
-          {/* <Card
-            bodyStyle={{ minHeight: 400 }}
-            title={intl.formatMessage({ id: 'dashboard.map', defaultMessage: '地图' })}
-          >
-            {}
-          </Card> */}
           <RealTimeMap />
         </Col>
         <Col span="12">
@@ -66,7 +64,7 @@ const Welcome: React.FC = () => {
               defaultMessage: '24小时告警变化',
             })}
           >
-            {}
+            <AlarmLast_24HoursChart />
           </Card>
         </Col>
         <Col span="6">
@@ -77,7 +75,7 @@ const Welcome: React.FC = () => {
               defaultMessage: '今日告警',
             })}
           >
-            {}
+            <WarningOfTodayTable />
           </Card>
         </Col>
         <Col span="6">
@@ -107,7 +105,7 @@ const Welcome: React.FC = () => {
             bodyStyle={{ minHeight: 400 }}
             title={intl.formatMessage({ id: 'dashboard.label.status', defaultMessage: '标签状态' })}
           >
-            {}
+            <LabelCountChart />
           </Card>
         </Col>
         <Col span="6">
@@ -118,7 +116,7 @@ const Welcome: React.FC = () => {
               defaultMessage: '基站状态',
             })}
           >
-            {}
+            <GatewayCountChart />
           </Card>
         </Col>
         <Col span="6"></Col>

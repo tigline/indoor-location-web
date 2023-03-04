@@ -5,7 +5,7 @@ import { PageContainer, ProColumns, ProTable } from '@ant-design/pro-components'
 import { FormattedMessage, useIntl, useModel, useRequest } from '@umijs/max';
 import { ReadyState } from 'ahooks/lib/useWebSocket';
 import { Button, notification, Space } from 'antd';
-import * as dayjs from 'dayjs';
+import dayjs from 'dayjs';
 import React from 'react';
 import { v4 } from 'uuid';
 import { DealAlarmModal } from './components/deal-alarm.modal';
@@ -194,8 +194,8 @@ export default function Page() {
           const [startTime, endTime] = createTime ?? [];
           return {
             ...rest,
-            startTime: startTime?.valueOf(),
-            endTime: endTime?.valueOf(),
+            startTime: startTime ? dayjs(startTime)?.unix() : undefined,
+            endTime: endTime ? dayjs(endTime)?.unix() : undefined,
           };
         }}
         request={(param) => {
