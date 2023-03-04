@@ -1,6 +1,7 @@
 import { ImageUploadFormItem } from '@/components/image.upload.form.item';
 import { pageBeacon } from '@/services/swagger/shebeiguanli';
 import { addThing, pageThingType } from '@/services/swagger/wupinguanli';
+import { PlusOutlined } from '@ant-design/icons';
 import { ModalForm, ProFormSelect, ProFormText } from '@ant-design/pro-components';
 import { useIntl, useRequest } from '@umijs/max';
 import { Button, notification } from 'antd';
@@ -55,7 +56,9 @@ export function AddGoodsModal(props: IProps) {
         defaultMessage: '添加物品',
       })}
       trigger={
-        <Button>{intl.formatMessage({ id: 'app.action.add', defaultMessage: '新建' })}</Button>
+        <Button type="primary" icon={<PlusOutlined />}>
+          {intl.formatMessage({ id: 'app.action.add', defaultMessage: '新建' })}
+        </Button>
       }
       onFinish={(values) => {
         return run(values);
