@@ -145,10 +145,47 @@ export async function listBeaconLocation(
   });
 }
 
-/** 获取标签在线数量 GET /api/v1/online/beacon */
-export async function listBeaconOnlineCounts(options?: { [key: string]: any }) {
-  return request<API.RestValueListOnlineCount>('/api/v1/online/beacon', {
+/** 不同标签类型的在线状态 GET /api/v1/status/beacon */
+export async function getBeaconStatusCounts(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.getBeaconStatusCountsParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.RestValueMapBeaconTypeOnlineStatusCount>('/api/v1/status/beacon', {
     method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
+/** 获取网关在线状态 GET /api/v1/status/gateway */
+export async function getGatewayOnlineStatusCount(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.getGatewayOnlineStatusCountParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.RestValueOnlineStatusCount>('/api/v1/status/gateway', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
+/** 获取未绑定标签列表 GET /api/v1/unbound/beacon */
+export async function listUnboundBeacon(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.listUnboundBeaconParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.RestValueListBeaconInfo>('/api/v1/unbound/beacon', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
     ...(options || {}),
   });
 }

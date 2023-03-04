@@ -225,8 +225,18 @@ declare namespace API {
     updateTime?: number;
   };
 
+  type getBeaconStatusCountsParams = {
+    mapId?: string;
+    type?: 'Equipment' | 'Personnel' | 'Vehicle' | 'Stuff';
+    onlyOnline?: boolean;
+  };
+
   type getFenceParams = {
     fenceId: string;
+  };
+
+  type getGatewayOnlineStatusCountParams = {
+    mapId?: string;
   };
 
   type getMapParams = {
@@ -250,6 +260,10 @@ declare namespace API {
     hidePicture?: boolean;
   };
 
+  type listUnboundBeaconParams = {
+    type?: 'Equipment' | 'Personnel' | 'Vehicle' | 'Stuff';
+  };
+
   type LoginInfo = {
     password: string;
     username: string;
@@ -271,9 +285,10 @@ declare namespace API {
     widthPx?: number;
   };
 
-  type OnlineCount = {
-    count?: number;
-    type?: 'Equipment' | 'Personnel' | 'Vehicle' | 'Stuff';
+  type OnlineStatusCount = {
+    offline?: number;
+    online?: number;
+    total?: number;
   };
 
   type pageAlarmParams = {
@@ -335,6 +350,7 @@ declare namespace API {
   };
 
   type pagePersonnelTypeParams = {
+    hidePicture?: boolean;
     /** 当前页码 */
     current?: string;
     /** 每页数量 */
@@ -413,6 +429,7 @@ declare namespace API {
   };
 
   type pageThingTypeParams = {
+    hidePicture?: boolean;
     /** 当前页码 */
     current?: string;
     /** 每页数量 */
@@ -490,6 +507,13 @@ declare namespace API {
     message?: string;
   };
 
+  type RestValueListBeaconInfo = {
+    code?: number;
+    data?: BeaconInfo[];
+    errorDetail?: string;
+    message?: string;
+  };
+
   type RestValueListBuildingInfo = {
     code?: number;
     data?: BuildingInfo[];
@@ -511,9 +535,16 @@ declare namespace API {
     message?: string;
   };
 
-  type RestValueListOnlineCount = {
+  type RestValueLong = {
     code?: number;
-    data?: OnlineCount[];
+    data?: number;
+    errorDetail?: string;
+    message?: string;
+  };
+
+  type RestValueMapBeaconTypeOnlineStatusCount = {
+    code?: number;
+    data?: Record<string, any>;
     errorDetail?: string;
     message?: string;
   };
@@ -521,6 +552,13 @@ declare namespace API {
   type RestValueMapInfo = {
     code?: number;
     data?: MapInfo;
+    errorDetail?: string;
+    message?: string;
+  };
+
+  type RestValueOnlineStatusCount = {
+    code?: number;
+    data?: OnlineStatusCount;
     errorDetail?: string;
     message?: string;
   };
@@ -700,6 +738,11 @@ declare namespace API {
   };
 
   type updateUserInfoParams = {
+    userId: string;
+  };
+
+  type UpdateUserRole = {
+    role: 'Admin' | 'User';
     userId: string;
   };
 

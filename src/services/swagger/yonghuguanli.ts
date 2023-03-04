@@ -2,6 +2,18 @@
 /* eslint-disable */
 import { request } from '@umijs/max';
 
+/** 更改用户角色 PUT /api/v1/user/role */
+export async function updateUserRole(body: API.UpdateUserRole, options?: { [key: string]: any }) {
+  return request<API.RestValueBoolean>('/api/v1/user/role', {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
 /** 获取用户信息 GET /api/v1/userInfo */
 export async function getUserInfo(options?: { [key: string]: any }) {
   return request<API.RestValueUserInfo>('/api/v1/userInfo', {

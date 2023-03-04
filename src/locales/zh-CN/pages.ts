@@ -44,6 +44,10 @@ export default {
   'pages.register.failure': '注册失败，请重试！',
   'pages.register.success': '注册成功！',
 
+  'pages.dashboard.goods.count': '物资数量',
+  'pages.dashboard.goods.online.count': '在线数量',
+  'pages.dashboard.goods.offline.count': '离线数量',
+
   'pages.welcome.link': '欢迎使用',
   'pages.welcome.alertMessage': '更快更强的重型组件，已经发布。',
   'pages.admin.subPage.title': ' 这个页面只有 admin 权限才能查看',

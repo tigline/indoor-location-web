@@ -1,13 +1,14 @@
-import { PageContainer, StatisticCard } from '@ant-design/pro-components';
+import { PageContainer } from '@ant-design/pro-components';
 import { useIntl } from '@umijs/max';
 import { Card, Col, Row, theme } from 'antd';
 import React from 'react';
 import { AlarmAnalogyRatioChart } from './components/alarm-analogy-ratio.chart';
+import { GoodsCountStatistic } from './components/goods-count.statistic';
 import { SystemRunningTimeChart } from './components/system-running-time.chart';
-
 const Welcome: React.FC = () => {
   const {} = theme.useToken();
   const intl = useIntl();
+
   return (
     <PageContainer>
       <Row gutter={[8, 8]}>
@@ -18,29 +19,9 @@ const Welcome: React.FC = () => {
               defaultMessage: '定位概览',
             })}
             // direction="row"
-            style={{ minHeight: 400 }}
+            bodyStyle={{ minHeight: 400 }}
           >
-            <StatisticCard
-              statistic={{
-                title: '未发布',
-                value: 5,
-                status: 'default',
-              }}
-            />
-            <StatisticCard
-              statistic={{
-                title: '发布中',
-                value: 3,
-                status: 'processing',
-              }}
-            />
-            <StatisticCard
-              statistic={{
-                title: '发布异常',
-                value: 2,
-                status: 'error',
-              }}
-            />
+            <GoodsCountStatistic />
           </Card>
         </Col>
         <Col span="6">
@@ -92,7 +73,7 @@ const Welcome: React.FC = () => {
               defaultMessage: '今日告警类比占比',
             })}
           >
-            <AlarmAnalogyRatioChart></AlarmAnalogyRatioChart>
+            <AlarmAnalogyRatioChart />
           </Card>
         </Col>
         <Col span="6">
@@ -103,7 +84,7 @@ const Welcome: React.FC = () => {
               defaultMessage: '系统运行时间',
             })}
           >
-            <SystemRunningTimeChart></SystemRunningTimeChart>
+            <SystemRunningTimeChart />
           </Card>
         </Col>
         <Col span="6">

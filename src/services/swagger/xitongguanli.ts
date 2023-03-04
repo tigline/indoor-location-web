@@ -227,3 +227,11 @@ export async function deleteMap(
     ...(options || {}),
   });
 }
+
+/** 获取系统开始运行时间 GET /api/v1/runningTime */
+export async function getSystemRunningTime(options?: { [key: string]: any }) {
+  return request<API.RestValueLong>('/api/v1/runningTime', {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
