@@ -1,14 +1,28 @@
+import { getBeaconStatusCounts } from '@/services/swagger/shebeiguanli';
 import { PageContainer } from '@ant-design/pro-components';
-import { useIntl } from '@umijs/max';
+import { useIntl, useRequest } from '@umijs/max';
 import { Card, Col, Row, theme } from 'antd';
 import React from 'react';
 import { AlarmAnalogyRatioChart } from './components/alarm-analogy-ratio.chart';
 import { GoodsCountStatistic } from './components/goods-count.statistic';
+import { LabelDistributionChart } from './components/label-distribution.chart';
+import { RealTimeMap } from './components/real-time.map';
 import { SystemRunningTimeChart } from './components/system-running-time.chart';
+
+type keyType = Required<API.BeaconInfo>['type'];
+export type LabelDistribution = Record<keyType, { offline: number; online: number; total: number }>;
 const Welcome: React.FC = () => {
   const {} = theme.useToken();
   const intl = useIntl();
-
+  const { data } = useRequest(getBeaconStatusCounts, {
+    // manual: true,
+    formatResult(res) {
+      return res.data as LabelDistribution;
+    },
+    onSuccess(data) {
+      console.log('不同标签类型的在线状态', data);
+    },
+  });
   return (
     <PageContainer>
       <Row gutter={[8, 8]}>
@@ -21,7 +35,7 @@ const Welcome: React.FC = () => {
             // direction="row"
             bodyStyle={{ minHeight: 400 }}
           >
-            <GoodsCountStatistic />
+            <GoodsCountStatistic data={data} />
           </Card>
         </Col>
         <Col span="6">
@@ -32,16 +46,17 @@ const Welcome: React.FC = () => {
               defaultMessage: '在线标签分布',
             })}
           >
-            {}
+            <LabelDistributionChart data={data} />
           </Card>
         </Col>
         <Col span="12">
-          <Card
+          {/* <Card
             bodyStyle={{ minHeight: 400 }}
             title={intl.formatMessage({ id: 'dashboard.map', defaultMessage: '地图' })}
           >
             {}
-          </Card>
+          </Card> */}
+          <RealTimeMap />
         </Col>
         <Col span="12">
           <Card

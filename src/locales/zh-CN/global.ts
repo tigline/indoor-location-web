@@ -18,4 +18,5 @@ export default {
   'app.createTime': '创建时间',
   'app.updateTime': '更新时间',
   '{days}day {hours}hour {mins}min {secs}sec': '{days}天 {hours}时 {mins}分 {secs}秒',
+  'app.total': '汇总',
 };

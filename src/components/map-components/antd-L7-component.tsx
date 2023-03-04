@@ -17,7 +17,6 @@ import {
 } from '@antv/l7';
 import { DrawPolygon } from '@antv/l7-draw';
 import { Card } from 'antd';
-import { isEmpty } from 'lodash';
 import React from 'react';
 
 const scale = 10;
@@ -42,6 +41,8 @@ export function convertLtoCM(l: Point, length: number = 0) {
 
 interface IProps {
   map?: string;
+  width?: number;
+  height?: number;
   rect: [number?, number?];
   drawEnable?: boolean;
   drawRef?: React.MutableRefObject<DrawPolygon | undefined>;
@@ -125,18 +126,19 @@ export function AntdL7Component(props: IProps) {
   React.useEffect(() => {
     if (props.map && loaded && mapWidth && mapLength) {
       if (imageLayer.current) {
-        scene.current?.removeLayer(imageLayer.current);
-        // imageLayer.current.destroy();
+        imageLayer.current.setData(props.map!);
+        imageLayer.current.setIndex(0);
+      } else {
+        imageLayer.current = new ImageLayer({ zIndex: 0 });
+        // layer.source('https://www.arapahoe.edu/sites/default/files/about-acc/acc-annex-2nd-floor.jpg', {
+        // layer.source('https://img-blog.csdnimg.cn/20200616175116543.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTM4MjAxMjE=,size_16,color_FFFFFF,t_70', {
+        const maxRange = metersToLngLat([mapWidth * scale, mapLength * scale]);
+        imageLayer.current.source(props.map!, {
+          parser: { type: 'image', extent: [0, 0, ...maxRange] },
+        });
+        scene.current?.setCenter([maxRange[0] / 2, maxRange[1] / 2]);
+        scene.current?.addLayer(imageLayer.current);
       }
-      imageLayer.current = new ImageLayer({ zIndex: -1 });
-      // layer.source('https://www.arapahoe.edu/sites/default/files/about-acc/acc-annex-2nd-floor.jpg', {
-      // layer.source('https://img-blog.csdnimg.cn/20200616175116543.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTM4MjAxMjE=,size_16,color_FFFFFF,t_70', {
-      const maxRange = metersToLngLat([mapWidth * scale, mapLength * scale]);
-      imageLayer.current.source(props.map!, {
-        parser: { type: 'image', extent: [0, 0, ...maxRange] },
-      });
-      scene.current?.setCenter([maxRange[0] / 2, maxRange[1] / 2]);
-      scene.current?.addLayer(imageLayer.current);
     }
   }, [props.map, loaded]);
   React.useEffect(() => {
@@ -171,193 +173,184 @@ export function AntdL7Component(props: IProps) {
 
   // 处理基站展示内容
   React.useEffect(() => {
-    if (isEmpty(props.stations)) {
-      return;
+    if (loaded) {
+      const source = (props.stations ?? [])?.map((item) => {
+        const [lng, lat] = convertCMtoL([item.setX!, item.setY!], mapLength);
+        return { ...item, lng, lat };
+      });
+      if (stationLayer.current) {
+        // scene.current?.removeLayer(stationLayer.current);
+        // stationLayer.current.destroy();
+        stationLayer.current.setData(source);
+        stationLayer.current.setIndex(3);
+      } else {
+        stationLayer.current = new PointLayer({ zIndex: 3 })
+          .source(source, {
+            parser: { type: 'json', x: 'lng', y: 'lat', name: 'name' },
+          })
+          .shape('name', ['stationIcon'])
+          .size(10);
+        scene.current?.addLayer(stationLayer.current);
+      }
     }
-    if (stationLayer.current) {
-      scene.current?.removeLayer(stationLayer.current);
-      stationLayer.current.destroy();
-    }
-    const source = props.stations?.map((item) => {
-      const [lng, lat] = convertCMtoL([item.setX!, item.setY!], mapLength);
-      return { ...item, lng, lat };
-    });
-    stationLayer.current = new PointLayer({ zIndex: 1 })
-      .source(source, {
-        parser: { type: 'json', x: 'lng', y: 'lat', name: 'name' },
-      })
-      .shape('name', ['stationIcon'])
-      .size(10);
-    scene.current?.addLayer(stationLayer.current);
   }, [props.stations, loaded]);
 
   // 处理标签展示内容
   React.useEffect(() => {
-    if (isEmpty(props.beacons)) {
-      return;
-    }
-    if (beaconLayer.current) {
-      scene.current?.removeLayer(beaconLayer.current);
-      beaconLayer.current?.destroy();
-    }
-    if (beaconPointLayer.current) {
-      scene.current?.removeLayer(beaconPointLayer.current);
-      beaconPointLayer.current.destroy();
-    }
-    const beacons = props.beacons ?? [];
-
-    beaconPointLayer.current = new PointLayer({ zIndex: 3 })
-      .source(
-        beacons?.map((item) => {
-          const [lng, lat] = convertCMtoL([item.posX!, item.posY!], mapLength);
-          return { ...item, lng, lat };
-        }),
-        { parser: { type: 'json', x: 'lng', y: 'lat', name: 'name' } },
-      )
-      .shape('circle')
-      .color(green[3])
-      .size(5);
-
-    const source = [];
-    for (let index = 0; index < beacons.length; index++) {
-      const start = beacons[index];
-      const end = beacons[index + 1];
-      if (end) {
-        const [lng, lat] = convertCMtoL([start.posX!, start.posY!], mapLength);
-        const [lng1, lat1] = convertCMtoL([end.posX!, end.posY!], mapLength);
-        source.push({ ...start, lng, lat, lng1, lat1 });
+    if (loaded) {
+      const beacons = props.beacons ?? [];
+      const beaconSource = beacons?.map((item) => {
+        const [lng, lat] = convertCMtoL([item.posX!, item.posY!], mapLength);
+        return { ...item, lng, lat };
+      });
+      const source = [];
+      for (let index = 0; index < beacons.length; index++) {
+        const start = beacons[index];
+        const end = beacons[index + 1];
+        if (end) {
+          const [lng, lat] = convertCMtoL([start.posX!, start.posY!], mapLength);
+          const [lng1, lat1] = convertCMtoL([end.posX!, end.posY!], mapLength);
+          source.push({ ...start, lng, lat, lng1, lat1 });
+        }
+      }
+      if (beaconLayer.current) {
+        // scene.current?.removeLayer(beaconLayer.current);
+        // beaconLayer.current?.destroy();
+        beaconLayer.current.setData(source);
+        beaconLayer.current.setIndex(3);
+      } else {
+        beaconLayer.current = new LineLayer({ zIndex: 3 })
+          .source(source, {
+            parser: { type: 'json', x: 'lng', y: 'lat', x1: 'lng1', y1: 'lat1' },
+          })
+          .shape('line')
+          .size(2)
+          // .texture('arrow')
+          .color(green[3])
+          .animate({
+            interval: 0.4, // 间隔
+            duration: 1, // 持续时间，延时
+            trailLength: 0.8, // 流线长度
+          })
+          .style({
+            lineTexture: true, // 开启线的贴图功能
+            iconStep: 20, // 设置贴图纹理的间距
+          });
+        scene.current?.addLayer(beaconLayer.current);
+      }
+      if (beaconPointLayer.current) {
+        // scene.current?.removeLayer(beaconPointLayer.current);
+        // beaconPointLayer.current.destroy();
+        beaconPointLayer.current.setData(beaconSource);
+        beaconPointLayer.current.setIndex(4);
+      } else {
+        beaconPointLayer.current = new PointLayer({ zIndex: 4 })
+          .source(beaconSource, { parser: { type: 'json', x: 'lng', y: 'lat', name: 'name' } })
+          .shape('circle')
+          .color(green[3])
+          .size(5);
+        scene.current?.addLayer(beaconPointLayer.current);
       }
     }
-    beaconLayer.current = new LineLayer({ zIndex: 2 })
-      .source(source, {
-        parser: { type: 'json', x: 'lng', y: 'lat', x1: 'lng1', y1: 'lat1' },
-      })
-      .shape('line')
-      .size(2)
-      // .texture('arrow')
-      .color(green[3])
-      .animate({
-        interval: 0.4, // 间隔
-        duration: 1, // 持续时间，延时
-        trailLength: 0.8, // 流线长度
-      })
-      .style({
-        lineTexture: true, // 开启线的贴图功能
-        iconStep: 20, // 设置贴图纹理的间距
-        // arrow: {
-        //   enable: true,
-        //   arrowWidth: 2,
-        //   arrowHeight: 1,
-        //   tailWidth: 1,
-        // },
-      });
-    scene.current?.addLayer(beaconLayer.current);
-    scene.current?.addLayer(beaconPointLayer.current);
   }, [props.beacons, loaded]);
 
   // 处理围栏展示内容
   React.useEffect(() => {
-    if (!props.fence || isEmpty(props.fence?.points) || !loaded) {
-      return;
-    }
-    const fences = props.fence.points ?? [];
-    const source = {
-      type: 'FeatureCollection',
-      features: [
-        {
-          type: 'Feature',
-          properties: {},
-          geometry: {
-            type: 'Polygon',
-            coordinates: [fences.map((item) => convertCMtoL([item.x, item.y], mapLength))],
+    if (loaded && props.fence) {
+      const fences = props.fence.points ?? [];
+      const source = {
+        type: 'FeatureCollection',
+        features: [
+          {
+            type: 'Feature',
+            properties: {},
+            geometry: {
+              type: 'Polygon',
+              coordinates: [fences.map((item) => convertCMtoL([item.x, item.y], mapLength))],
+            },
           },
-        },
-      ],
-    };
+        ],
+      };
 
-    if (!fenceLayer.current) {
-      fenceLayer.current = new PolygonLayer({ zIndex: 4 })
-        .source(source)
-        .shape('fill')
-        .color(props.fence.type === 'In' ? green[4] : gold[4])
-        .style({ opacity: 0.6 });
-      scene.current?.addLayer(fenceLayer.current);
-      console.log('fenceLayer.current', fenceLayer.current);
-    } else {
-      fenceLayer.current.setData(source);
+      if (!fenceLayer.current) {
+        fenceLayer.current = new PolygonLayer({ zIndex: 2 })
+          .source(source)
+          .shape('fill')
+          .color(props.fence.type === 'In' ? green[4] : gold[4])
+          .style({ opacity: 0.6 });
+        scene.current?.addLayer(fenceLayer.current);
+        console.log('fenceLayer.current', fenceLayer.current);
+      } else {
+        fenceLayer.current.setData(source);
+        fenceLayer.current.setIndex(2);
+      }
     }
   }, [props.fence, loaded]);
 
   React.useEffect(() => {
-    if (isEmpty(props.locations) || !loaded) {
-      return;
-    }
-    const coordinates =
-      props.locations?.map((item) => convertCMtoL([item.posX!, item.posY!], mapLength)) ?? [];
+    if (loaded) {
+      const coordinates =
+        props.locations?.map((item) => convertCMtoL([item.posX!, item.posY!], mapLength)) ?? [];
 
-    const source = {
-      type: 'FeatureCollection',
-      features: [
-        {
-          type: 'Feature',
-          properties: {},
-          geometry: { type: 'Polygon', coordinates: [coordinates] },
-        },
-      ],
-    };
-    if (!locationLayer.current) {
-      locationLayer.current = new PointLayer({ zIndex: 3, layerType: 'fillImage' })
-        .source(source)
-        .color(green[3])
-        .size(15)
-        .shape('personImage', ['personImage'])
-        .animate(true);
-      scene.current?.addLayer(locationLayer.current);
-    } else {
-      locationLayer.current.setData(source);
+      const source = {
+        type: 'FeatureCollection',
+        features: [
+          {
+            type: 'Feature',
+            properties: {},
+            geometry: { type: 'Polygon', coordinates: [coordinates] },
+          },
+        ],
+      };
+      if (!locationLayer.current) {
+        locationLayer.current = new PointLayer({ zIndex: 3, layerType: 'fillImage' })
+          .source(source)
+          .color(green[3])
+          .size(15)
+          .shape('personImage', ['personImage'])
+          .animate(true);
+        scene.current?.addLayer(locationLayer.current);
+      } else {
+        locationLayer.current.setData(source);
+      }
     }
-    return () => {
-      // locationLayer.current?.destroy();
-    };
   }, [props.locations, loaded]);
   // 处理告警信息
   React.useEffect(() => {
-    if (isEmpty(props.alarms) || !loaded) {
-      return;
-    }
-    const coordinates =
-      props.alarms?.map((item) => convertCMtoL([item.point!.x!, item.point!.y!], mapLength)) ?? [];
+    if (loaded) {
+      const coordinates =
+        props.alarms?.map((item) => convertCMtoL([item.point!.x!, item.point!.y!], mapLength)) ??
+        [];
 
-    const source = {
-      type: 'FeatureCollection',
-      features: [
-        {
-          type: 'Feature',
-          properties: {},
-          geometry: { type: 'Polygon', coordinates: [coordinates] },
-        },
-      ],
-    };
-    if (!alarmLayer.current) {
-      alarmLayer.current = new PointLayer({ zIndex: 3, layerType: 'fillImage' })
-        .source(source)
-        .color(green[3])
-        .size(15)
-        .shape('warning', ['warning'])
-        .animate(true);
-      scene.current?.addLayer(alarmLayer.current);
-    } else {
-      alarmLayer.current.setData(source);
+      const source = {
+        type: 'FeatureCollection',
+        features: [
+          {
+            type: 'Feature',
+            properties: {},
+            geometry: { type: 'Polygon', coordinates: [coordinates] },
+          },
+        ],
+      };
+      if (!alarmLayer.current) {
+        alarmLayer.current = new PointLayer({ zIndex: 10, layerType: 'fillImage' })
+          .source(source)
+          .color(green[3])
+          .size(15)
+          .shape('warning', ['warning'])
+          .animate(true);
+        scene.current?.addLayer(alarmLayer.current);
+      } else {
+        alarmLayer.current.setData(source);
+        alarmLayer.current.setIndex(10);
+      }
     }
-    return () => {
-      // locationLayer.current?.destroy();
-    };
   }, [props.alarms, loaded]);
 
   return (
     <React.Fragment>
       <Card bodyStyle={{ padding: 0 }}>
-        <div id="map" ref={mapContainer} style={{ minHeight: 600 }}></div>
+        <div id="map" ref={mapContainer} style={{ minHeight: props.height ?? 600 }}></div>
       </Card>
     </React.Fragment>
   );
