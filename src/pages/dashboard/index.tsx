@@ -44,8 +44,8 @@ const Welcome: React.FC = () => {
     queryAlarm({
       current: '1',
       size: '10000',
-      startTime: dayjs('2023-03-02').add(-1, 'day').unix(),
-      endTime: dayjs('2023-03-02').unix(),
+      startTime: dayjs().add(-1, 'day').unix(),
+      endTime: dayjs().unix(),
     });
   }, []);
   return (
