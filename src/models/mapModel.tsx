@@ -1,7 +1,7 @@
 import { listMaps } from '@/services/swagger/xitongguanli';
 import { useRequest } from '@umijs/max';
 import { first, isEmpty } from 'lodash';
-import React, { useEffect } from 'react';
+import React from 'react';
 
 export default () => {
   const [initialValue, setInitialValue] = React.useState<string>();
@@ -19,9 +19,9 @@ export default () => {
       },
     },
   );
-  useEffect(() => {
-    run();
-  }, []);
+  // React.useEffect(() => {
+  //   run();
+  // }, []);
   const options = (data ?? []).map((item) => ({
     label: item.name,
     value: item.mapId,
