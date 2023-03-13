@@ -11,6 +11,7 @@ import {
 } from '@ant-design/pro-components';
 import { useIntl, useRequest } from '@umijs/max';
 import { Card } from 'antd';
+import dayjs from 'dayjs';
 import { isNil } from 'lodash';
 import { Moment } from 'moment';
 import React from 'react';
@@ -77,8 +78,8 @@ export default function Page() {
             transform={(value: [Moment?, Moment?]) => {
               const [startTime, endTime] = fmtDate(value) ?? [];
               return {
-                startTime,
-                endTime,
+                startTime: startTime ? dayjs(startTime)?.unix() : undefined,
+                endTime: endTime ? dayjs(endTime)?.unix() : undefined,
               };
             }}
             placeholder={[

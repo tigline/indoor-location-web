@@ -49,6 +49,12 @@ export function RealTimeMap() {
     query({ mapId: mapId });
     return run({ mapId });
   }
+  React.useEffect(() => {
+    const mapId = formRef.current?.getFieldValue(['mapId']);
+    if (mapId) {
+      submit(mapId);
+    }
+  }, []);
   return (
     <Card
       bodyStyle={{ minHeight: 400 }}

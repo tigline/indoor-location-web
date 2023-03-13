@@ -116,7 +116,7 @@ export function DealAlarmModal(props: IProps) {
     >
       <AntdL7Component
         map={map?.picture}
-        rect={[map?.width, map?.length]}
+        rect={[map?.length, map?.width]}
         alarms={[props.record]}
         fence={fence}
         // locations={[]}

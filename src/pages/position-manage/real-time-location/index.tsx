@@ -80,7 +80,12 @@ export default function Page() {
     query({ mapId: mapId });
     return run({ mapId });
   }
-
+  React.useEffect(() => {
+    const mapId = formRef.current?.getFieldValue(['mapId']);
+    if (mapId) {
+      submit(mapId);
+    }
+  }, []);
   return (
     <PageContainer>
       <ProCard>
