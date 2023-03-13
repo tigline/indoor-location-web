@@ -19,7 +19,7 @@ const Name = () => {
 
   const nameClassName = useEmotionCss(({ token }) => {
     return {
-      width: '70px',
+      // width: '70px',
       height: '48px',
       overflow: 'hidden',
       lineHeight: '48px',
@@ -31,12 +31,12 @@ const Name = () => {
     };
   });
 
-  return <span className={`${nameClassName} anticon`}>{currentUser?.nickname}</span>;
+  return <span className={`${nameClassName} anticon`}>{currentUser?.username}</span>;
 };
 
 const AvatarLogo = () => {
-  const { initialState } = useModel('@@initialState');
-  const { currentUser } = initialState || {};
+  // const { initialState } = useModel('@@initialState');
+  // const { currentUser } = initialState || {};
 
   const avatarClassName = useEmotionCss(({ token }) => {
     return {
@@ -50,7 +50,7 @@ const AvatarLogo = () => {
     };
   });
 
-  return <Avatar size="small" className={avatarClassName} src={currentUser?.email} alt="avatar" />;
+  return <Avatar size="small" className={avatarClassName} src={<UserOutlined />} alt="avatar" />;
 };
 
 const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
@@ -124,7 +124,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
 
   const { currentUser } = initialState;
 
-  if (!currentUser || !currentUser.nickname) {
+  if (!currentUser || !currentUser.username) {
     return loading;
   }
 

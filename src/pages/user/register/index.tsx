@@ -1,7 +1,7 @@
 import Footer from '@/components/Footer';
 import { register } from '@/services/swagger/dengluxiangguan';
 import { NP, OK } from '@/utils/global.utils';
-import { LockOutlined, MailOutlined, PhoneOutlined, UserOutlined } from '@ant-design/icons';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { ProForm, ProFormText } from '@ant-design/pro-components';
 import { useEmotionCss } from '@ant-design/use-emotion-css';
 import { FormattedMessage, Helmet, history, SelectLang, useIntl } from '@umijs/max';
@@ -49,9 +49,10 @@ const Register: React.FC = () => {
   const handleSubmit = async (values: API.RegistryInfo & { confirm: string }) => {
     try {
       // 登录
-      const { confirm, ...rest } = values;
+      const { confirm, username, ...rest } = values;
+
       console.log(confirm);
-      const msg = await register(NP, { ...rest });
+      const msg = await register(NP, { username, ...rest, nickname: username, email: username });
       if (msg.code === OK && msg.data) {
         const defaultLoginSuccessMessage = intl.formatMessage({
           id: 'pages.register.success',
@@ -119,7 +120,7 @@ const Register: React.FC = () => {
           <Typography.Title level={3}>
             <FormattedMessage id="pages.login.registerAccount" defaultMessage="注册账户" />
           </Typography.Title>
-          <ProFormText
+          {/* <ProFormText
             name="nickname"
             placeholder={intl.formatMessage({
               id: 'pages.register.nickname',
@@ -137,7 +138,7 @@ const Register: React.FC = () => {
                 ),
               },
             ]}
-          />
+          /> */}
           <ProFormText
             name="username"
             fieldProps={{ size: 'large', prefix: <UserOutlined /> }}
@@ -207,7 +208,7 @@ const Register: React.FC = () => {
               },
             ]}
           />
-          <ProFormText
+          {/* <ProFormText
             name="email"
             placeholder={intl.formatMessage({ id: 'pages.register.email', defaultMessage: '邮箱' })}
             fieldProps={{ size: 'large', prefix: <MailOutlined /> }}
@@ -222,8 +223,8 @@ const Register: React.FC = () => {
                 ),
               },
             ]}
-          />
-          <ProFormText
+          /> */}
+          {/* <ProFormText
             name="phone"
             placeholder={intl.formatMessage({ id: 'pages.register.phone', defaultMessage: '手机' })}
             fieldProps={{ size: 'large', prefix: <PhoneOutlined /> }}
@@ -238,7 +239,7 @@ const Register: React.FC = () => {
                 ),
               },
             ]}
-          />
+          /> */}
         </ProForm>
       </div>
       <Footer />
