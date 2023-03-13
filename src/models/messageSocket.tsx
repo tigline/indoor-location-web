@@ -4,7 +4,7 @@ import { useWebSocket } from 'ahooks';
 export default () => {
   const { initialState } = useModel('@@initialState');
   const { connect, readyState, latestMessage } = useWebSocket(
-    `ws://120.78.168.7/websocket?userId=${initialState?.currentUser?.userId}`,
+    `ws://${location.hostname}/websocket?userId=${initialState?.currentUser?.userId}`,
     {
       manual: true,
       onOpen: () => console.log('web socket connected'),
