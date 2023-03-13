@@ -109,7 +109,7 @@ export default function Page() {
       <Card>
         <AntdL7Component
           map={data?.data?.picture}
-          rect={[data?.data?.width, data?.data?.length]}
+          rect={[data?.data?.length, data?.data?.width]}
           // drawEnable
           stations={gateways?.items}
           beacons={beacons?.data}

@@ -72,7 +72,7 @@ export function RealTimeMap() {
       <AntdL7Component
         height={400 - 48}
         map={mapInfo?.data?.picture}
-        rect={[mapInfo?.data?.width, mapInfo?.data?.length]}
+        rect={[mapInfo?.data?.length, mapInfo?.data?.width]}
         stations={gateways?.items}
         locations={map(beacons, (o) => o).filter((f) => f.mapId === mapInfo?.data?.mapId)}
       />

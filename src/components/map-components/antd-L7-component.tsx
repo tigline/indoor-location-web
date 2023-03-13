@@ -25,18 +25,18 @@ const scale = 10;
  * 厘米转经纬度，这里是虚构的CM，对应的是M
  * @export
  * @param {Point} m
- * @param {number} [length=0]
+ * @param {number} [width=0]
  * @return {*}
  */
-export function convertCMtoL(m: Point, length: number = 0) {
+export function convertCMtoL(m: Point, width: number = 0) {
   // FIXME: 需要处理 假的 cm 数据
   const [x, prevY] = m;
-  const y = length - prevY;
+  const y = width - prevY;
   return metersToLngLat([x * scale, y * scale]);
 }
-export function convertLtoCM(l: Point, length: number = 0) {
+export function convertLtoCM(l: Point, width: number = 0) {
   const [x, y] = lngLatToMeters(l);
-  return [x / scale, length - y / scale];
+  return [x / scale, width - y / scale];
 }
 
 interface IProps {
@@ -79,7 +79,7 @@ interface IProps {
 }
 
 export function AntdL7Component(props: IProps) {
-  const [mapWidth, mapLength] = props.rect;
+  const [mapLength, mapWidth] = props.rect;
   // const [polygonDrawer, setPolygonDrawer] = React.useState<DrawPolygon | null>(null);
   // const [coord, setCoorde] = React.useState<string>();
   const [loaded, setLoaded] = React.useState<boolean>();
@@ -132,7 +132,7 @@ export function AntdL7Component(props: IProps) {
         imageLayer.current = new ImageLayer({ zIndex: 0 });
         // layer.source('https://www.arapahoe.edu/sites/default/files/about-acc/acc-annex-2nd-floor.jpg', {
         // layer.source('https://img-blog.csdnimg.cn/20200616175116543.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTM4MjAxMjE=,size_16,color_FFFFFF,t_70', {
-        const maxRange = metersToLngLat([mapWidth * scale, mapLength * scale]);
+        const maxRange = metersToLngLat([mapLength * scale, mapWidth * scale]);
         imageLayer.current.source(props.map!, {
           parser: { type: 'image', extent: [0, 0, ...maxRange] },
         });
@@ -140,7 +140,7 @@ export function AntdL7Component(props: IProps) {
         scene.current?.addLayer(imageLayer.current);
       }
     }
-  }, [props.map, loaded]);
+  }, [props.map, loaded, mapWidth, mapLength]);
   React.useEffect(() => {
     if (scene.current && loaded) {
       drawer.current = new DrawPolygon(scene.current, {
@@ -173,9 +173,9 @@ export function AntdL7Component(props: IProps) {
 
   // 处理基站展示内容
   React.useEffect(() => {
-    if (loaded) {
+    if (loaded && mapWidth) {
       const source = (props.stations ?? [])?.map((item) => {
-        const [lng, lat] = convertCMtoL([item.setX!, item.setY!], mapLength);
+        const [lng, lat] = convertCMtoL([item.setX!, item.setY!], mapWidth);
         return { ...item, lng, lat };
       });
       if (stationLayer.current) {
@@ -193,14 +193,14 @@ export function AntdL7Component(props: IProps) {
         scene.current?.addLayer(stationLayer.current);
       }
     }
-  }, [props.stations, loaded]);
+  }, [props.stations, loaded, mapWidth]);
 
   // 处理标签展示内容
   React.useEffect(() => {
-    if (loaded) {
+    if (loaded && mapWidth) {
       const beacons = props.beacons ?? [];
       const beaconSource = beacons?.map((item) => {
-        const [lng, lat] = convertCMtoL([item.posX!, item.posY!], mapLength);
+        const [lng, lat] = convertCMtoL([item.posX!, item.posY!], mapWidth);
         return { ...item, lng, lat };
       });
       const source = [];
@@ -208,8 +208,8 @@ export function AntdL7Component(props: IProps) {
         const start = beacons[index];
         const end = beacons[index + 1];
         if (end) {
-          const [lng, lat] = convertCMtoL([start.posX!, start.posY!], mapLength);
-          const [lng1, lat1] = convertCMtoL([end.posX!, end.posY!], mapLength);
+          const [lng, lat] = convertCMtoL([start.posX!, start.posY!], mapWidth);
+          const [lng1, lat1] = convertCMtoL([end.posX!, end.posY!], mapWidth);
           source.push({ ...start, lng, lat, lng1, lat1 });
         }
       }
@@ -252,11 +252,11 @@ export function AntdL7Component(props: IProps) {
         scene.current?.addLayer(beaconPointLayer.current);
       }
     }
-  }, [props.beacons, loaded]);
+  }, [props.beacons, loaded, mapWidth]);
 
   // 处理围栏展示内容
   React.useEffect(() => {
-    if (loaded && props.fence) {
+    if (loaded && props.fence && mapWidth) {
       const fences = props.fence.points ?? [];
       const source = {
         type: 'FeatureCollection',
@@ -266,7 +266,7 @@ export function AntdL7Component(props: IProps) {
             properties: {},
             geometry: {
               type: 'Polygon',
-              coordinates: [fences.map((item) => convertCMtoL([item.x, item.y], mapLength))],
+              coordinates: [fences.map((item) => convertCMtoL([item.x, item.y], mapWidth))],
             },
           },
         ],
@@ -285,12 +285,12 @@ export function AntdL7Component(props: IProps) {
         fenceLayer.current.setIndex(2);
       }
     }
-  }, [props.fence, loaded]);
+  }, [props.fence, loaded, mapWidth]);
 
   React.useEffect(() => {
-    if (loaded) {
+    if (loaded && mapWidth) {
       const coordinates =
-        props.locations?.map((item) => convertCMtoL([item.posX!, item.posY!], mapLength)) ?? [];
+        props.locations?.map((item) => convertCMtoL([item.posX!, item.posY!], mapWidth)) ?? [];
 
       const source = {
         type: 'FeatureCollection',
@@ -314,13 +314,12 @@ export function AntdL7Component(props: IProps) {
         locationLayer.current.setData(source);
       }
     }
-  }, [props.locations, loaded]);
+  }, [props.locations, loaded, mapWidth]);
   // 处理告警信息
   React.useEffect(() => {
-    if (loaded) {
+    if (loaded && mapWidth) {
       const coordinates =
-        props.alarms?.map((item) => convertCMtoL([item.point!.x!, item.point!.y!], mapLength)) ??
-        [];
+        props.alarms?.map((item) => convertCMtoL([item.point!.x!, item.point!.y!], mapWidth)) ?? [];
 
       const source = {
         type: 'FeatureCollection',
@@ -345,7 +344,7 @@ export function AntdL7Component(props: IProps) {
         alarmLayer.current.setIndex(10);
       }
     }
-  }, [props.alarms, loaded]);
+  }, [props.alarms, loaded, mapWidth]);
 
   return (
     <React.Fragment>

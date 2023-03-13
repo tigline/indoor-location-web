@@ -139,7 +139,7 @@ export function AddFenceModal(props: IProps) {
               drawRef={drawRef}
               map={map?.picture}
               drawEnable
-              rect={[map?.width, map?.length]}
+              rect={[map?.length, map?.width]}
             />
           );
         }}

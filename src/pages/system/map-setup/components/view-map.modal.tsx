@@ -35,7 +35,7 @@ export function ViewMapModal(props: IProps) {
         </Button>
       }
     >
-      <AntdL7Component map={map?.picture} rect={[map?.width, map?.length]} />
+      <AntdL7Component map={map?.picture} rect={[map?.length, map?.width]} />
     </ModalForm>
   );
 }

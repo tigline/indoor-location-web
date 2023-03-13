@@ -108,7 +108,7 @@ export default function Page() {
       <Card>
         <AntdL7Component
           map={mapInfo?.data?.picture}
-          rect={[mapInfo?.data?.width, mapInfo?.data?.length]}
+          rect={[mapInfo?.data?.length, mapInfo?.data?.width]}
           stations={gateways?.items}
           locations={map(beacons, (o) => o).filter((f) => f.mapId === mapInfo?.data?.mapId)}
         />
