@@ -1,4 +1,4 @@
-import { AntdL7Component } from '@/components/map-components/antd-L7-component';
+import { RealTimeL7Component } from '@/components/map-components/real-time-L7-component';
 import { SelectMapSelect } from '@/components/select-map.select';
 import { ILocation } from '@/models/messageSocket';
 import { pageGateway } from '@/services/swagger/shebeiguanli';
@@ -75,7 +75,7 @@ export function RealTimeMap() {
         </ProForm>
       }
     >
-      <AntdL7Component
+      <RealTimeL7Component
         height={400 - 48}
         map={mapInfo?.data?.picture}
         rect={[mapInfo?.data?.length, mapInfo?.data?.width]}

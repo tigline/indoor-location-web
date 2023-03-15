@@ -2,7 +2,7 @@
 import { Request, Response } from 'express';
 import { mock } from 'mockjs';
 export default {
-  'GET /api/v1/alarms': (req: Request, res: Response) => {
+  'GET /ips/api/v1/alarms': (req: Request, res: Response) => {
     res.status(200).send(
       mock({
         code: 200,
@@ -12,6 +12,7 @@ export default {
             {
               alarmId: /\d{12}/,
               content: '@paragraph',
+              mapId: '1635140740788903938',
               createTime: Date.now(),
               deviceId: /\d{12}/,
               fenceId: /\d{12}/,

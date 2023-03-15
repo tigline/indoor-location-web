@@ -1,4 +1,5 @@
-import { AntdL7Component, convertLtoCM } from '@/components/map-components/antd-L7-component';
+import { convertLtoCM } from '@/components/map-components/antd-L7-component';
+import { FenceL7Components } from '@/components/map-components/fence-L7-components';
 import { SelectMapSelect } from '@/components/select-map.select';
 import { addFence } from '@/services/swagger/xitongguanli';
 import { OK } from '@/utils/global.utils';
@@ -135,7 +136,7 @@ export function AddFenceModal(props: IProps) {
           //   return false;
           // }
           return (
-            <AntdL7Component
+            <FenceL7Components
               drawRef={drawRef}
               map={map?.picture}
               drawEnable

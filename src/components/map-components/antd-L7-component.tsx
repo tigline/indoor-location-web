@@ -207,7 +207,7 @@ export function AntdL7Component(props: IProps) {
 
   // 处理标签展示内容
   React.useEffect(() => {
-    if (loaded && mapWidth && !isEmpty(props.beacons)) {
+    if (loaded && mapWidth) {
       const beacons = props.beacons ?? [];
       const beaconSource = beacons?.map((item) => {
         const [lng, lat] = convertCMtoL([item.posX!, item.posY!], mapWidth);
@@ -224,10 +224,14 @@ export function AntdL7Component(props: IProps) {
         }
       }
       if (beaconLayer.current) {
-        // scene.current?.removeLayer(beaconLayer.current);
-        // beaconLayer.current?.destroy();
-        beaconLayer.current.setData(source);
-        beaconLayer.current.setIndex(3);
+        if (isEmpty(props.beacons)) {
+          // 图层不能设置空数据 ，这里数据为空时直接隐藏图层
+          beaconLayer.current.hide();
+        } else {
+          beaconLayer.current.show();
+          beaconLayer.current.setData(source);
+          beaconLayer.current.setIndex(3);
+        }
       } else {
         beaconLayer.current = new LineLayer({ zIndex: 3 })
           .source(source, {
@@ -249,10 +253,14 @@ export function AntdL7Component(props: IProps) {
         scene.current?.addLayer(beaconLayer.current);
       }
       if (beaconPointLayer.current) {
-        // scene.current?.removeLayer(beaconPointLayer.current);
-        // beaconPointLayer.current.destroy();
-        beaconPointLayer.current.setData(beaconSource);
-        beaconPointLayer.current.setIndex(4);
+        // 图层不能设置空数据 ，这里数据为空时直接隐藏图层
+        if (isEmpty(props.beacons)) {
+          beaconPointLayer.current.hide();
+        } else {
+          beaconPointLayer.current.show();
+          beaconPointLayer.current.setData(beaconSource);
+          beaconPointLayer.current.setIndex(4);
+        }
       } else {
         beaconPointLayer.current = new PointLayer({ zIndex: 4 })
           .source(beaconSource, { parser: { type: 'json', x: 'lng', y: 'lat', name: 'name' } })
@@ -298,7 +306,7 @@ export function AntdL7Component(props: IProps) {
   }, [props.fence, loaded, mapWidth]);
 
   React.useEffect(() => {
-    if (loaded && mapWidth && !isEmpty(props.locations)) {
+    if (loaded && mapWidth) {
       const coordinates =
         props.locations?.map((item) => convertCMtoL([item.posX!, item.posY!], mapWidth)) ?? [];
 
@@ -313,7 +321,11 @@ export function AntdL7Component(props: IProps) {
         ],
       };
       if (!locationLayer.current) {
-        locationLayer.current = new PointLayer({ zIndex: 3, layerType: 'fillImage' })
+        locationLayer.current = new PointLayer({
+          name: 'real-time',
+          zIndex: 3,
+          layerType: 'fillImage',
+        })
           .source(source)
           .color(green[3])
           .size(15)
@@ -321,7 +333,16 @@ export function AntdL7Component(props: IProps) {
           .animate(true);
         scene.current?.addLayer(locationLayer.current);
       } else {
+        // if (isEmpty(props.locations)) {
+        //   // 图层不能设置空数据 ，这里数据为空时直接隐藏图层
+        //   locationLayer.current.hide();
+        // } else {
+        //   if (!locationLayer.current.isVisible()) {
+        //     locationLayer.current.show();
+        //   }
+        // }
         locationLayer.current.setData(source);
+        locationLayer.current.setIndex(3);
       }
     }
   }, [props.locations, loaded, mapWidth]);

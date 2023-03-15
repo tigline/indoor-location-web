@@ -195,6 +195,7 @@ export default function Page() {
             endTime: endTime ? dayjs(endTime)?.unix() : undefined,
           };
         }}
+        rowKey={(o) => o.alarmId + ''}
         request={(param) => {
           const { current, pageSize, ...rest } = param ?? {};
           return pageAlarm({ current: current + '', size: pageSize + '', ...rest }).then((res) => {

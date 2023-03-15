@@ -1,4 +1,4 @@
-import { AntdL7Component } from '@/components/map-components/antd-L7-component';
+import { TrackHistoryL7Component } from '@/components/map-components/track-history-L7-component';
 import { SelectMapSelect } from '@/components/select-map.select';
 import { pageGateway } from '@/services/swagger/shebeiguanli';
 import { getMap } from '@/services/swagger/xitongguanli';
@@ -24,16 +24,23 @@ export default function Page() {
   const intl = useIntl();
   const { run, data } = useRequest(getMap, {
     manual: true,
-    formatResult(res) {
-      return res;
-    },
+    formatResult: (res) => res,
   });
   const { run: query, data: gateways } = useRequest(pageGateway, {
     manual: true,
+    formatResult: (res) => res,
   });
-  function submit(mapId: string) {
-    run({ mapId: mapId }).then((res) => res.code === OK);
-    query({ mapId: mapId });
+
+  function submit(values: Required<API.pageGatewayParams>) {
+    const { mapId } = values;
+    // run({ mapId: mapId }).then((res) => res.code === OK);
+    // query({ mapId: mapId });
+    return (
+      run({ mapId: mapId })
+        .then(() => query({ mapId: mapId }))
+        // .then(() => queryBeacon(values))
+        .then((res) => res.code === OK)
+    );
   }
   return (
     <PageContainer>
@@ -43,10 +50,11 @@ export default function Page() {
           submitter={{ resetButtonProps: { style: { display: 'none' } } }}
           layout="inline"
           style={{ minWidth: 320 }}
-          onValuesChange={(values) => {
+          onFinish={(values) => {
             if (!isNil(values.mapId)) {
-              submit(values.mapId);
+              return submit(values.mapId);
             }
+            return Promise.resolve(false);
           }}
         >
           <SelectMapSelect />
@@ -84,11 +92,11 @@ export default function Page() {
         </ProForm>
       </ProCard>
       <Card>
-        <AntdL7Component
+        <TrackHistoryL7Component
           map={data?.data?.picture}
           rect={[data?.data?.length, data?.data?.width]}
           // drawEnable
-          stations={gateways?.items}
+          stations={gateways?.data?.items}
         />
       </Card>
     </PageContainer>

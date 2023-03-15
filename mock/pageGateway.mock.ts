@@ -2,7 +2,9 @@
 import { Request, Response } from 'express';
 import { mock } from 'mockjs';
 export default {
-  'GET /api/v1/gateway': (req: Request, res: Response) => {
+  'GET /ips/api/v1/gateway': (req: Request, res: Response) => {
+    console.log('req.body', req.query.mapId);
+
     res.status(200).send(
       mock({
         code: 200,
@@ -19,11 +21,11 @@ export default {
               hisY: 0,
               hisZ: 0,
               ip: '@ip',
-              mapId: /\d{12}/,
+              mapId: req.query.mapId,
               name: '@name',
               productName: '@name',
-              'setX|0-50': 1.1,
-              'setY|0-30': 1.1,
+              'setX|0-6.10': 1,
+              'setY|0-6.10': 1,
               setZ: 0,
               status: /Online|Offline/,
               systemId: /\d{12}/,

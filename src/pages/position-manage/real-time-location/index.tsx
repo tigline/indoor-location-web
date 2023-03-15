@@ -1,4 +1,4 @@
-import { AntdL7Component } from '@/components/map-components/antd-L7-component';
+import { RealTimeL7Component } from '@/components/map-components/real-time-L7-component';
 import { SelectMapSelect } from '@/components/select-map.select';
 import { ILocation } from '@/models/messageSocket';
 import { pageGateway } from '@/services/swagger/shebeiguanli';
@@ -54,6 +54,9 @@ export default function Page() {
   const { run, data: mapInfo } = useRequest(getMap, {
     manual: true,
     formatResult: (res) => res,
+    onSuccess() {
+      setBeacons({});
+    },
   });
   const { run: query, data: gateways } = useRequest(pageGateway, {
     manual: true,
@@ -111,7 +114,7 @@ export default function Page() {
         </Row>
       </ProCard>
       <Card>
-        <AntdL7Component
+        <RealTimeL7Component
           map={mapInfo?.data?.picture}
           rect={[mapInfo?.data?.length, mapInfo?.data?.width]}
           stations={gateways?.items}

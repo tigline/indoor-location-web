@@ -1,4 +1,4 @@
-import { AntdL7Component } from '@/components/map-components/antd-L7-component';
+import { AlarmsL7Component } from '@/components/map-components/alarms-L7-component';
 import { dealWithAlarm } from '@/services/swagger/gaojingguanli';
 import { getFence } from '@/services/swagger/xitongguanli';
 import { OK } from '@/utils/global.utils';
@@ -114,7 +114,7 @@ export function DealAlarmModal(props: IProps) {
         ) : undefined
       }
     >
-      <AntdL7Component
+      <AlarmsL7Component
         map={map?.picture}
         rect={[map?.length, map?.width]}
         alarms={[props.record]}

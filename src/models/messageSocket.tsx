@@ -3,15 +3,17 @@ import { useWebSocket } from 'ahooks';
 
 export default () => {
   const { initialState } = useModel('@@initialState');
+  // const url = location.hostname.replace('localhost', '') || '18.179.207.178';
+  const url = 'localhost:3000';
   const { connect, readyState, latestMessage } = useWebSocket(
-    `ws://${location.hostname}/websocket?userId=${initialState?.currentUser?.userId}`,
+    `ws://${url}/websocket?userId=${initialState?.currentUser?.userId}`,
     {
       manual: true,
       onOpen: () => console.log('web socket connected'),
       onClose: () => console.log('web socket closed'),
-      onMessage(message: MessageEvent<string>) {
-        console.log('Receive:', message);
-      },
+      // onMessage(message: MessageEvent<string>) {
+      //   console.log('Receive:', message);
+      // },
       onError: (err) => console.log(err),
     },
   );

@@ -13,6 +13,7 @@ export default () => {
       return listMaps({});
     },
     {
+      debounceInterval: 100,
       manual: true,
       onSuccess(data) {
         setInitialValue(first(data)?.mapId);

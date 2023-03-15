@@ -19,10 +19,10 @@ function sendMessage(socket) {
     data: {
       deviceId: /123|456|789/,
       id: /123|456|789/,
-      mapId: '1628312290603667457',
+      mapId: /1635140740788903938|1636003377902903297|1635140740788903937/,
       optScale: 0,
-      'posX|0-50': 1,
-      'posY|0-30': 1,
+      'posX|0-6.6': 1,
+      'posY|0-6.6': 1,
       timestamp: 0,
       type: '',
     },
@@ -30,5 +30,5 @@ function sendMessage(socket) {
   socket.send(JSON.stringify(data));
   setTimeout(() => {
     sendMessage(socket);
-  }, 1000);
+  }, 300);
 }

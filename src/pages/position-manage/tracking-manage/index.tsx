@@ -1,4 +1,4 @@
-import { AntdL7Component } from '@/components/map-components/antd-L7-component';
+import { TrackL7Component } from '@/components/map-components/track-L7-component';
 import { SelectMapSelect } from '@/components/select-map.select';
 import { listBeaconLocation, pageGateway } from '@/services/swagger/shebeiguanli';
 import { getMap } from '@/services/swagger/xitongguanli';
@@ -12,7 +12,6 @@ import {
 import { useIntl, useRequest } from '@umijs/max';
 import { Card } from 'antd';
 import dayjs from 'dayjs';
-import { isNil } from 'lodash';
 import { Moment } from 'moment';
 import React from 'react';
 
@@ -36,9 +35,12 @@ export default function Page() {
     manual: true,
     formatResult: (res) => res,
   });
-  function submit(mapId: string) {
-    run({ mapId: mapId }).then((res) => res.code === OK);
-    query({ mapId: mapId });
+  function submit(values: API.listBeaconLocationParams) {
+    const { mapId } = values;
+    return run({ mapId: mapId })
+      .then(() => query({ mapId: mapId }))
+      .then(() => queryBeacon(values))
+      .then((res) => res.code === OK);
   }
   return (
     <PageContainer>
@@ -51,14 +53,13 @@ export default function Page() {
           style={{ minWidth: 320 }}
           onFinish={(values) => {
             // console.log(values);
-            return queryBeacon(values).then((res) => res.code === OK);
-            return Promise.resolve(false);
+            return submit(values);
           }}
-          onValuesChange={(values) => {
-            if (!isNil(values.mapId)) {
-              submit(values.mapId);
-            }
-          }}
+          // onValuesChange={(values) => {
+          //   if (!isNil(values.mapId)) {
+          //     submit(values.mapId);
+          //   }
+          // }}
         >
           <SelectMapSelect />
           {/* <SelectMapCascader
@@ -108,10 +109,9 @@ export default function Page() {
         </ProForm>
       </ProCard>
       <Card>
-        <AntdL7Component
+        <TrackL7Component
           map={data?.data?.picture}
           rect={[data?.data?.length, data?.data?.width]}
-          // drawEnable
           stations={gateways?.items}
           beacons={beacons?.data}
         />

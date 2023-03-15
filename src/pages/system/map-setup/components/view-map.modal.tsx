@@ -1,4 +1,4 @@
-import { AntdL7Component } from '@/components/map-components/antd-L7-component';
+import { MapL7Component } from '@/components/map-components/map-L7-components';
 import { ModalForm } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl, useModel } from '@umijs/max';
 import { Button } from 'antd';
@@ -35,7 +35,7 @@ export function ViewMapModal(props: IProps) {
         </Button>
       }
     >
-      <AntdL7Component map={map?.picture} rect={[map?.length, map?.width]} />
+      <MapL7Component map={map?.picture} rect={[map?.length, map?.width]} />
     </ModalForm>
   );
 }

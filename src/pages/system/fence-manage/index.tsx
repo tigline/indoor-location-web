@@ -105,11 +105,12 @@ export default function Page() {
         toolBarRender={(action) => [
           <AddFenceModal key="add" refresh={action?.reload}></AddFenceModal>,
         ]}
+        rowKey={(o) => o.fenceId + ''}
         request={(param) => {
           const { current, pageSize, ...rest } = param;
           return run({ current: current + '', size: pageSize + '', ...rest });
         }}
-      ></ProTable>
+      />
     </PageContainer>
   );
 }
