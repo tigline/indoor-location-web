@@ -57,7 +57,7 @@ export function AddFenceModal(props: IProps) {
             const coordinate = item.geometry.coordinates?.[0];
             return coordinate.map((v) => {
               const [lng, lat] = v ?? [];
-              const [x, y] = convertLtoCM([lng, lat], map?.length);
+              const [x, y] = convertLtoCM([lng, lat], map?.width);
               return { x, y };
             });
           }) ?? [];
