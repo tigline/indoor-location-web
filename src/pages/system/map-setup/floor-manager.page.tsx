@@ -1,7 +1,8 @@
+import { RemoveButtonPopover } from '@/components/remove-button.popover';
 import { deleteMap, listMaps } from '@/services/swagger/xitongguanli';
 import { OK } from '@/utils/global.utils';
 import { PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
-import { FormattedMessage, useIntl, useMatch, useRequest } from '@umijs/max';
+import { useIntl, useMatch, useRequest } from '@umijs/max';
 import { Button, notification } from 'antd';
 import { AddMapModal } from './components/add-map.modal';
 import { EditMapModal } from './components/edit-map.modal';
@@ -69,9 +70,7 @@ export default function FloorManagerPage() {
         <Button.Group>
           <EditMapModal disabled={!record.mapId} record={record}></EditMapModal>
           <ViewMapModal record={record}></ViewMapModal>
-          <Button
-            type="link"
-            size="small"
+          <RemoveButtonPopover
             disabled={!record.mapId}
             loading={loading}
             onClick={() =>
@@ -79,9 +78,7 @@ export default function FloorManagerPage() {
                 action?.reload();
               })
             }
-          >
-            <FormattedMessage id="app.remove" defaultMessage="删除" />
-          </Button>
+          />
         </Button.Group>
       ),
     },

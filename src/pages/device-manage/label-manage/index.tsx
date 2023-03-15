@@ -1,7 +1,8 @@
+import { RemoveButtonPopover } from '@/components/remove-button.popover';
 import { deleteBeacon, pageBeacon } from '@/services/swagger/shebeiguanli';
 import { fmtPage } from '@/utils/global.utils';
 import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
-import { FormattedMessage, useIntl, useRequest } from '@umijs/max';
+import { useIntl, useRequest } from '@umijs/max';
 import { Button } from 'antd';
 import React from 'react';
 import { AddLabelModal } from './components/add-label.modal';
@@ -118,15 +119,11 @@ export default function Page() {
       render: (_, record, __, action) => (
         <Button.Group>
           <EditLabelModal record={record} refresh={action?.reload} />
-          <Button
-            type="link"
-            size="small"
+          <RemoveButtonPopover
             disabled={!record.deviceId}
             onClick={() => remove({ deviceId: record.deviceId! }).then(() => action?.reload())}
             loading={fetches?.[record.deviceId!]?.loading}
-          >
-            <FormattedMessage id="app.remove" defaultMessage="删除" />
-          </Button>
+          />
         </Button.Group>
       ),
     },

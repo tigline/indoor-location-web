@@ -1,8 +1,9 @@
+import { RemoveButtonPopover } from '@/components/remove-button.popover';
 import { ILocation } from '@/models/messageSocket';
 import { deleteAlarm, pageAlarm } from '@/services/swagger/gaojingguanli';
 import { fmt, fmtPage, OK } from '@/utils/global.utils';
 import { PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
-import { FormattedMessage, useIntl, useModel, useRequest } from '@umijs/max';
+import { useIntl, useModel, useRequest } from '@umijs/max';
 import { ReadyState } from 'ahooks/lib/useWebSocket';
 import { Button, notification, Space } from 'antd';
 import dayjs from 'dayjs';
@@ -167,15 +168,11 @@ export default function Page() {
       render: (_, record, __, action) => (
         <Button.Group>
           <DealAlarmModal record={record} refresh={action?.reload} />
-          <Button
-            type="link"
-            size="small"
+          <RemoveButtonPopover
             disabled={!record.alarmId}
             onClick={() => remove({ alarmIds: [record.alarmId!] }).then(() => action?.reload())}
             loading={fetches?.[record.alarmId!]?.loading}
-          >
-            <FormattedMessage id="app.remove" defaultMessage="删除" />
-          </Button>
+          />
         </Button.Group>
       ),
     },

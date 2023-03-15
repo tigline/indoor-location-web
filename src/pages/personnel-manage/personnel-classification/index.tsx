@@ -39,14 +39,7 @@ export default function Page() {
     {
       title: intl.formatMessage({ id: 'app.action', defaultMessage: '操作' }),
       render(_, record, __, action) {
-        return (
-          <EditPersonnelModal record={record} refresh={action?.reload} />
-          // <Button.Group>
-          //   <Button size="small" type="link">
-          //     {intl.formatMessage({ id: 'app.remove', defaultMessage: '删除' })}
-          //   </Button>
-          // </Button.Group>
-        );
+        return <EditPersonnelModal record={record} refresh={action?.reload} />;
       },
     },
   ];

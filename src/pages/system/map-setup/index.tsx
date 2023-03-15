@@ -1,3 +1,4 @@
+import { RemoveButtonPopover } from '@/components/remove-button.popover';
 import { deleteBuilding, listBuilding } from '@/services/swagger/xitongguanli';
 import { OK } from '@/utils/global.utils';
 import { PageContainer, ProList } from '@ant-design/pro-components';
@@ -67,8 +68,10 @@ export default function Page() {
                   {intl.formatMessage({ id: 'app.view', defaultMessage: '查看' })}
                 </Link>
               </Button>,
-              <Button
+              <RemoveButtonPopover
                 key="remove"
+                size="middle"
+                type="default"
                 disabled={!record.buildingId}
                 onClick={() =>
                   run({ buildingId: record.buildingId! }).then(() => {
@@ -76,9 +79,7 @@ export default function Page() {
                   })
                 }
                 loading={fetches?.[record.buildingId!]?.loading}
-              >
-                {intl.formatMessage({ id: 'app.remove', defaultMessage: '删除' })}
-              </Button>,
+              />,
             ],
           },
           content: {

@@ -15,8 +15,9 @@ import {
   PolygonLayer,
   Scene,
 } from '@antv/l7';
-import { DrawPolygon } from '@antv/l7-draw';
+import { DrawEvent, DrawPolygon } from '@antv/l7-draw';
 import { Card } from 'antd';
+import { isEmpty } from 'lodash';
 import React from 'react';
 
 const scale = 10;
@@ -83,6 +84,7 @@ export function AntdL7Component(props: IProps) {
   // const [polygonDrawer, setPolygonDrawer] = React.useState<DrawPolygon | null>(null);
   // const [coord, setCoorde] = React.useState<string>();
   const [loaded, setLoaded] = React.useState<boolean>();
+  const [drawerInited, setDrawerInited] = React.useState<boolean>(false);
   const mapContainer = React.useRef<HTMLDivElement>(null);
   const scene = React.useRef<Scene>();
 
@@ -142,7 +144,7 @@ export function AntdL7Component(props: IProps) {
     }
   }, [props.map, loaded, mapWidth, mapLength]);
   React.useEffect(() => {
-    if (scene.current && loaded) {
+    if (scene.current && loaded && mapWidth) {
       drawer.current = new DrawPolygon(scene.current, {
         distanceOptions: {
           showTotalDistance: false,
@@ -158,22 +160,30 @@ export function AntdL7Component(props: IProps) {
         // areaOptions: {},
         liveUpdate: true,
       });
+
+      drawer.current.on(DrawEvent.Init, () => {
+        setDrawerInited(true);
+      });
+      if (props.drawEnable) {
+        // 初始化时判断下是否开启绘图
+        drawer.current?.enable();
+      }
       if (props.drawRef) {
         props.drawRef.current = drawer.current;
       }
     }
-  }, [loaded]);
+  }, [loaded, mapWidth]);
   React.useEffect(() => {
-    if (props.drawEnable && drawer.current) {
+    if (props.drawEnable && drawerInited && drawer.current) {
       drawer.current?.enable();
     } else {
       drawer.current?.disable();
     }
-  }, [props.drawEnable, drawer.current]);
+  }, [props.drawEnable, drawerInited]);
 
   // 处理基站展示内容
   React.useEffect(() => {
-    if (loaded && mapWidth) {
+    if (loaded && mapWidth && !isEmpty(props.stations)) {
       const source = (props.stations ?? [])?.map((item) => {
         const [lng, lat] = convertCMtoL([item.setX!, item.setY!], mapWidth);
         return { ...item, lng, lat };
@@ -197,7 +207,7 @@ export function AntdL7Component(props: IProps) {
 
   // 处理标签展示内容
   React.useEffect(() => {
-    if (loaded && mapWidth) {
+    if (loaded && mapWidth && !isEmpty(props.beacons)) {
       const beacons = props.beacons ?? [];
       const beaconSource = beacons?.map((item) => {
         const [lng, lat] = convertCMtoL([item.posX!, item.posY!], mapWidth);
@@ -256,7 +266,7 @@ export function AntdL7Component(props: IProps) {
 
   // 处理围栏展示内容
   React.useEffect(() => {
-    if (loaded && props.fence && mapWidth) {
+    if (loaded && props.fence && mapWidth && !isEmpty(props.fence.points)) {
       const fences = props.fence.points ?? [];
       const source = {
         type: 'FeatureCollection',
@@ -288,7 +298,7 @@ export function AntdL7Component(props: IProps) {
   }, [props.fence, loaded, mapWidth]);
 
   React.useEffect(() => {
-    if (loaded && mapWidth) {
+    if (loaded && mapWidth && !isEmpty(props.locations)) {
       const coordinates =
         props.locations?.map((item) => convertCMtoL([item.posX!, item.posY!], mapWidth)) ?? [];
 
@@ -317,7 +327,7 @@ export function AntdL7Component(props: IProps) {
   }, [props.locations, loaded, mapWidth]);
   // 处理告警信息
   React.useEffect(() => {
-    if (loaded && mapWidth) {
+    if (loaded && mapWidth && !isEmpty(props.alarms)) {
       const coordinates =
         props.alarms?.map((item) => convertCMtoL([item.point!.x!, item.point!.y!], mapWidth)) ?? [];
 

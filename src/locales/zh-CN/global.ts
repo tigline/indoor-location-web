@@ -10,6 +10,8 @@ export default {
   'app.edit.success': '更新成功',
   'app.view': '查看',
   'app.remove': '删除',
+  'app.remove.confirm.title': '删除此项',
+  'app.remove.confirm.description': '你确定要删除此项吗?',
   'app.add': '新建',
   'app.add.success': '新建成功',
   'app.remove.success': '删除成功',

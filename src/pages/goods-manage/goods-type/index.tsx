@@ -1,3 +1,4 @@
+import { RemoveButtonPopover } from '@/components/remove-button.popover';
 import { deleteThingType, pageThingType } from '@/services/swagger/wupinguanli';
 import { fmtPage } from '@/utils/global.utils';
 import { PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
@@ -58,15 +59,11 @@ export default function Page() {
         return (
           <Button.Group>
             <EditGoodsTypeModal key="edit" record={record} refresh={action?.reload} />
-            <Button
-              size="small"
-              type="link"
+            <RemoveButtonPopover
               disabled={!record.typeId}
               loading={fetches?.[record.typeId!]?.loading}
               onClick={() => remove({ typeId: record.typeId! }).then(() => action?.reload())}
-            >
-              {intl.formatMessage({ id: 'app.remove', defaultMessage: '删除' })}
-            </Button>
+            />
           </Button.Group>
         );
       },

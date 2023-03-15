@@ -1,7 +1,8 @@
+import { RemoveButtonPopover } from '@/components/remove-button.popover';
 import { deleteFence, pageFence } from '@/services/swagger/xitongguanli';
 import { fmtPage } from '@/utils/global.utils';
 import { PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
-import { FormattedMessage, useIntl, useRequest } from '@umijs/max';
+import { useIntl, useRequest } from '@umijs/max';
 import { Button } from 'antd';
 import { AddFenceModal } from './components/add-fence.modal';
 import { SwitchFenceButton } from './components/switch-fence.button';
@@ -88,15 +89,11 @@ export default function Page() {
         <Button.Group>
           <SwitchFenceButton record={record} refresh={action?.reload} />
           <ViewFenceModal record={record} />
-          <Button
-            type="link"
-            size="small"
+          <RemoveButtonPopover
             disabled={!record.fenceId}
             loading={fetches?.[record.fenceId!]?.loading}
             onClick={() => remove({ fenceId: record.fenceId! }).then(() => action?.reload())}
-          >
-            <FormattedMessage id="app.remove" defaultMessage="删除" />
-          </Button>
+          />
         </Button.Group>
       ),
     },

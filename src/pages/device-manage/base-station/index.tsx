@@ -1,3 +1,4 @@
+import { RemoveButtonPopover } from '@/components/remove-button.popover';
 import { deleteGateway, pageGateway } from '@/services/swagger/shebeiguanli';
 import { fmt, fmtPage } from '@/utils/global.utils';
 import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
@@ -111,13 +112,10 @@ export default function Page() {
           <Button type="link">
             <FormattedMessage id="app.copy" defaultMessage="复制" />
           </Button>
-          <Button
-            type="link"
+          <RemoveButtonPopover
             disabled={!record.gateway}
             onClick={() => remove({ gateway: record.gateway! }).then(() => action?.reload())}
-          >
-            <FormattedMessage id="app.remove" defaultMessage="删除" />
-          </Button>
+          />
         </Button.Group>
       ),
     },
