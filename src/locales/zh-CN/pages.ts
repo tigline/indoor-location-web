@@ -115,6 +115,7 @@ export default {
   'pages.device-manage.base-station.device.time': '加入时间',
   'pages.device-manage.base-station.device.state': '状态',
   'pages.device-manage.base-station.device.add': '添加基站',
+  'pages.device-manage.base-station.device.edit': '编辑基站',
   'pages.device-manage.base-station.device.setX': '基站X坐标',
   'pages.device-manage.base-station.device.setY': '基站Y坐标',
   'pages.device-manage.base-station.device.setZ': '基站Z坐标',

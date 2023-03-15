@@ -1,12 +1,12 @@
-import { SelectMapCascader } from '@/components/select-map.cascader';
-import { addGateway } from '@/services/swagger/shebeiguanli';
-import { PlusOutlined } from '@ant-design/icons';
+import { SelectMapSelect } from '@/components/select-map.select';
+import { updateGateway } from '@/services/swagger/shebeiguanli';
 import { ModalForm, ProFormDigit, ProFormText } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl, useRequest } from '@umijs/max';
 import { Button, Form, notification } from 'antd';
 interface IProps {
   // children: JSX.Element;
   refresh?: () => void;
+  record: API.GatewayInfo;
 }
 /**
  * 功能 模态框
@@ -15,10 +15,10 @@ interface IProps {
  * @param {IProps} props
  * @return {JSX.Element}
  */
-export function AddBaseStationModal(props: IProps): JSX.Element {
+export function EditBaseStationModal(props: IProps): JSX.Element {
   const [form] = Form.useForm();
   const intl = useIntl();
-  const { run } = useRequest(addGateway, {
+  const { run } = useRequest(updateGateway, {
     manual: true,
     onSuccess(res) {
       if (res) {
@@ -30,11 +30,11 @@ export function AddBaseStationModal(props: IProps): JSX.Element {
     },
   });
   return (
-    <ModalForm<API.AddGatewayInfo & { mapId: number[] }>
+    <ModalForm<API.AddGatewayInfo>
       title={
         <FormattedMessage
-          id="pages.device-manage.base-station.device.add"
-          defaultMessage="添加基站"
+          id="pages.device-manage.base-station.device.edit"
+          defaultMessage="编辑基站"
         />
       }
       layout="horizontal"
@@ -42,20 +42,19 @@ export function AddBaseStationModal(props: IProps): JSX.Element {
       labelCol={{ xs: 6 }}
       wrapperCol={{ xs: 16 }}
       onFinish={(values) => {
-        // mapId 由级联菜单选出，表单项中是一个数组
-        const [, mapId] = values.mapId;
-        return run({ ...values, mapId });
+        const { mapId, name, ...rest } = values;
+        return run({ gateway: props.record.gateway! }, { mapId: mapId!, name: name!, ...rest });
       }}
       trigger={
-        <Button type="primary">
-          <PlusOutlined />
-          {intl.formatMessage({ id: 'app.action.add', defaultMessage: '新建' })}
+        <Button type="link" size="small">
+          {intl.formatMessage({ id: 'app.action.edit', defaultMessage: '编辑' })}
         </Button>
       }
     >
       <ProFormText
         width="lg"
         name="name"
+        initialValue={props.record?.name}
         label={intl.formatMessage({
           id: 'pages.device-manage.label.device.name',
           defaultMessage: '设置名称',
@@ -64,6 +63,7 @@ export function AddBaseStationModal(props: IProps): JSX.Element {
       <ProFormText
         width="lg"
         name="gateway"
+        initialValue={props.record?.gateway}
         label={intl.formatMessage({
           id: 'pages.device-manage.label.device.gateway',
           defaultMessage: '基站',
@@ -72,6 +72,7 @@ export function AddBaseStationModal(props: IProps): JSX.Element {
       <ProFormText
         width="lg"
         name="productName"
+        initialValue={props.record?.productName}
         label={intl.formatMessage({
           id: 'pages.device-manage.label.device.productName',
           defaultMessage: '产品名称',
@@ -81,9 +82,8 @@ export function AddBaseStationModal(props: IProps): JSX.Element {
         width="lg"
         name="setX"
         max={9999}
-        fieldProps={{
-          precision: 2,
-        }}
+        initialValue={props.record?.setX}
+        fieldProps={{ precision: 2 }}
         label={intl.formatMessage({
           id: 'pages.device-manage.base-station.device.setX',
           defaultMessage: '基站X坐标',
@@ -93,9 +93,8 @@ export function AddBaseStationModal(props: IProps): JSX.Element {
         width="lg"
         name="setY"
         max={9999}
-        fieldProps={{
-          precision: 2,
-        }}
+        initialValue={props.record?.setY}
+        fieldProps={{ precision: 2 }}
         label={intl.formatMessage({
           id: 'pages.device-manage.base-station.device.setY',
           defaultMessage: '基站Y坐标',
@@ -105,15 +104,20 @@ export function AddBaseStationModal(props: IProps): JSX.Element {
         width="lg"
         name="setZ"
         max={9999}
-        fieldProps={{
-          precision: 2,
-        }}
+        initialValue={props.record?.setZ}
+        fieldProps={{ precision: 2 }}
         label={intl.formatMessage({
           id: 'pages.device-manage.base-station.device.setZ',
           defaultMessage: '基站Z坐标',
         })}
       ></ProFormDigit>
-      <SelectMapCascader></SelectMapCascader>
+      <SelectMapSelect
+        label={intl.formatMessage({
+          id: 'pages.device-manage.label.device.map',
+          defaultMessage: '地图',
+        })}
+        initialValue={props.record.mapId}
+      />
     </ModalForm>
   );
 }

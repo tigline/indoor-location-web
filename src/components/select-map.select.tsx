@@ -15,8 +15,8 @@ export function SelectMapSelect(props: IProps) {
       name="mapId"
       style={{ width: 240 }}
       fieldProps={{ loading }}
-      initialValue={initialValue}
+      initialValue={props.initialValue ?? initialValue}
       options={options}
-    ></ProFormSelect>
+    />
   );
 }

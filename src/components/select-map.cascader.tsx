@@ -22,11 +22,7 @@ export function SelectMapCascader(props: IProps) {
   const { run } = useRequest(listMaps, {
     manual: true,
     formatResult(res) {
-      return res.data?.map((item) => ({
-        label: item.name,
-        value: item.mapId,
-        isLeaf: true,
-      }));
+      return res.data?.map((item) => ({ label: item.name, value: item.mapId, isLeaf: true }));
     },
     onSuccess(res: any[], [params]) {
       setOptions((pre) => {
@@ -46,11 +42,7 @@ export function SelectMapCascader(props: IProps) {
   });
   const {} = useRequest(listBuilding, {
     formatResult(res) {
-      return res.data?.map((item) => ({
-        label: item.name,
-        value: item.buildingId,
-        isLeaf: false,
-      }));
+      return res.data?.map((item) => ({ label: item.name, value: item.buildingId, isLeaf: false }));
     },
     onSuccess(res: any[]) {
       setOptions(res);

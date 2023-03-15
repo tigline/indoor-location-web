@@ -6,6 +6,7 @@ import { FormattedMessage, useIntl, useRequest } from '@umijs/max';
 import { Button, notification, Tag } from 'antd';
 import React from 'react';
 import { AddBaseStationModal } from './components/add-base-station.modal';
+import { EditBaseStationModal } from './components/edit-base-station.modal';
 
 export default function Page() {
   const actionRef = React.useRef<ActionType>();
@@ -109,9 +110,7 @@ export default function Page() {
       key: 'option',
       render: (_, record, __, action) => (
         <Button.Group>
-          <Button type="link">
-            <FormattedMessage id="app.copy" defaultMessage="复制" />
-          </Button>
+          <EditBaseStationModal record={record} refresh={action?.reload} />
           <RemoveButtonPopover
             disabled={!record.gateway}
             onClick={() => remove({ gateway: record.gateway! }).then(() => action?.reload())}
