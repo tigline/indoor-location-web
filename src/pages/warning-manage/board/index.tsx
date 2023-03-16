@@ -202,7 +202,7 @@ export default function Page() {
             return fmtPage(res);
           });
         }}
-      ></ProTable>
+      />
     </PageContainer>
   );
 }

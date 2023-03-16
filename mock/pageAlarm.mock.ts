@@ -16,6 +16,10 @@ export default {
               createTime: Date.now(),
               deviceId: /\d{12}/,
               fenceId: /\d{12}/,
+              point: {
+                'x|0-6.10': 1,
+                'y|0-6.10': 1,
+              },
               status: /Unprocessed|Processed|Ignored/,
               type: /In|Out/,
               updateTime: Date.now(),

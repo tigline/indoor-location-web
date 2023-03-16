@@ -145,7 +145,7 @@ export default defineConfig({
     // },
     {
       requestLibPath: "import { request } from '@umijs/max'",
-      schemaPath: 'http://120.78.168.7:9050/v3/api-docs',
+      schemaPath: 'http://18.179.207.178:9050/v3/api-docs',
       projectName: 'swagger',
       mock: true,
     },

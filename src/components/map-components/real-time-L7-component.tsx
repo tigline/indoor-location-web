@@ -92,7 +92,7 @@ export function RealTimeL7Component(props: IProps) {
 
   // 处理基站展示内容
   React.useEffect(() => {
-    if (loaded && mapWidth && !isEmpty(props.stations)) {
+    if (loaded && mapWidth) {
       const source = (props.stations ?? [])?.map((item) => {
         const [lng, lat] = convertCMtoL([item.setX!, item.setY!], mapWidth);
         return { ...item, lng, lat };
