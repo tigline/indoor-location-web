@@ -92,6 +92,19 @@ declare namespace API {
     updateTime?: number;
   };
 
+  type AlarmRank = {
+    count?: number;
+    deviceId?: string;
+    rank?: number;
+  };
+
+  type AlarmSummary = {
+    alarmRank?: AlarmRank[];
+    alarmRatio?: Record<string, any>;
+    statusCount?: Record<string, any>;
+    total?: number;
+  };
+
   type AoaDataInfo = {
     deviceId?: string;
     id?: number;
@@ -484,6 +497,13 @@ declare namespace API {
     password: string;
     phone?: string;
     username: string;
+  };
+
+  type RestValueAlarmSummary = {
+    code?: number;
+    data?: AlarmSummary;
+    errorDetail?: string;
+    message?: string;
   };
 
   type RestValueBoolean = {

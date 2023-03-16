@@ -1,7 +1,7 @@
 import Footer from '@/components/Footer';
 // import { login } from '@/services/ant-design-pro/api';
 import { login } from '@/services/swagger/dengluxiangguan';
-import { NP, OK } from '@/utils/global.utils';
+import { OK } from '@/utils/global.utils';
 import {
   // AlipayCircleOutlined,
   // TaobaoCircleOutlined,
@@ -104,7 +104,7 @@ const Login: React.FC = () => {
   const handleSubmit = async (values: API.LoginInfo) => {
     try {
       // 登录
-      const msg = await login(NP, { ...values });
+      const msg = await login({ ...values });
       if (msg.code === OK) {
         const defaultLoginSuccessMessage = intl.formatMessage({
           id: 'pages.login.success',

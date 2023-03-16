@@ -2,6 +2,14 @@
 /* eslint-disable */
 import { request } from '@umijs/max';
 
+/** 获取今日告警统计信息 GET /api/v1/alarm/summary */
+export async function getAlarmSummary(options?: { [key: string]: any }) {
+  return request<API.RestValueAlarmSummary>('/api/v1/alarm/summary', {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
+
 /** 分页获取告警信息 GET /api/v1/alarms */
 export async function pageAlarm(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
