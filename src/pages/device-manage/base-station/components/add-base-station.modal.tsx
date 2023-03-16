@@ -1,9 +1,9 @@
-import { SelectMapCascader } from '@/components/select-map.cascader';
 import { addGateway } from '@/services/swagger/shebeiguanli';
 import { PlusOutlined } from '@ant-design/icons';
-import { ModalForm, ProFormDigit, ProFormText } from '@ant-design/pro-components';
+import { ModalForm } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl, useRequest } from '@umijs/max';
 import { Button, Form, notification } from 'antd';
+import { BaseStationFormFragment } from './form.fragment';
 interface IProps {
   // children: JSX.Element;
   refresh?: () => void;
@@ -53,67 +53,7 @@ export function AddBaseStationModal(props: IProps): JSX.Element {
         </Button>
       }
     >
-      <ProFormText
-        width="lg"
-        name="name"
-        label={intl.formatMessage({
-          id: 'pages.device-manage.label.device.name',
-          defaultMessage: '设置名称',
-        })}
-      />
-      <ProFormText
-        width="lg"
-        name="gateway"
-        label={intl.formatMessage({
-          id: 'pages.device-manage.label.device.gateway',
-          defaultMessage: '基站',
-        })}
-      />
-      <ProFormText
-        width="lg"
-        name="productName"
-        label={intl.formatMessage({
-          id: 'pages.device-manage.label.device.productName',
-          defaultMessage: '产品名称',
-        })}
-      />
-      <ProFormDigit
-        width="lg"
-        name="setX"
-        max={9999}
-        fieldProps={{
-          precision: 2,
-        }}
-        label={intl.formatMessage({
-          id: 'pages.device-manage.base-station.device.setX',
-          defaultMessage: '基站X坐标',
-        })}
-      ></ProFormDigit>
-      <ProFormDigit
-        width="lg"
-        name="setY"
-        max={9999}
-        fieldProps={{
-          precision: 2,
-        }}
-        label={intl.formatMessage({
-          id: 'pages.device-manage.base-station.device.setY',
-          defaultMessage: '基站Y坐标',
-        })}
-      ></ProFormDigit>
-      <ProFormDigit
-        width="lg"
-        name="setZ"
-        max={9999}
-        fieldProps={{
-          precision: 2,
-        }}
-        label={intl.formatMessage({
-          id: 'pages.device-manage.base-station.device.setZ',
-          defaultMessage: '基站Z坐标',
-        })}
-      ></ProFormDigit>
-      <SelectMapCascader></SelectMapCascader>
+      <BaseStationFormFragment />
     </ModalForm>
   );
 }

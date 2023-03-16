@@ -1,8 +1,8 @@
-import { SelectMapSelect } from '@/components/select-map.select';
 import { updateGateway } from '@/services/swagger/shebeiguanli';
-import { ModalForm, ProFormDigit, ProFormText } from '@ant-design/pro-components';
+import { ModalForm } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl, useRequest } from '@umijs/max';
 import { Button, Form, notification } from 'antd';
+import { BaseStationFormFragment } from './form.fragment';
 interface IProps {
   // children: JSX.Element;
   refresh?: () => void;
@@ -51,73 +51,7 @@ export function EditBaseStationModal(props: IProps): JSX.Element {
         </Button>
       }
     >
-      <ProFormText
-        width="lg"
-        name="name"
-        initialValue={props.record?.name}
-        label={intl.formatMessage({
-          id: 'pages.device-manage.label.device.name',
-          defaultMessage: '设置名称',
-        })}
-      />
-      <ProFormText
-        width="lg"
-        name="gateway"
-        initialValue={props.record?.gateway}
-        label={intl.formatMessage({
-          id: 'pages.device-manage.label.device.gateway',
-          defaultMessage: '基站',
-        })}
-      />
-      <ProFormText
-        width="lg"
-        name="productName"
-        initialValue={props.record?.productName}
-        label={intl.formatMessage({
-          id: 'pages.device-manage.label.device.productName',
-          defaultMessage: '产品名称',
-        })}
-      />
-      <ProFormDigit
-        width="lg"
-        name="setX"
-        max={9999}
-        initialValue={props.record?.setX}
-        fieldProps={{ precision: 2 }}
-        label={intl.formatMessage({
-          id: 'pages.device-manage.base-station.device.setX',
-          defaultMessage: '基站X坐标',
-        })}
-      ></ProFormDigit>
-      <ProFormDigit
-        width="lg"
-        name="setY"
-        max={9999}
-        initialValue={props.record?.setY}
-        fieldProps={{ precision: 2 }}
-        label={intl.formatMessage({
-          id: 'pages.device-manage.base-station.device.setY',
-          defaultMessage: '基站Y坐标',
-        })}
-      ></ProFormDigit>
-      <ProFormDigit
-        width="lg"
-        name="setZ"
-        max={9999}
-        initialValue={props.record?.setZ}
-        fieldProps={{ precision: 2 }}
-        label={intl.formatMessage({
-          id: 'pages.device-manage.base-station.device.setZ',
-          defaultMessage: '基站Z坐标',
-        })}
-      ></ProFormDigit>
-      <SelectMapSelect
-        label={intl.formatMessage({
-          id: 'pages.device-manage.label.device.map',
-          defaultMessage: '地图',
-        })}
-        initialValue={props.record.mapId}
-      />
+      <BaseStationFormFragment record={props.record} />
     </ModalForm>
   );
 }

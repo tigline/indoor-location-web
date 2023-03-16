@@ -119,6 +119,8 @@ export default {
   'pages.device-manage.base-station.device.setX': '基站X坐标',
   'pages.device-manage.base-station.device.setY': '基站Y坐标',
   'pages.device-manage.base-station.device.setZ': '基站Z坐标',
+  'pages.device-manage.base-station.device.angle': '基站角度',
+  'pages.device-manage.base-station.device.group': '基站分组',
   'pages.device-manage.base-station.device.status.online': '在线',
   'pages.device-manage.base-station.device.status.offline': '离线',
 
