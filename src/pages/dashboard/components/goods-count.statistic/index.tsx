@@ -42,7 +42,7 @@ export function GoodsCountStatistic(props: IProps) {
   };
 
   return (
-    <Slider {...settings}>
+    <Slider {...settings} className="goods-count-statistic-container">
       <div style={contentStyle}>
         <ProCard split="horizontal">
           <ProCard bodyStyle={imageCardStyle}>
@@ -50,6 +50,8 @@ export function GoodsCountStatistic(props: IProps) {
           </ProCard>
           <ProCard split="vertical">
             <ProCard
+              headStyle={{ textAlign: 'center' }}
+              bodyStyle={{ textAlign: 'center' }}
               title={intl.formatMessage({
                 id: 'pages.dashboard.equipment.count',
                 defaultMessage: '物资数量',
@@ -58,6 +60,8 @@ export function GoodsCountStatistic(props: IProps) {
               {data?.Equipment.total}
             </ProCard>
             <ProCard
+              headStyle={{ textAlign: 'center' }}
+              bodyStyle={{ textAlign: 'center' }}
               title={intl.formatMessage({
                 id: 'pages.dashboard.online.count',
                 defaultMessage: '在线数量',
@@ -66,6 +70,8 @@ export function GoodsCountStatistic(props: IProps) {
               {data?.Equipment.online}
             </ProCard>
             <ProCard
+              headStyle={{ textAlign: 'center' }}
+              bodyStyle={{ textAlign: 'center' }}
               title={intl.formatMessage({
                 id: 'pages.dashboard.offline.count',
                 defaultMessage: '离线数量',
@@ -83,6 +89,8 @@ export function GoodsCountStatistic(props: IProps) {
           </ProCard>
           <ProCard split="vertical">
             <ProCard
+              headStyle={{ textAlign: 'center' }}
+              bodyStyle={{ textAlign: 'center' }}
               title={intl.formatMessage({
                 id: 'pages.dashboard.vehicle.count',
                 defaultMessage: '车辆数量',
@@ -91,6 +99,8 @@ export function GoodsCountStatistic(props: IProps) {
               {data?.Vehicle.total}
             </ProCard>
             <ProCard
+              headStyle={{ textAlign: 'center' }}
+              bodyStyle={{ textAlign: 'center' }}
               title={intl.formatMessage({
                 id: 'pages.dashboard.online.count',
                 defaultMessage: '在线数量',
@@ -99,6 +109,8 @@ export function GoodsCountStatistic(props: IProps) {
               {data?.Vehicle.online}
             </ProCard>
             <ProCard
+              headStyle={{ textAlign: 'center' }}
+              bodyStyle={{ textAlign: 'center' }}
               title={intl.formatMessage({
                 id: 'pages.dashboard.offline.count',
                 defaultMessage: '离线数量',
@@ -116,6 +128,8 @@ export function GoodsCountStatistic(props: IProps) {
           </ProCard>
           <ProCard split="vertical">
             <ProCard
+              headStyle={{ textAlign: 'center' }}
+              bodyStyle={{ textAlign: 'center' }}
               title={intl.formatMessage({
                 id: 'pages.dashboard.stuff.count',
                 defaultMessage: '物资数量',
@@ -124,6 +138,8 @@ export function GoodsCountStatistic(props: IProps) {
               {data?.Stuff.total}
             </ProCard>
             <ProCard
+              headStyle={{ textAlign: 'center' }}
+              bodyStyle={{ textAlign: 'center' }}
               title={intl.formatMessage({
                 id: 'pages.dashboard.online.count',
                 defaultMessage: '在线数量',
@@ -132,6 +148,8 @@ export function GoodsCountStatistic(props: IProps) {
               {data?.Stuff.online}
             </ProCard>
             <ProCard
+              headStyle={{ textAlign: 'center' }}
+              bodyStyle={{ textAlign: 'center' }}
               title={intl.formatMessage({
                 id: 'pages.dashboard.offline.count',
                 defaultMessage: '离线数量',
@@ -149,6 +167,8 @@ export function GoodsCountStatistic(props: IProps) {
           </ProCard>
           <ProCard split="vertical">
             <ProCard
+              headStyle={{ textAlign: 'center' }}
+              bodyStyle={{ textAlign: 'center' }}
               title={intl.formatMessage({
                 id: 'pages.dashboard.personnel.count',
                 defaultMessage: '人员数量',
@@ -157,6 +177,8 @@ export function GoodsCountStatistic(props: IProps) {
               {data?.Personnel.total}
             </ProCard>
             <ProCard
+              headStyle={{ textAlign: 'center' }}
+              bodyStyle={{ textAlign: 'center' }}
               title={intl.formatMessage({
                 id: 'pages.dashboard.online.count',
                 defaultMessage: '在线数量',
@@ -165,6 +187,8 @@ export function GoodsCountStatistic(props: IProps) {
               {data?.Personnel.online}
             </ProCard>
             <ProCard
+              headStyle={{ textAlign: 'center' }}
+              bodyStyle={{ textAlign: 'center' }}
               title={intl.formatMessage({
                 id: 'pages.dashboard.offline.count',
                 defaultMessage: '离线数量',

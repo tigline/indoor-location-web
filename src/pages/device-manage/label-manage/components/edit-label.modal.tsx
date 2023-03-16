@@ -80,7 +80,7 @@ export function EditLabelModal(props: IProps): JSX.Element {
             }),
           },
           {
-            pattern: /^[0-9a-fA-F]+$/,
+            pattern: /^[0-9a-fA-F,]+$/,
             message: intl.formatMessage({
               id: 'pages.device-manage.label.device.mac.hex.failure',
               defaultMessage: '物理地址必填',
@@ -122,6 +122,7 @@ export function EditLabelModal(props: IProps): JSX.Element {
       />
       <ProFormSelect
         name="fenceIds"
+        initialValue={props.record.fenceIds}
         label={intl.formatMessage({
           id: 'pages.device-manage.label.device.fence',
           defaultMessage: '绑定围栏',

@@ -14,6 +14,7 @@ import { LabelDistributionChart } from './components/label-distribution.chart';
 import { RealTimeMap } from './components/real-time.map';
 import { SystemRunningTimeChart } from './components/system-running-time.chart';
 import { WarningOfTodayTable } from './components/warning-of-today.table';
+import './index.less';
 
 type keyType = Required<API.BeaconInfo>['type'];
 export type LabelDistribution = Record<keyType, { offline: number; online: number; total: number }>;
@@ -49,9 +50,9 @@ const Welcome: React.FC = () => {
     });
   }, []);
   return (
-    <PageContainer>
+    <PageContainer className="dashboard">
       <Row gutter={[8, 8]}>
-        <Col span="6">
+        <Col span="12">
           <Card
             loading={beaconLoading}
             title={intl.formatMessage({
@@ -64,7 +65,7 @@ const Welcome: React.FC = () => {
             <GoodsCountStatistic data={data} />
           </Card>
         </Col>
-        <Col span="6">
+        <Col span="12">
           <Card
             loading={beaconLoading}
             bodyStyle={{ minHeight: 400 }}
@@ -76,10 +77,10 @@ const Welcome: React.FC = () => {
             <LabelDistributionChart data={data} />
           </Card>
         </Col>
-        <Col span="12">
+        <Col span="24">
           <RealTimeMap />
         </Col>
-        <Col span="12">
+        <Col span="24">
           <Card
             loading={alarmLoading}
             bodyStyle={{ minHeight: 400 }}
@@ -91,7 +92,7 @@ const Welcome: React.FC = () => {
             <AlarmLast_24HoursChart data={alarms ?? []} />
           </Card>
         </Col>
-        <Col span="6">
+        <Col span="12">
           <Card
             loading={alarmLoading}
             bodyStyle={{ minHeight: 400, paddingTop: 0 }}
@@ -103,7 +104,7 @@ const Welcome: React.FC = () => {
             <WarningOfTodayTable data={alarms ?? []} />
           </Card>
         </Col>
-        <Col span="6">
+        <Col span="12">
           <Card
             loading={alarmLoading}
             bodyStyle={{ minHeight: 400 }}
@@ -115,7 +116,7 @@ const Welcome: React.FC = () => {
             <AlarmAnalogyRatioChart data={alarms ?? []} />
           </Card>
         </Col>
-        <Col span="6">
+        <Col span="12">
           <Card
             bodyStyle={{ minHeight: 400 }}
             title={intl.formatMessage({
@@ -126,7 +127,7 @@ const Welcome: React.FC = () => {
             <SystemRunningTimeChart />
           </Card>
         </Col>
-        <Col span="6">
+        <Col span="12">
           <Card
             loading={beaconLoading}
             bodyStyle={{ minHeight: 400 }}
@@ -135,7 +136,7 @@ const Welcome: React.FC = () => {
             <LabelCountChart data={data} />
           </Card>
         </Col>
-        <Col span="6">
+        <Col span="12">
           <Card
             bodyStyle={{ minHeight: 400 }}
             title={intl.formatMessage({

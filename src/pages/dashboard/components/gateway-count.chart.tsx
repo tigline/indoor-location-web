@@ -3,7 +3,6 @@ import { ProCard } from '@ant-design/pro-components';
 import { Pie } from '@antv/g2plot';
 import { useIntl, useRequest } from '@umijs/max';
 import React from 'react';
-
 const imageCardStyle: React.CSSProperties = {
   display: 'flex',
   justifyContent: 'center',
