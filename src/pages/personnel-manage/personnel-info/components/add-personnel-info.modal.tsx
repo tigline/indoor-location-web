@@ -3,6 +3,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { ModalForm } from '@ant-design/pro-components';
 import { useIntl, useRequest } from '@umijs/max';
 import { Button, notification } from 'antd';
+import React from 'react';
 import { PersonnelInfoFormFragment } from './personnel-info.form.fragment';
 
 interface IProps {
@@ -10,6 +11,7 @@ interface IProps {
 }
 export function AddPersonnelInfoModal(props: IProps) {
   const intl = useIntl();
+  const [visible, setVisible] = React.useState<boolean>();
   const { run } = useRequest(addPersonnel, {
     manual: true,
     onSuccess(data) {
@@ -30,6 +32,7 @@ export function AddPersonnelInfoModal(props: IProps) {
       layout="horizontal"
       labelCol={{ xs: 6 }}
       wrapperCol={{ xs: 16 }}
+      onOpenChange={(val) => setVisible(val)}
       trigger={
         <Button type="primary" icon={<PlusOutlined />}>
           {intl.formatMessage({ id: 'app.action.add', defaultMessage: '新建' })}
@@ -39,7 +42,7 @@ export function AddPersonnelInfoModal(props: IProps) {
         return run(value);
       }}
     >
-      <PersonnelInfoFormFragment />
+      <PersonnelInfoFormFragment visible={visible} />
     </ModalForm>
   );
 }

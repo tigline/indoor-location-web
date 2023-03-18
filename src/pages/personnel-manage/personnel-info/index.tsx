@@ -3,7 +3,7 @@ import { deletePersonnel, pagePersonnel } from '@/services/swagger/renyuanguanli
 import { fmtPage } from '@/utils/global.utils';
 import { PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
 import { useIntl, useRequest } from '@umijs/max';
-import { Button, Input, notification } from 'antd';
+import { Button, Image, Input, notification } from 'antd';
 import { AddPersonnelInfoModal } from './components/add-personnel-info.modal';
 import { EditPersonnelInfoModal } from './components/edit-personnel-info.modal';
 
@@ -108,7 +108,9 @@ export default function Page() {
         defaultMessage: '头像',
       }),
       dataIndex: 'avatar',
-      valueType: 'image',
+      render(dom, entity) {
+        return <Image width={100} height={100} src={entity.avatar}></Image>;
+      },
       search: false,
     },
     {

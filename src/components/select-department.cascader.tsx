@@ -1,11 +1,28 @@
-import { NodeType } from '@/pages/personnel-manage/organization';
 import { treeDepartment } from '@/services/swagger/renyuanguanli';
 import { OK } from '@/utils/global.utils';
 import { ProFormCascader } from '@ant-design/pro-components';
 import { useIntl, useRequest } from '@umijs/max';
-import { filter, forEach, last, set } from 'lodash';
+import { CascaderProps } from 'antd';
+import { last, set } from 'lodash';
 import React from 'react';
 
+type DepartmentTreeType = API.DepartmentTree & {
+  children: DepartmentTreeType[];
+};
+
+function convert(list: DepartmentTreeType[]): CascaderProps['options'] {
+  return list?.map((val) => ({
+    label: val.name,
+    key: val.depId,
+    value: val.depId,
+    parentId: val.parentId,
+    children: convert(val.children),
+  }));
+}
+
+interface IProps extends React.ComponentProps<typeof ProFormCascader> {
+  visible?: boolean;
+}
 /**
  * 部门树形选择组件
  *
@@ -13,38 +30,22 @@ import React from 'react';
  * @param {typeof ProFormCascader} props
  * @return {*}
  */
-export function SelectDepartmentCascader(props: React.ComponentProps<typeof ProFormCascader>) {
+export function SelectDepartmentCascader(props: IProps) {
   const intl = useIntl();
   // 获取部门树形列表
   const { run, data } = useRequest(treeDepartment, {
     manual: true,
     formatResult(res) {
       if (res.code === OK) {
-        const record: Record<string, NodeType & { label?: string }> = {};
-        forEach(res.data, (val) => {
-          if (val.depId) {
-            record[val.depId] = {
-              label: val.name,
-              key: val.depId,
-              value: val.depId,
-              parentId: val.parentId,
-              children: [],
-            };
-          }
-        });
-        forEach(res.data, (val) => {
-          if (val.parentId && val.depId) {
-            record[val.parentId].children?.push(record[val.depId]);
-          }
-        });
-        const result = filter(record, (val) => !val.parentId);
-        return result;
+        return convert(res.data);
       }
     },
   });
   React.useEffect(() => {
-    run();
-  }, []);
+    if (props.visible) {
+      run();
+    }
+  }, [props.visible]);
   return (
     <ProFormCascader
       label={intl.formatMessage({

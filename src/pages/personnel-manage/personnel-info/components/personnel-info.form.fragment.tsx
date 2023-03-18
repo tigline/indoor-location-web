@@ -9,6 +9,7 @@ import React from 'react';
 
 interface IProps {
   record?: API.PersonnelFillInfo;
+  visible?: boolean;
 }
 
 export function PersonnelInfoFormFragment(props: IProps) {
@@ -95,6 +96,7 @@ export function PersonnelInfoFormFragment(props: IProps) {
       />
       <SelectDepartmentCascader
         name="depId"
+        visible={props.visible}
         initialValue={props.record?.depId}
         label={intl.formatMessage({
           id: 'pages.personnel-manage.organization.department.parent',
