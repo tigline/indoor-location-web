@@ -1,7 +1,7 @@
 import { getFileBase64 } from '@/utils/global.utils';
 import { ProFormUploadButton, ProFormUploadButtonProps } from '@ant-design/pro-components';
 import { useIntl } from '@umijs/max';
-import { notification } from 'antd';
+import { Image, Modal, notification } from 'antd';
 import { RcFile, UploadFile } from 'antd/es/upload';
 import { first, set } from 'lodash';
 
@@ -19,6 +19,13 @@ export function ImageUploadFormItem(props: ProFormUploadButtonProps) {
       {...props}
       fieldProps={{
         listType: 'picture-card',
+        onPreview(file) {
+          Modal.warning({
+            content: <Image width={600} src={file.thumbUrl} />,
+            width: 660 - 12,
+            icon: ' ',
+          });
+        },
         customRequest(options) {
           // if (props.accept === 'image/svg+xml') {
           //   getFileText(options.file as RcFile).then((res) => {
