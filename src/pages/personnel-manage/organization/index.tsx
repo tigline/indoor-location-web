@@ -8,7 +8,7 @@ import { PageContainer, ProColumns, ProTable } from '@ant-design/pro-components'
 import { useIntl, useRequest } from '@umijs/max';
 import { Button, Card, Col, notification, Row, Tree } from 'antd';
 import { DataNode } from 'antd/es/tree';
-import { first, isEmpty } from 'lodash';
+import { compact, first, isEmpty } from 'lodash';
 import React from 'react';
 import { AddDepartmentModal } from './components/add-department.modal';
 import { EditDepartmentModal } from './components/edit-department.modal';
@@ -34,6 +34,10 @@ export default function Page() {
     manual: true,
     formatResult(res) {
       if (res.code === OK) {
+        setTimeout(() => {
+          setSelectedKeys(compact([first(res.data)?.depId]));
+        }, 300);
+
         return convert(res.data);
       }
     },
