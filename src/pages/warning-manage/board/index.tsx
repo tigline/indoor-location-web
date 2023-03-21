@@ -1,71 +1,15 @@
 import { RemoveButtonPopover } from '@/components/remove-button.popover';
-import { ILocation } from '@/models/messageSocket';
 import { deleteAlarm, pageAlarm } from '@/services/swagger/gaojingguanli';
 import { fmt, fmtPage, OK } from '@/utils/global.utils';
 import { PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
-import { useIntl, useModel, useRequest } from '@umijs/max';
-import { ReadyState } from 'ahooks/lib/useWebSocket';
-import { Button, notification, Space } from 'antd';
+import { useIntl, useRequest } from '@umijs/max';
+import { Button, notification } from 'antd';
 import dayjs from 'dayjs';
-import React from 'react';
-import { v4 } from 'uuid';
 import { DealAlarmModal } from './components/deal-alarm.modal';
 
 export default function Page() {
   const intl = useIntl();
-  const [open, setOpen] = React.useState<boolean>(false);
-  const [selected, setSelected] = React.useState<API.AlarmInfo>();
-  const [api, contextHolder] = notification.useNotification();
-  const { readyState, connect, data } = useModel('messageSocket');
-  React.useEffect(() => {
-    if (ReadyState.Closed === readyState) {
-      connect?.();
-    }
-  }, [readyState]);
-  React.useEffect(() => {
-    const key = v4();
-    if (data) {
-      const res = JSON.parse(data) as ILocation;
-      if (res.type === 'Alarm') {
-        const alarm = res.data as API.AlarmInfo;
-        api.warning({
-          message: intl.formatMessage({
-            id: 'pages.system.warning-manage.board.title',
-            defaultMessage: '围栏告警',
-          }),
-          key,
-          description: alarm.content,
-          // description: 'hello 非法闯入',
-          btn: (
-            <Space>
-              <Button type="link" size="small" onClick={() => api.destroy()}>
-                {intl.formatMessage({
-                  id: 'pages.system.warning-manage.board.ignored',
-                  defaultMessage: '忽略',
-                })}
-              </Button>
-              <Button
-                type="primary"
-                size="small"
-                onClick={() => {
-                  api.destroy(key);
-                  setOpen(true);
-                  setSelected(alarm);
-                }}
-              >
-                {intl.formatMessage({
-                  id: 'pages.system.warning-manage.board.deal',
-                  defaultMessage: '处理告警',
-                })}
-              </Button>
-            </Space>
-          ),
-          placement: 'bottomRight',
-          duration: 100,
-        });
-      }
-    }
-  }, [data]);
+
   const { run: remove, fetches } = useRequest(deleteAlarm, {
     manual: true,
     fetchKey: (o) => o.alarmIds.join('-'),
@@ -179,8 +123,6 @@ export default function Page() {
   ];
   return (
     <PageContainer>
-      {contextHolder}
-      <DealAlarmModal open={open} setOpen={setOpen} record={selected} />
       <ProTable<
         API.AlarmInfo,
         API.pageAlarmParams & { createTime: [dayjs.ConfigType, dayjs.ConfigType] }
