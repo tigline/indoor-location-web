@@ -35,7 +35,7 @@ function sendMessage(socket) {
       content: '@title',
       createTime: Date.now(),
       deviceId: /\d{12}/,
-      fenceId: /\d{12}/,
+      fenceId: /1636027801196683266|1638064827190337538/,
       mapId: '1636003377902903297',
       name: '@name',
       point: {
@@ -47,10 +47,11 @@ function sendMessage(socket) {
       updateTime: Date.now(),
     },
   });
+  Alarm.data.content = Alarm.data.fenceId;
   // const msg =  JSON.stringify(data)
   const msg = JSON.stringify(Alarm);
   socket.send(msg);
   setTimeout(() => {
     sendMessage(socket);
-  }, 3000);
+  }, 800);
 }

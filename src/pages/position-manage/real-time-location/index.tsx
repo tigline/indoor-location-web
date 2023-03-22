@@ -53,6 +53,7 @@ export default function Page() {
   const formRef = React.useRef<ProFormInstance<{ mapId: string[] }>>(null);
   const [beacons, setBeacons] = React.useState<Record<string, API.AoaDataInfo>>();
   const [fenceEnable, setFenceDisable] = React.useState<boolean>(true);
+  const [warningFenceId, setWarningFenceId] = React.useState<string>();
   const { run: queryFences, data: fences } = useRequest(pageFence, {
     manual: true,
     formatResult(res) {
@@ -89,6 +90,8 @@ export default function Page() {
         setBeacons((pre) => {
           return { ...pre, [res.data.deviceId!]: res.data as API.AoaDataInfo };
         });
+      } else if (res.type === 'Alarm') {
+        setWarningFenceId((res.data as API.AlarmInfo).fenceId);
       }
     }
   }, [data]);
@@ -146,6 +149,8 @@ export default function Page() {
           stations={gateways?.items}
           fences={fences}
           hiddenFence={!fenceEnable}
+          warningFenceId={warningFenceId}
+          clear={() => setWarningFenceId('')}
           locations={
             map(beacons, (o) => o)
             // .filter((f) => f.mapId === mapInfo?.data?.mapId)

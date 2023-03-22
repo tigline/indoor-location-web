@@ -2,6 +2,7 @@ import arrow from '@/assets/images/arrow.svg';
 import person from '@/assets/images/person.svg';
 import stationImage from '@/assets/images/station.svg';
 import warning from '@/assets/images/warning.svg';
+import { delay } from '@/utils/global.utils';
 import { gold, green } from '@ant-design/colors';
 import {
   ILayer,
@@ -13,9 +14,29 @@ import {
   Scene,
 } from '@antv/l7';
 import { Card } from 'antd';
-import { isEmpty, isNil } from 'lodash';
+import { forEach, isEmpty, isNil } from 'lodash';
 import React from 'react';
 import { convertCMtoL, scale } from './convert';
+
+/**
+ * 让围栏图层闪烁
+ * @param layer
+ * @returns
+ */
+function flash(layer: ILayer) {
+  return delay()
+    .then(() => layer?.color('c', ['red']).renderLayers())
+    .then(() => delay(50))
+    .then(() => layer?.color('c').renderLayers())
+    .then(() => delay(200))
+    .then(() => layer?.color('c', ['red']).renderLayers())
+    .then(() => delay(50))
+    .then(() => layer?.color('c').renderLayers())
+    .then(() => delay(200))
+    .then(() => layer?.color('c', ['red']).renderLayers())
+    .then(() => delay(50))
+    .then(() => layer?.color('c').renderLayers());
+}
 
 interface IProps {
   map?: string;
@@ -48,6 +69,11 @@ interface IProps {
    * 收到报警后需要闪烁围栏图层
    */
   warningFenceId?: string;
+  /**
+   * 闪烁围栏图层
+   * @returns
+   */
+  clear?: () => void;
 }
 
 /**
@@ -72,8 +98,8 @@ export function RealTimeL7Component(props: IProps) {
   const locationLayer = React.useRef<ILayer>();
 
   /** @type {*} 展示围栏 ‘面’ 图层 */
-  const fenceLayer = React.useRef<ILayer>();
-
+  const fenceLayers = React.useRef<Record<string | number, ILayer>>({});
+  window.fenceLayers = fenceLayers;
   React.useEffect(() => {
     scene.current = new Scene({
       id: mapContainer.current!,
@@ -176,69 +202,83 @@ export function RealTimeL7Component(props: IProps) {
 
   // 处理围栏展示内容
   React.useEffect(() => {
-    if (loaded && props.fences && mapWidth) {
-      // const source = props.fences.map((fence) =>
-      //   fence.points?.map((item) => {
-      //     const [lng, lat] = convertCMtoL([item.x!, item.y!], mapWidth);
-      //     return { ...item, type: fence.type, lng, lat };
-      //   }),
-      // );
+    if (loaded && mapWidth) {
+      forEach(fenceLayers.current, (item) => {
+        if (!props.fences?.find((f) => item?.name.endsWith(f.fenceId + ''))) {
+          item.hide();
+        }
+      });
 
-      // const fences = props.fences.points ?? [];
-      const features =
-        props.fences.map((fence) => {
-          return {
-            type: 'Feature',
-            properties: {
-              name: fence.name,
-              code: fence.fenceId,
-              c: fence.type === 'In' ? green[4] : gold[4],
+      props.fences?.forEach((fence) => {
+        const source = {
+          type: 'FeatureCollection',
+          features: [
+            {
+              type: 'Feature',
+              properties: {
+                name: fence.name,
+                code: fence.fenceId,
+                c: fence.type === 'In' ? green[4] : gold[4],
+              },
+              geometry: {
+                type: 'Polygon',
+                coordinates: [
+                  fence.points?.map((item) => convertCMtoL([item.x, item.y], mapWidth)),
+                ],
+              },
             },
-            geometry: {
-              type: 'Polygon',
-              coordinates: [fence.points?.map((item) => convertCMtoL([item.x, item.y], mapWidth))],
-            },
-          };
-        }) ?? [];
-      const source = {
-        type: 'FeatureCollection',
-        features,
-      };
+          ],
+        };
 
-      if (!fenceLayer.current) {
-        fenceLayer.current = new PolygonLayer({
-          zIndex: 2,
-          name: 'fence-layout',
-        })
-          .source(source)
-          .shape('fill')
-          .color('c')
-          .style({ opacity: 0.6 })
-          .active({
-            color: 'red',
-          });
-        scene.current?.addLayer(fenceLayer.current);
-        // console.log('fenceLayer.current', fenceLayer.current);
-      } else {
-        fenceLayer.current.setData(source);
-        fenceLayer.current.setIndex(9);
-      }
+        if (!fenceLayers.current[fence.fenceId!]) {
+          fenceLayers.current[fence.fenceId!] = new PolygonLayer({
+            zIndex: 4,
+            name: 'fence-layout-' + fence.fenceId,
+            active: true,
+            activeColor: 'red',
+          })
+            .source(source)
+            .shape('fill')
+            .color('c')
+            .style({ opacity: 0.6 });
+
+          // .active({
+          //   color: 'red',
+          // });
+          scene.current?.addLayer(fenceLayers.current[fence.fenceId!]);
+          // console.log('fenceLayer.current', fenceLayer.current);
+        } else {
+          fenceLayers.current?.[fence.fenceId!].show();
+          fenceLayers.current?.[fence.fenceId!]?.setData(source);
+          fenceLayers.current?.[fence.fenceId!]?.setIndex(9);
+        }
+      });
     }
   }, [props.fences, loaded, mapWidth]);
 
   React.useEffect(() => {
     if (!isNil(props.hiddenFence)) {
       if (props.hiddenFence) {
-        fenceLayer.current?.hide();
+        forEach(fenceLayers.current, (item) => item?.hide());
       } else {
-        fenceLayer.current?.show();
+        forEach(fenceLayers.current, (item) => item?.show());
       }
     }
   }, [props.hiddenFence]);
 
   React.useEffect(() => {
-    // TODO:
-  }, [props.warningFenceId]);
+    if (
+      props.warningFenceId &&
+      loaded &&
+      fenceLayers.current[props.warningFenceId] &&
+      !props.hiddenFence
+    ) {
+      // flash(props.warningFenceId);
+      // fenceLayers.current?.[props.warningFenceId]?.color('c', ['red']);
+      flash(fenceLayers.current?.[props.warningFenceId]).then(props.clear);
+    }
+  }, [props.warningFenceId, loaded, props.map, props.hiddenFence]);
+
   return (
     <React.Fragment>
       <Card bodyStyle={{ padding: 0 }}>

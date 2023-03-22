@@ -296,3 +296,16 @@ export function getFileText(file: RcFile): Promise<string> {
     };
   });
 }
+
+/**
+ *
+ * @param time 延时时间
+ * @returns
+ */
+export async function delay(time: number = 300) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(true);
+    }, time);
+  });
+}
