@@ -130,6 +130,7 @@ export default function Page() {
                 defaultMessage="围栏开关"
               />
               <Switch
+                style={{ marginLeft: 10 }}
                 checked={fenceEnable}
                 onChange={(e) => setFenceDisable(e)}
                 checkedChildren={<CheckOutlined />}
