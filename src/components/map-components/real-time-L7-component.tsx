@@ -2,10 +2,18 @@ import arrow from '@/assets/images/arrow.svg';
 import person from '@/assets/images/person.svg';
 import stationImage from '@/assets/images/station.svg';
 import warning from '@/assets/images/warning.svg';
-import { green } from '@ant-design/colors';
-import { ILayer, ImageLayer, Mapbox, metersToLngLat, PointLayer, Scene } from '@antv/l7';
+import { gold, green } from '@ant-design/colors';
+import {
+  ILayer,
+  ImageLayer,
+  Mapbox,
+  metersToLngLat,
+  PointLayer,
+  PolygonLayer,
+  Scene,
+} from '@antv/l7';
 import { Card } from 'antd';
-import { isEmpty } from 'lodash';
+import { isEmpty, isNil } from 'lodash';
 import React from 'react';
 import { convertCMtoL, scale } from './convert';
 
@@ -29,6 +37,17 @@ interface IProps {
    * @memberof IProps
    */
   locations?: API.AoaDataInfo[];
+
+  /**
+   * 围栏内容
+   */
+  fences?: API.FenceAndMapInfo[];
+  hiddenFence?: boolean;
+
+  /**
+   * 收到报警后需要闪烁围栏图层
+   */
+  warningFenceId?: string;
 }
 
 /**
@@ -51,6 +70,9 @@ export function RealTimeL7Component(props: IProps) {
 
   /** @type {*} 实时位置 ‘点’图层 */
   const locationLayer = React.useRef<ILayer>();
+
+  /** @type {*} 展示围栏 ‘面’ 图层 */
+  const fenceLayer = React.useRef<ILayer>();
 
   React.useEffect(() => {
     scene.current = new Scene({
@@ -152,6 +174,71 @@ export function RealTimeL7Component(props: IProps) {
     }
   }, [props.locations, loaded, mapWidth]);
 
+  // 处理围栏展示内容
+  React.useEffect(() => {
+    if (loaded && props.fences && mapWidth) {
+      // const source = props.fences.map((fence) =>
+      //   fence.points?.map((item) => {
+      //     const [lng, lat] = convertCMtoL([item.x!, item.y!], mapWidth);
+      //     return { ...item, type: fence.type, lng, lat };
+      //   }),
+      // );
+
+      // const fences = props.fences.points ?? [];
+      const features =
+        props.fences.map((fence) => {
+          return {
+            type: 'Feature',
+            properties: {
+              name: fence.name,
+              code: fence.fenceId,
+              c: fence.type === 'In' ? green[4] : gold[4],
+            },
+            geometry: {
+              type: 'Polygon',
+              coordinates: [fence.points?.map((item) => convertCMtoL([item.x, item.y], mapWidth))],
+            },
+          };
+        }) ?? [];
+      const source = {
+        type: 'FeatureCollection',
+        features,
+      };
+
+      if (!fenceLayer.current) {
+        fenceLayer.current = new PolygonLayer({
+          zIndex: 2,
+          name: 'fence-layout',
+        })
+          .source(source)
+          .shape('fill')
+          .color('c')
+          .style({ opacity: 0.6 })
+          .active({
+            color: 'red',
+          });
+        scene.current?.addLayer(fenceLayer.current);
+        // console.log('fenceLayer.current', fenceLayer.current);
+      } else {
+        fenceLayer.current.setData(source);
+        fenceLayer.current.setIndex(9);
+      }
+    }
+  }, [props.fences, loaded, mapWidth]);
+
+  React.useEffect(() => {
+    if (!isNil(props.hiddenFence)) {
+      if (props.hiddenFence) {
+        fenceLayer.current?.hide();
+      } else {
+        fenceLayer.current?.show();
+      }
+    }
+  }, [props.hiddenFence]);
+
+  React.useEffect(() => {
+    // TODO:
+  }, [props.warningFenceId]);
   return (
     <React.Fragment>
       <Card bodyStyle={{ padding: 0 }}>

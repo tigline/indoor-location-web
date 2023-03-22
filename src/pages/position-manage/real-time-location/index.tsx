@@ -2,8 +2,9 @@ import { RealTimeL7Component } from '@/components/map-components/real-time-L7-co
 import { SelectMapSelect } from '@/components/select-map.select';
 import { ILocation } from '@/models/messageSocket';
 import { pageGateway } from '@/services/swagger/shebeiguanli';
-import { getMap } from '@/services/swagger/xitongguanli';
-import { fmt } from '@/utils/global.utils';
+import { getMap, pageFence } from '@/services/swagger/xitongguanli';
+import { fmt, OK } from '@/utils/global.utils';
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import {
   isNil,
   PageContainer,
@@ -12,10 +13,10 @@ import {
   ProFormInstance,
   Statistic,
 } from '@ant-design/pro-components';
-import { useIntl, useModel, useRequest } from '@umijs/max';
+import { FormattedMessage, useIntl, useModel, useRequest } from '@umijs/max';
 import { useInterval } from 'ahooks';
 import { ReadyState } from 'ahooks/lib/useWebSocket';
-import { Card, Col, Row, Typography } from 'antd';
+import { Card, Col, Row, Switch, Typography } from 'antd';
 import { map } from 'lodash';
 import React from 'react';
 
@@ -51,10 +52,23 @@ export default function Page() {
   // const intl = useIntl();
   const formRef = React.useRef<ProFormInstance<{ mapId: string[] }>>(null);
   const [beacons, setBeacons] = React.useState<Record<string, API.AoaDataInfo>>();
+  const [fenceEnable, setFenceDisable] = React.useState<boolean>(true);
+  const { run: queryFences, data: fences } = useRequest(pageFence, {
+    manual: true,
+    formatResult(res) {
+      return res.data?.items ?? [];
+    },
+  });
+
   const { run, data: mapInfo } = useRequest(getMap, {
     manual: true,
     formatResult: (res) => res,
-    onSuccess() {
+    onSuccess(res: API.RestValueMapInfo) {
+      if (res.code === OK) {
+        if (res.data?.mapId) {
+          queryFences({ mapId: res.data?.mapId, current: '1', size: '15' });
+        }
+      }
       setBeacons({});
     },
   });
@@ -92,32 +106,46 @@ export default function Page() {
   return (
     <PageContainer>
       <ProCard>
-        <Row>
-          <Col span="12">
-            <StatisticOfNow />
-          </Col>
-          <Col span="12">
-            <ProForm<{ mapId: string[] }>
-              submitter={false}
-              layout="inline"
-              formRef={formRef}
-              onValuesChange={(values) => {
-                if (!isNil(values.mapId)) {
-                  submit(values.mapId);
-                }
-              }}
-              style={{ minWidth: 320, height: '100%', alignItems: 'end', justifyContent: 'end' }}
-            >
-              <SelectMapSelect></SelectMapSelect>
-            </ProForm>
-          </Col>
-        </Row>
+        <ProForm<{ mapId: string[] }>
+          submitter={false}
+          layout="horizontal"
+          formRef={formRef}
+          onValuesChange={(values) => {
+            if (!isNil(values.mapId)) {
+              submit(values.mapId);
+            }
+          }}
+          style={{ alignItems: 'end' }}
+        >
+          <Row>
+            <Col span="12">
+              <StatisticOfNow />
+            </Col>
+            <Col span="4" style={{ display: 'flex', alignItems: 'end', justifyContent: 'end' }}>
+              <FormattedMessage
+                id="pages.position-manage.real-time-location.fence-switch"
+                defaultMessage="围栏开关"
+              />
+              <Switch
+                checked={fenceEnable}
+                onChange={(e) => setFenceDisable(e)}
+                checkedChildren={<CheckOutlined />}
+                unCheckedChildren={<CloseOutlined />}
+              />
+            </Col>
+            <Col span="8" style={{ display: 'flex', alignItems: 'end', justifyContent: 'end' }}>
+              <SelectMapSelect formItemProps={{ style: { marginBottom: 0 } }}></SelectMapSelect>
+            </Col>
+          </Row>
+        </ProForm>
       </ProCard>
       <Card>
         <RealTimeL7Component
           map={mapInfo?.data?.picture}
           rect={[mapInfo?.data?.length, mapInfo?.data?.width]}
           stations={gateways?.items}
+          fences={fences}
+          hiddenFence={!fenceEnable}
           locations={
             map(beacons, (o) => o)
             // .filter((f) => f.mapId === mapInfo?.data?.mapId)

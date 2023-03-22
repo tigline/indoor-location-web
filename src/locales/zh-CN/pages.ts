@@ -102,6 +102,7 @@ export default {
 
   'pages.position-manage.real-time-location.current-time': '当前时间',
   'pages.position-manage.real-time-location.map-select': '请选择地图',
+  'pages.position-manage.real-time-location.fence-switch': '围栏开关',
   'pages.position-manage.real-time-location.floor-select': '请选择楼层',
 
   'pages.position-manage.tracking-manage.person-select': '请选择人员',
