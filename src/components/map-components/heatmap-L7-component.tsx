@@ -2,6 +2,7 @@ import arrow from '@/assets/images/arrow.svg';
 import person from '@/assets/images/person.svg';
 import stationImage from '@/assets/images/station.svg';
 import warning from '@/assets/images/warning.svg';
+import { blue, gold, green, red } from '@ant-design/colors';
 import {
   HeatmapLayer,
   ILayer,
@@ -12,9 +13,16 @@ import {
   Scene,
 } from '@antv/l7';
 import { Card } from 'antd';
-import { chain, isEmpty } from 'lodash';
+import { chain, forEach, isEmpty } from 'lodash';
 import React from 'react';
 import { convertCMtoL, scale } from './convert';
+
+const ColorMap = {
+  Equipment: red,
+  Personnel: green,
+  Vehicle: gold,
+  Stuff: blue,
+};
 
 interface IProps {
   map?: string;
@@ -57,7 +65,7 @@ export function HeatmapL7Component(props: IProps) {
   /**
    * 热力图图层
    */
-  const heatMapLayer = React.useRef<ILayer>();
+  const heatMapLayer = React.useRef<Record<Required<API.AoaDataInfo>['type'], ILayer>>({} as any);
 
   React.useEffect(() => {
     scene.current = new Scene({
@@ -125,38 +133,55 @@ export function HeatmapL7Component(props: IProps) {
   React.useEffect(() => {
     if (loaded && mapWidth) {
       const source = chain(props.beacons ?? [])
-        .countBy((item) => {
-          return `${item.posX?.toFixed(1)}-${item.posY?.toFixed(1)}`;
-        })
-        .map((count, key) => {
-          const [posX, posY] = key.split('-').map(Number);
-          const [lng, lat] = convertCMtoL([posX!, posY!], mapWidth);
-          return { lng, lat, sum: count };
+        .groupBy((o) => o.type)
+        .mapValues((value) => {
+          return chain(value)
+            .countBy((item) => {
+              return `${item.posX?.toFixed(1)}-${item.posY?.toFixed(1)}`;
+            })
+            .map((count, key) => {
+              const [posX, posY] = key.split('-').map(Number);
+              const [lng, lat] = convertCMtoL([posX!, posY!], mapWidth);
+              return { lng, lat, sum: count };
+            })
+            .value();
         })
         .value();
       // const source = (props.beacons ?? [])?.map((item) => {
       //   const [lng, lat] = convertCMtoL([item.posX!, item.posY!], mapWidth);
       //   return { ...item, lng, lat, sum: 100 };
       // });
-      if (!heatMapLayer.current) {
-        heatMapLayer.current = new HeatmapLayer({ name: 'heat-map-layer' })
-          .source(source, { parser: { type: 'json', x: 'lng', y: 'lat' } })
-          .shape('heatmap')
-          .size('sum', [0, 1]) // weight映射通道
-          .style({
-            intensity: 2,
-            radius: 20,
-            rampColors: {
-              colors: ['#FF4818', '#F7B74A', '#FFF598', '#91EABC', '#2EA9A1', '#206C7C'].reverse(),
-              positions: [0, 0.2, 0.4, 0.6, 0.8, 1.0],
-            },
-          });
-        scene.current?.addLayer(heatMapLayer.current);
-      } else {
-        heatMapLayer.current.setData(source);
-        heatMapLayer.current?.show();
-        heatMapLayer.current.setIndex(4);
-      }
+      forEach(
+        ['Equipment', 'Personnel', 'Vehicle', 'Stuff'] as API.AoaDataInfo['type'][],
+        (key) => {
+          if (!heatMapLayer.current?.[key!]) {
+            heatMapLayer.current![key!] = new HeatmapLayer({ name: 'heat-map-Equipment-layer' })
+              .source(source[key!], { parser: { type: 'json', x: 'lng', y: 'lat' } })
+              .shape('heatmap')
+              .size('sum', [0, 1]) // weight映射通道
+              .style({
+                intensity: 2,
+                radius: 20,
+                rampColors: {
+                  colors: [
+                    ColorMap[key!][2],
+                    ColorMap[key!][3],
+                    ColorMap[key!][4],
+                    ColorMap[key!][5],
+                    ColorMap[key!][7],
+                    ColorMap[key!][9],
+                  ].reverse(),
+                  positions: [0, 0.2, 0.4, 0.6, 0.8, 1.0],
+                },
+              });
+            scene.current?.addLayer(heatMapLayer.current![key!]);
+          } else {
+            heatMapLayer.current![key!].setData(source[key!]);
+            heatMapLayer.current![key!]?.show();
+            heatMapLayer.current![key!].setIndex(4);
+          }
+        },
+      );
     }
   }, [props.beacons, loaded, mapWidth]);
 
