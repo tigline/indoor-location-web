@@ -140,10 +140,7 @@ export function HeatmapL7Component(props: IProps) {
       // });
       if (!heatMapLayer.current) {
         heatMapLayer.current = new HeatmapLayer({ name: 'heat-map-layer' })
-          .source(source, {
-            parser: { type: 'json', x: 'lng', y: 'lat' },
-            // transforms: [{ type: 'hexagon', size: 100, field: 'h12', method: 'sum' }],
-          })
+          .source(source, { parser: { type: 'json', x: 'lng', y: 'lat' } })
           .shape('heatmap')
           .size('sum', [0, 1]) // weight映射通道
           .style({
