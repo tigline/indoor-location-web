@@ -55,25 +55,9 @@ export default function Page() {
             // console.log(values);
             return submit(values);
           }}
-          // onValuesChange={(values) => {
-          //   if (!isNil(values.mapId)) {
-          //     submit(values.mapId);
-          //   }
-          // }}
         >
           <SelectMapSelect />
-          {/* <SelectMapCascader
-            transform={([, mapId]) => ({ mapId })}
-            submit={submit}
-            form={formRef.current}
-            label={false}
-          ></SelectMapCascader> */}
-          {/* <ProFormSelect
-            placeholder={intl.formatMessage({
-              id: 'pages.position-manage.tracking-manage.person-select',
-              defaultMessage: '请选择人员',
-            })}
-          /> */}
+
           <ProFormDateTimeRangePicker
             name="range"
             transform={(value: [Moment?, Moment?]) => {
@@ -94,18 +78,6 @@ export default function Page() {
               }),
             ]}
           />
-          {/* <ProFormSelect
-            placeholder={intl.formatMessage({
-              id: 'pages.position-manage.tracking-manage.speed-select',
-              defaultMessage: '速率',
-            })}
-            options={[
-              { label: 'x1', value: 1 },
-              { label: 'x2', value: 2 },
-              { label: 'x4', value: 4 },
-              { label: 'x8', value: 8 },
-            ]}
-          /> */}
         </ProForm>
       </ProCard>
       <Card>

@@ -6,7 +6,7 @@ export default {
     res.status(200).send(
       mock({
         code: 200,
-        'data|10-20': [
+        'data|3000-3500': [
           {
             deviceId: /\d{12}/,
             'id|1000-20000': 1,
