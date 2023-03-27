@@ -99,7 +99,7 @@ export function RealTimeL7Component(props: IProps) {
 
   /** @type {*} 展示围栏 ‘面’ 图层 */
   const fenceLayers = React.useRef<Record<string | number, ILayer>>({});
-  window.fenceLayers = fenceLayers;
+  // window.fenceLayers = fenceLayers;
   React.useEffect(() => {
     scene.current = new Scene({
       id: mapContainer.current!,
