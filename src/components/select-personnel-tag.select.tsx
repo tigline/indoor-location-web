@@ -34,3 +34,31 @@ export function SelectPersonnelTagSelect(props: React.ComponentProps<typeof ProF
     />
   );
 }
+
+export function SelectBeacon(props: React.ComponentProps<typeof ProFormSelect>) {
+  const intl = useIntl();
+  return (
+    <ProFormSelect
+      request={async ({ keyWords = '' }) => {
+        const res = await pageBeacon({ current: '1', size: '20', name: keyWords });
+        const list =
+          fmtPage(res).data?.map((item) => ({
+            label: item.name,
+            value: item.deviceId,
+            key: item.deviceId,
+          })) ?? [];
+        return list;
+        // return run({ current: '1', size: '20', name: keyWords });
+      }}
+      placeholder={intl.formatMessage({
+        id: 'pages.personnel-manage.organization.department.person.tag.placeholder',
+        defaultMessage: '请选择标签',
+      })}
+      fieldProps={{
+        showSearch: true,
+        style: { minWidth: 180 },
+      }}
+      {...props}
+    />
+  );
+}

@@ -1,5 +1,6 @@
 import { TrackL7Component } from '@/components/map-components/track-L7-component';
 import { SelectMapSelect } from '@/components/select-map.select';
+import { SelectBeacon } from '@/components/select-personnel-tag.select';
 import { listBeaconLocation, pageGateway } from '@/services/swagger/shebeiguanli';
 import { getMap } from '@/services/swagger/xitongguanli';
 import { fmtDate, OK } from '@/utils/global.utils';
@@ -8,6 +9,7 @@ import {
   ProCard,
   ProForm,
   ProFormDateTimeRangePicker,
+  ProFormDigit,
 } from '@ant-design/pro-components';
 import { useIntl, useRequest } from '@umijs/max';
 import { Card } from 'antd';
@@ -57,7 +59,8 @@ export default function Page() {
           }}
         >
           <SelectMapSelect />
-
+          <SelectBeacon name="deviceId" />
+          <ProFormDigit name="filterValue" />
           <ProFormDateTimeRangePicker
             name="range"
             transform={(value: [Moment?, Moment?]) => {

@@ -245,6 +245,7 @@ export default {
   'pages.personnel-manage.organization.department.person.type.required.failure': '请选择人员类型',
   'pages.personnel-manage.organization.department.person.icon': '头像',
   'pages.personnel-manage.organization.department.person.icon.required.failure': '请选择头像',
+  'pages.personnel-manage.organization.department.person.tag.placeholder': '请选择标签',
   'pages.personnel-manage.organization.department.person.tag': '绑定标签',
   'pages.personnel-manage.organization.department.person.tag.required.failure': '请选择绑定标签',
   'pages.personnel-manage.organization.department.person.edit': '更换部门',

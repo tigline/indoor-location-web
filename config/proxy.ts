@@ -15,7 +15,7 @@ export default {
     // localhost:8000/api/** -> https://preview.pro.ant.design/api/**
     '/ips/api/': {
       // 要代理的地址
-      target: 'http://18.179.207.178/',
+      target: 'http://13.112.168.219/',
       // 配置了这个可以从 http 代理到 https
       // 依赖 origin 的功能可能需要这个，比如 cookie
       changeOrigin: true,
@@ -30,7 +30,7 @@ export default {
   test: {
     // localhost:8000/api/** -> https://preview.pro.ant.design/api/**
     '/ips/api/': {
-      target: 'http://18.179.207.178/',
+      target: 'http://13.112.168.219/',
       changeOrigin: true,
       pathRewrite: { '^': '' },
     },

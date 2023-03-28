@@ -112,6 +112,7 @@ declare namespace API {
     optScale?: number;
     posX?: number;
     posY?: number;
+    status?: number;
     timestamp?: number;
     type?: 'Equipment' | 'Personnel' | 'Vehicle' | 'Stuff';
   };
@@ -261,6 +262,7 @@ declare namespace API {
     startTime: string;
     endTime: string;
     deviceId?: string;
+    filterValue?: number;
   };
 
   type listBuildingParams = {
