@@ -2,8 +2,9 @@ import { RemoveButtonPopover } from '@/components/remove-button.popover';
 import { deleteGateway, pageGateway } from '@/services/swagger/shebeiguanli';
 import { fmt, fmtPage } from '@/utils/global.utils';
 import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
-import { FormattedMessage, useIntl, useRequest } from '@umijs/max';
+import { FormattedMessage, Link, useIntl, useRequest } from '@umijs/max';
 import { Button, notification, Tag } from 'antd';
+import qs from 'qs';
 import React from 'react';
 import { AddBaseStationModal } from './components/add-base-station.modal';
 import { EditBaseStationModal } from './components/edit-base-station.modal';
@@ -111,6 +112,22 @@ export default function Page() {
       render: (_, record, __, action) => (
         <Button.Group>
           <EditBaseStationModal record={record} refresh={action?.reload} />
+          <Button type="link" size="small">
+            <Link
+              to={`/position-manage/real-time-location${qs.stringify(
+                {
+                  gateway: record.gateway,
+                  mapId: record.mapId,
+                },
+                { addQueryPrefix: true },
+              )}`}
+            >
+              {intl.formatMessage({
+                id: 'app.view',
+                defaultMessage: '查看地图',
+              })}
+            </Link>
+          </Button>
           <RemoveButtonPopover
             disabled={!record.gateway}
             onClick={() => remove({ gateway: record.gateway! }).then(() => action?.reload())}

@@ -1,9 +1,14 @@
 import arrow from '@/assets/images/arrow.svg';
-import box from '@/assets/images/box.svg';
-import cart from '@/assets/images/cart.svg';
-import equipment from '@/assets/images/equipment.svg';
-import person from '@/assets/images/person.svg';
-import stationImage from '@/assets/images/station.svg';
+import StuffSelect from '@/assets/images/box-select.svg';
+import Stuff from '@/assets/images/box.svg';
+import VehicleSelect from '@/assets/images/cart-select.svg';
+import Vehicle from '@/assets/images/cart.svg';
+import EquipmentSelect from '@/assets/images/equipment-select.svg';
+import Equipment from '@/assets/images/equipment.svg';
+import PersonnelSelect from '@/assets/images/person-select.svg';
+import Personnel from '@/assets/images/person.svg';
+import StationSelect from '@/assets/images/station-select.svg';
+import StationImage from '@/assets/images/station.svg';
 import warning from '@/assets/images/warning.svg';
 import { delay } from '@/utils/global.utils';
 import { gold, green } from '@ant-design/colors';
@@ -79,6 +84,16 @@ interface IProps {
    * @returns
    */
   clear?: () => void;
+
+  /**
+   * 选中的基站要高亮展示
+   */
+  selectedStation?: number | string | null;
+
+  /**
+   * 选中的标签要高亮展示
+   */
+  selectedDeviceId?: number | string | null;
 }
 
 /**
@@ -167,7 +182,14 @@ export function RealTimeL7Component(props: IProps) {
     if (loaded && mapWidth) {
       const source = (props.locations ?? [])?.map((item) => {
         const [lng, lat] = convertCMtoL([item.posX!, item.posY!], mapWidth) ?? [];
-        return { ...item, lng, lat };
+
+        return {
+          ...item,
+          lng,
+          lat,
+          // 对于选中的基站要添加标识
+          type: item.deviceId === props.selectedDeviceId ? item.type : item.type + '-selected',
+        };
       });
 
       if (!locationLayer.current) {
@@ -180,9 +202,20 @@ export function RealTimeL7Component(props: IProps) {
             .source(source, {
               parser: { type: 'json', x: 'lng', y: 'lat', name: 'type' },
             })
-            .color(green[3])
+            // .color(green[3])
+            .color('red')
             .size(15)
-            .shape('type', ['Equipment', 'Personnel', 'Vehicle', 'Stuff'])
+            .shape('type', [
+              'Equipment',
+              'Personnel',
+              'Vehicle',
+              'Stuff',
+
+              'Equipment-selected',
+              'Personnel-selected',
+              'Vehicle-selected',
+              'Stuff-selected',
+            ])
             .animate(true);
           scene.current?.addLayer(locationLayer.current);
           locationLayer.current.on('mousemove', (e) => {
@@ -241,13 +274,19 @@ export function RealTimeL7Component(props: IProps) {
         // rotation: 19.313180925794313
       }),
     });
-    scene.current.addImage('stationIcon', stationImage);
+    scene.current.addImage('Gateway', StationImage);
+    scene.current.addImage('Gateway-selected', StationSelect);
+
     scene.current.addImage('arrow', arrow);
 
-    scene.current.addImage('Equipment', equipment);
-    scene.current.addImage('Personnel', person);
-    scene.current.addImage('Vehicle', cart);
-    scene.current.addImage('Stuff', box);
+    scene.current.addImage('Equipment', Equipment);
+    scene.current.addImage('Personnel', Personnel);
+    scene.current.addImage('Vehicle', Vehicle);
+    scene.current.addImage('Stuff', Stuff);
+    scene.current.addImage('Equipment-selected', EquipmentSelect);
+    scene.current.addImage('Personnel-selected', PersonnelSelect);
+    scene.current.addImage('Vehicle-selected', VehicleSelect);
+    scene.current.addImage('Stuff-selected', StuffSelect);
 
     scene.current.addImage('warning', warning);
     scene.current?.on('loaded', () => setLoaded(true));
@@ -276,7 +315,14 @@ export function RealTimeL7Component(props: IProps) {
     if (loaded && mapWidth) {
       const source = (props.stations ?? [])?.map((item) => {
         const [lng, lat] = convertCMtoL([item.setX!, item.setY!], mapWidth);
-        return { ...item, lng, lat };
+
+        return {
+          ...item,
+          lng,
+          lat,
+          // 对于选中的基站要添加标识
+          type: item.gateway === props.selectedStation ? item.type : 'Gateway-selected',
+        };
       });
       if (stationLayer.current) {
         // scene.current?.removeLayer(stationLayer.current);
@@ -286,9 +332,9 @@ export function RealTimeL7Component(props: IProps) {
       } else {
         stationLayer.current = new PointLayer({ zIndex: 3 })
           .source(source, {
-            parser: { type: 'json', x: 'lng', y: 'lat', name: 'name' },
+            parser: { type: 'json', x: 'lng', y: 'lat', name: 'type' },
           })
-          .shape('name', ['stationIcon'])
+          .shape('type', ['Gateway', 'Gateway-selected'])
           .size(10);
         scene.current?.addLayer(stationLayer.current);
       }
@@ -296,10 +342,10 @@ export function RealTimeL7Component(props: IProps) {
   }, [props.stations, loaded, mapWidth]);
   // 处理标签展示内容
   React.useEffect(() => {
+
     updateLocations(performance.now());
     requestAnimationFrame(updateLocations);
   }, [updateLocations, loaded, mapWidth]);
-
 
   // 处理围栏展示内容
   React.useEffect(() => {
