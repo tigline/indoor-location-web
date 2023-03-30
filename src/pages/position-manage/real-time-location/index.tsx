@@ -1,6 +1,5 @@
 import { RealTimeL7Component } from '@/components/map-components/real-time-L7-component';
 import { SelectMapSelect } from '@/components/select-map.select';
-import { ILocation } from '@/models/messageSocket';
 import { pageGateway } from '@/services/swagger/shebeiguanli';
 import { getMap, pageFence } from '@/services/swagger/xitongguanli';
 import { fmt, OK } from '@/utils/global.utils';
@@ -15,9 +14,8 @@ import {
 } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl, useModel, useRequest, useSearchParams } from '@umijs/max';
 import { useInterval } from 'ahooks';
-import { ReadyState } from 'ahooks/lib/useWebSocket';
 import { Card, Col, Row, Switch, Typography } from 'antd';
-import { map } from 'lodash';
+import { chain } from 'lodash';
 import React from 'react';
 
 /**
@@ -56,7 +54,8 @@ export default function Page() {
   const selectedDeviceId = param.get('deviceId');
   const selectedMapId = param.get('mapId');
   const formRef = React.useRef<ProFormInstance<{ mapId: string[] }>>(null);
-  const [beacons, setBeacons] = React.useState<Record<string, API.AoaDataInfo>>();
+
+  const [currentMapId, setCurrentMapId] = React.useState<string>();
   const [fenceEnable, setFenceDisable] = React.useState<boolean>(true);
   const [warningFenceId, setWarningFenceId] = React.useState<string>();
 
@@ -76,34 +75,16 @@ export default function Page() {
           queryFences({ mapId: res.data?.mapId, current: '1', size: '15' });
         }
       }
-      setBeacons({});
     },
   });
   const { run: query, data: gateways } = useRequest(pageGateway, {
     manual: true,
   });
-  const { readyState, connect, data } = useModel('messageSocket');
-  React.useEffect(() => {
-    if (ReadyState.Closed === readyState) {
-      connect?.();
-    }
-  }, [readyState]);
-  React.useEffect(() => {
-    if (data) {
-      const res = JSON.parse(data) as ILocation;
-      // 这里只处理'定位数据'
-      if (res.type === 'AOAData') {
-        setBeacons((pre) => {
-          return { ...pre, [res.data.deviceId!]: res.data as API.AoaDataInfo };
-        });
-      } else if (res.type === 'Alarm') {
-        setWarningFenceId((res.data as API.AlarmInfo).fenceId);
-      }
-    }
-  }, [data]);
+  const { beacons } = useModel('messageSocket');
 
   function submit(mapId: string) {
     query({ mapId: mapId });
+    setCurrentMapId(mapId);
     return run({ mapId });
   }
   React.useEffect(() => {
@@ -163,10 +144,10 @@ export default function Page() {
           clear={() => setWarningFenceId('')}
           selectedStation={selectedGateway}
           selectedDeviceId={selectedDeviceId}
-          locations={
-            map(beacons, (o) => o)
-            // .filter((f) => f.mapId === mapInfo?.data?.mapId)
-          }
+          locations={chain(beacons)
+            .map((o) => o)
+            .filter((f) => f.mapId === currentMapId)
+            .value()}
         />
       </Card>
     </PageContainer>

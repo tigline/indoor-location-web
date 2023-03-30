@@ -15,7 +15,8 @@ import React from 'react';
 
 export default () => {
   const { initialState } = useModel('@@initialState');
-
+  // 当前有实时数据的标签
+  const [beacons, setBeacons] = React.useState<Record<string, API.AoaDataInfo>>();
   // const [state, setState] = React.useState();
 
   // const [aoas,setAoas] = React.useState<Record<string,API.AoaDataInfo[]>>()
@@ -38,10 +39,23 @@ export default () => {
   );
   React.useEffect(() => {}, [latestMessage?.data]);
 
+  React.useEffect(() => {
+    if (latestMessage?.data) {
+      const res = JSON.parse(latestMessage?.data) as ILocation;
+      // 这里只处理'定位数据'
+      if (res.type === 'AOAData') {
+        setBeacons((pre) => {
+          return { ...pre, [res.data.deviceId!]: res.data as API.AoaDataInfo };
+        });
+      }
+    }
+  }, [latestMessage?.data]);
+
   return {
     readyState,
     connect,
     data: latestMessage?.data,
+    beacons,
   };
 };
 

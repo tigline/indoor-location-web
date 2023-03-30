@@ -112,22 +112,21 @@ export default function Page() {
       render: (_, record, __, action) => (
         <Button.Group>
           <EditBaseStationModal record={record} refresh={action?.reload} />
-          <Button type="link" size="small">
-            <Link
-              to={`/position-manage/real-time-location${qs.stringify(
-                {
-                  gateway: record.gateway,
-                  mapId: record.mapId,
-                },
-                { addQueryPrefix: true },
-              )}`}
-            >
-              {intl.formatMessage({
-                id: 'app.view',
-                defaultMessage: '查看地图',
-              })}
-            </Link>
-          </Button>
+          {record.status === 'Online' && (
+            <Button type="link" size="small">
+              <Link
+                to={`/position-manage/real-time-location${qs.stringify(
+                  {
+                    gateway: record.gateway,
+                    mapId: record.mapId,
+                  },
+                  { addQueryPrefix: true },
+                )}`}
+              >
+                {intl.formatMessage({ id: 'app.view', defaultMessage: '查看' })}
+              </Link>
+            </Button>
+          )}
           <RemoveButtonPopover
             disabled={!record.gateway}
             onClick={() => remove({ gateway: record.gateway! }).then(() => action?.reload())}

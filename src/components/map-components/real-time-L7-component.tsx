@@ -136,13 +136,15 @@ export function RealTimeL7Component(props: IProps) {
   const mapContainer = React.useRef<HTMLDivElement>(null);
   const scene = React.useRef<Scene>();
 
+  const popup = React.useRef<Popup>();
+
   /** @type {*} 地图图片 图层 */
   const imageLayer = React.useRef<ImageLayer>();
-  /** @type {*} 基站图层 */
-  const stationLayer = React.useRef<ILayer>();
+  /** @type {*} 基站图层 分高亮的和正常的 */
+  const stationLayers = React.useRef<ILayer[]>([]);
 
-  /** @type {*} 实时位置 ‘点’图层 */
-  const locationLayer = React.useRef<ILayer>();
+  /** @type {*} 实时位置 ‘点’图层 分高亮的和正常的 */
+  const locationLayers = React.useRef<ILayer[]>([]);
 
   /** @type {*} 展示围栏 ‘面’ 图层 */
   const fenceLayers = React.useRef<Record<string | number, ILayer>>({});
@@ -180,80 +182,79 @@ export function RealTimeL7Component(props: IProps) {
     // 更新位置数据
     
     if (loaded && mapWidth) {
-      const source = (props.locations ?? [])?.map((item) => {
-        const [lng, lat] = convertCMtoL([item.posX!, item.posY!], mapWidth) ?? [];
-
-        return {
-          ...item,
-          lng,
-          lat,
-          // 对于选中的基站要添加标识
-          type: item.deviceId === props.selectedDeviceId ? item.type : item.type + '-selected',
-        };
-      });
-
-      if (!locationLayer.current) {
-        if (!isEmpty(source)) {
-          locationLayer.current = new PointLayer({
-            name: 'real-time',
-            zIndex: 3,
-            layerType: 'fillImage',
-          })
-            .source(source, {
-              parser: { type: 'json', x: 'lng', y: 'lat', name: 'type' },
+      forEach(
+        [
+          'Equipment',
+          'Personnel',
+          'Vehicle',
+          'Stuff',
+          'Equipment-selected',
+          'Personnel-selected',
+          'Vehicle-selected',
+          'Stuff-selected',
+        ],
+        (key, index) => {
+          const source = (props.locations ?? [])
+            ?.filter((f) => {
+              const [type, selected] = key.split('-');
+              if (selected) {
+                return f.type === type && f.deviceId === props.selectedDeviceId;
+              } else {
+                return f.type === type;
+              }
             })
-            // .color(green[3])
-            .color('red')
-            .size(15)
-            .shape('type', [
-              'Equipment',
-              'Personnel',
-              'Vehicle',
-              'Stuff',
+            ?.map((item) => {
+              const [lng, lat] = convertCMtoL([item.posX!, item.posY!], mapWidth) ?? [];
+              return { ...item, lng, lat };
+            });
 
-              'Equipment-selected',
-              'Personnel-selected',
-              'Vehicle-selected',
-              'Stuff-selected',
-            ])
-            .animate(true);
-          scene.current?.addLayer(locationLayer.current);
-          locationLayer.current.on('mousemove', (e) => {
-            console.log(e);
-
-            const popup = new Popup({
-              offsets: [0, 0],
-              closeButton: false,
-            })
-              .setLnglat(e.lngLat)
-              .setHTML(
-                `
-                <span>
-                  <p>deviceId:${e.feature.deviceId}</p>
-                  <p>X:${e.feature.posX}</p>
-                  <p>Y:${e.feature.posY}</p>
-                  <p>${intl.formatMessage({
-                    id: 'pages.device-manage.label.type',
-                    defaultMessage: '类型',
-                  })}: ${TypeLabel[e.feature.type as any]}</p>
-                </span>
-                `,
-              );
-            scene.current?.addPopup(popup);
-          });
-        }
-      } else {
-        if (isEmpty(props.locations)) {
-          // 图层不能设置空数据 ，这里数据为空时直接隐藏图层
-          locationLayer.current.hide();
-        } else {
-          if (!locationLayer.current.isVisible()) {
-            locationLayer.current.show();
+          if (!locationLayers.current?.[index]) {
+            if (!isEmpty(source)) {
+              locationLayers.current![index] = new PointLayer({
+                name: 'real-time',
+                zIndex: 3,
+                layerType: 'fillImage',
+              })
+                .source(source, {
+                  parser: { type: 'json', x: 'lng', y: 'lat', name: 'type' },
+                })
+                // .color(green[3])
+                // .color('red')
+                .size(15)
+                .shape(key)
+                .animate(true);
+              scene.current?.addLayer(locationLayers.current![index]!);
+              locationLayers.current?.[index].on('mousemove', (e) => {
+                console.log(e);
+                popup.current?.setLnglat(e.lngLat).setHTML(
+                  `<span>
+                    <p>deviceId:${e.feature.deviceId}</p>
+                    <p>X:${e.feature.posX}</p>
+                    <p>Y:${e.feature.posY}</p>
+                    <p>${intl.formatMessage({
+                      id: 'pages.device-manage.label.type',
+                      defaultMessage: '类型',
+                    })}: ${TypeLabel[e.feature.type as any]}</p>
+                  </span>
+                  `,
+                );
+                scene.current?.addPopup(popup.current!);
+              });
+            }
+          } else {
+            if (isEmpty(props.locations)) {
+              // 图层不能设置空数据 ，这里数据为空时直接隐藏图层
+              locationLayers.current?.[index].hide();
+            } else {
+              if (!locationLayers.current?.[index].isVisible()) {
+                locationLayers.current?.[index].show();
+              }
+              locationLayers.current?.[index].setData(source);
+              locationLayers.current?.[index].setIndex(3);
+            }
           }
-          locationLayer.current.setData(source);
-          locationLayer.current.setIndex(3);
-        }
-      }
+        },
+      );
     }
   }
 
@@ -289,6 +290,12 @@ export function RealTimeL7Component(props: IProps) {
     scene.current.addImage('Stuff-selected', StuffSelect);
 
     scene.current.addImage('warning', warning);
+
+    popup.current = new Popup({
+      offsets: [0, 0],
+      closeButton: false,
+    });
+
     scene.current?.on('loaded', () => setLoaded(true));
   }, []);
   React.useEffect(() => {
@@ -313,33 +320,55 @@ export function RealTimeL7Component(props: IProps) {
   // 处理基站展示内容
   React.useEffect(() => {
     if (loaded && mapWidth) {
-      const source = (props.stations ?? [])?.map((item) => {
-        const [lng, lat] = convertCMtoL([item.setX!, item.setY!], mapWidth);
-
-        return {
-          ...item,
-          lng,
-          lat,
-          // 对于选中的基站要添加标识
-          type: item.gateway === props.selectedStation ? item.type : 'Gateway-selected',
-        };
-      });
-      if (stationLayer.current) {
-        // scene.current?.removeLayer(stationLayer.current);
-        // stationLayer.current.destroy();
-        stationLayer.current.setData(source);
-        stationLayer.current.setIndex(3);
-      } else {
-        stationLayer.current = new PointLayer({ zIndex: 3 })
-          .source(source, {
-            parser: { type: 'json', x: 'lng', y: 'lat', name: 'type' },
+      // 分为高亮的和正常的
+      forEach(['Gateway-selected', 'Gateway'], (key, index) => {
+        const source = (props.stations ?? [])
+          ?.filter((f) => {
+            const [, selected] = key.split('-');
+            if (selected) {
+              return f.gateway === props.selectedStation;
+            } else {
+              return f.gateway !== props.selectedStation;
+            }
           })
-          .shape('type', ['Gateway', 'Gateway-selected'])
-          .size(10);
-        scene.current?.addLayer(stationLayer.current);
-      }
+          ?.map((item) => {
+            const [lng, lat] = convertCMtoL([item.setX!, item.setY!], mapWidth);
+            return { ...item, lng, lat };
+          });
+        if (stationLayers.current?.[index]) {
+          // scene.current?.removeLayer(stationLayer.current);
+          // stationLayer.current.destroy();
+          stationLayers.current?.[index].setData(source);
+          stationLayers.current?.[index].setIndex(3);
+        } else {
+          stationLayers.current[index] = new PointLayer({ zIndex: 3 })
+            .source(source, {
+              parser: { type: 'json', x: 'lng', y: 'lat', name: 'type' },
+            })
+            .shape(key)
+            .size(10);
+          scene.current?.addLayer(stationLayers.current[index]!);
+          stationLayers.current?.[index].on('mousemove', (e) => {
+            console.log(e);
+            popup.current?.setLnglat(e.lngLat).setHTML(
+              `<span>
+                  <p>name:${e.feature.name}</p>
+                  <p>deviceId:${e.feature.gateway}</p>
+                  <p>X:${e.feature.setX}</p>
+                  <p>Y:${e.feature.setY}</p>
+                  <p>${intl.formatMessage({
+                    id: 'pages.device-manage.label.type',
+                    defaultMessage: '类型',
+                  })}: Gateway</p>
+                </span>`,
+            );
+            scene.current?.addPopup(popup.current!);
+          });
+        }
+      });
     }
   }, [props.stations, loaded, mapWidth]);
+
   // 处理标签展示内容
   React.useEffect(() => {
 
