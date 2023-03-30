@@ -6,11 +6,11 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'develop', url: 'https://github.com/tigline/indoor-location-web.git'
-            }
-        }
+        // stage('Checkout') {
+        //     steps {
+        //         git branch: 'develop', url: 'https://github.com/tigline/indoor-location-web.git'
+        //     }
+        // }
 
         stage('Install') {
             steps {
