@@ -19,12 +19,13 @@ function sendMessage(socket) {
     data: {
       deviceId: /123|456|789/,
       id: /123|456|789/,
-      mapId: /1635140740788903938|1636003377902903297|1635140740788903937/,
+      mapId: /1635140740788903938/,
       optScale: 0,
       'posX|0-6.6': 1,
       'posY|0-6.6': 1,
       timestamp: 0,
-      type: /Equipment|Personnel|Vehicle|Stuff/,
+      // type: /Equipment|Personnel|Vehicle|Stuff/,
+      type: /Equipment/,
     },
   });
 

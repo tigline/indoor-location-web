@@ -2,7 +2,7 @@ import { RemoveButtonPopover } from '@/components/remove-button.popover';
 import { deleteBeacon, pageBeacon } from '@/services/swagger/shebeiguanli';
 import { fmtPage } from '@/utils/global.utils';
 import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
-import { Link, useIntl, useRequest } from '@umijs/max';
+import { Link, useIntl, useModel, useRequest } from '@umijs/max';
 import { Button } from 'antd';
 import qs from 'qs';
 import React from 'react';
@@ -11,6 +11,7 @@ import { EditLabelModal } from './components/edit-label.modal';
 
 export default function Page() {
   const actionRef = React.useRef<ActionType>();
+  const { beacons } = useModel('messageSocket');
   const intl = useIntl();
   const { run: remove, fetches } = useRequest(deleteBeacon, {
     manual: true,
@@ -120,22 +121,25 @@ export default function Page() {
       render: (_, record, __, action) => (
         <Button.Group>
           <EditLabelModal record={record} refresh={action?.reload} />
-          <Button type="link" size="small">
-            <Link
-              to={`/position-manage/real-time-location${qs.stringify(
-                {
-                  deviceId: record.deviceId,
-                  mapId: record.mapId,
-                },
-                { addQueryPrefix: true },
-              )}`}
-            >
-              {intl.formatMessage({
-                id: 'app.view',
-                defaultMessage: '查看地图',
-              })}
-            </Link>
-          </Button>
+          {/* 这个标签有实时位置的时候才展示跳转逻辑 */}
+          {beacons?.[record.deviceId!] && (
+            <Button hidden={!record.online} type="link" size="small">
+              <Link
+                to={`/position-manage/real-time-location${qs.stringify(
+                  {
+                    deviceId: record.deviceId,
+                    mapId: record.mapId,
+                  },
+                  { addQueryPrefix: true },
+                )}`}
+              >
+                {intl.formatMessage({
+                  id: 'app.view',
+                  defaultMessage: '查看地图',
+                })}
+              </Link>
+            </Button>
+          )}
           <RemoveButtonPopover
             disabled={!record.deviceId}
             onClick={() => remove({ deviceId: record.deviceId! }).then(() => action?.reload())}
