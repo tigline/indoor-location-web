@@ -13,7 +13,7 @@ import {
   ProFormInstance,
   Statistic,
 } from '@ant-design/pro-components';
-import { FormattedMessage, useIntl, useModel, useRequest } from '@umijs/max';
+import { FormattedMessage, useIntl, useModel, useRequest, useSearchParams } from '@umijs/max';
 import { useInterval } from 'ahooks';
 import { ReadyState } from 'ahooks/lib/useWebSocket';
 import { Card, Col, Row, Switch, Typography } from 'antd';
@@ -50,10 +50,16 @@ export function StatisticOfNow() {
  */
 export default function Page() {
   // const intl = useIntl();
+  // const param = useParams();
+  const [param] = useSearchParams();
+  const selectedGateway = param.get('gateway');
+  const selectedDeviceId = param.get('deviceId');
+  const selectedMapId = param.get('mapId');
   const formRef = React.useRef<ProFormInstance<{ mapId: string[] }>>(null);
   const [beacons, setBeacons] = React.useState<Record<string, API.AoaDataInfo>>();
   const [fenceEnable, setFenceDisable] = React.useState<boolean>(true);
   const [warningFenceId, setWarningFenceId] = React.useState<string>();
+
   const { run: queryFences, data: fences } = useRequest(pageFence, {
     manual: true,
     formatResult(res) {
@@ -101,7 +107,7 @@ export default function Page() {
     return run({ mapId });
   }
   React.useEffect(() => {
-    const mapId = formRef.current?.getFieldValue(['mapId']);
+    const mapId = formRef.current?.getFieldValue(['mapId']) ?? selectedMapId;
     if (mapId) {
       submit(mapId);
     }
@@ -138,7 +144,10 @@ export default function Page() {
               />
             </Col>
             <Col span="8" style={{ display: 'flex', alignItems: 'end', justifyContent: 'end' }}>
-              <SelectMapSelect formItemProps={{ style: { marginBottom: 0 } }}></SelectMapSelect>
+              <SelectMapSelect
+                initialValue={selectedMapId}
+                formItemProps={{ style: { marginBottom: 0 } }}
+              ></SelectMapSelect>
             </Col>
           </Row>
         </ProForm>
@@ -152,6 +161,8 @@ export default function Page() {
           hiddenFence={!fenceEnable}
           warningFenceId={warningFenceId}
           clear={() => setWarningFenceId('')}
+          selectedStation={selectedGateway}
+          selectedDeviceId={selectedDeviceId}
           locations={
             map(beacons, (o) => o)
             // .filter((f) => f.mapId === mapInfo?.data?.mapId)
