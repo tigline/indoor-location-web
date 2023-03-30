@@ -24,7 +24,7 @@ function sendMessage(socket) {
       'posX|0-6.6': 1,
       'posY|0-6.6': 1,
       timestamp: 0,
-      type: '',
+      type: /Equipment|Personnel|Vehicle|Stuff/,
     },
   });
 
@@ -47,9 +47,9 @@ function sendMessage(socket) {
       updateTime: Date.now(),
     },
   });
-  Alarm.data.content = Alarm.data.fenceId;
+  // Alarm.data.content = Alarm.data.fenceId;
   // const msg =  JSON.stringify(data)
-  const msg = JSON.stringify(Alarm);
+  const msg = JSON.stringify(data);
   socket.send(msg);
   setTimeout(() => {
     sendMessage(socket);

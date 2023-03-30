@@ -1,4 +1,7 @@
 import arrow from '@/assets/images/arrow.svg';
+import box from '@/assets/images/box.svg';
+import cart from '@/assets/images/cart.svg';
+import equipment from '@/assets/images/equipment.svg';
 import person from '@/assets/images/person.svg';
 import stationImage from '@/assets/images/station.svg';
 import warning from '@/assets/images/warning.svg';
@@ -11,8 +14,10 @@ import {
   metersToLngLat,
   PointLayer,
   PolygonLayer,
+  Popup,
   Scene,
 } from '@antv/l7';
+import { useIntl } from '@umijs/max';
 import { Card } from 'antd';
 import { forEach, isEmpty, isNil } from 'lodash';
 import React from 'react';
@@ -83,6 +88,25 @@ interface IProps {
  * @returns
  */
 export function RealTimeL7Component(props: IProps) {
+  const intl = useIntl();
+  const TypeLabel: Record<string, string> = {
+    Equipment: intl.formatMessage({
+      id: 'pages.device-manage.label.type.equipment',
+      defaultMessage: '设备',
+    }),
+    Personnel: intl.formatMessage({
+      id: 'pages.device-manage.label.type.personnel',
+      defaultMessage: '人员',
+    }),
+    Vehicle: intl.formatMessage({
+      id: 'pages.device-manage.label.type.vehicle',
+      defaultMessage: '工具',
+    }),
+    Stuff: intl.formatMessage({
+      id: 'pages.device-manage.label.type.stuff',
+      defaultMessage: '材料',
+    }),
+  };
   const [mapLength, mapWidth] = props.rect;
   const [loaded, setLoaded] = React.useState<boolean>();
 
@@ -115,7 +139,12 @@ export function RealTimeL7Component(props: IProps) {
     });
     scene.current.addImage('stationIcon', stationImage);
     scene.current.addImage('arrow', arrow);
-    scene.current.addImage('personImage', person);
+
+    scene.current.addImage('Equipment', equipment);
+    scene.current.addImage('Personnel', person);
+    scene.current.addImage('Vehicle', cart);
+    scene.current.addImage('Stuff', box);
+
     scene.current.addImage('warning', warning);
     scene.current?.on('loaded', () => setLoaded(true));
   }, []);
@@ -161,7 +190,7 @@ export function RealTimeL7Component(props: IProps) {
       }
     }
   }, [props.stations, loaded, mapWidth]);
-
+  // 处理标签展示内容
   React.useEffect(() => {
     if (loaded && mapWidth) {
       const source = (props.locations ?? [])?.map((item) => {
@@ -177,13 +206,36 @@ export function RealTimeL7Component(props: IProps) {
             layerType: 'fillImage',
           })
             .source(source, {
-              parser: { type: 'json', x: 'lng', y: 'lat', name: 'name' },
+              parser: { type: 'json', x: 'lng', y: 'lat', name: 'type' },
             })
             .color(green[3])
             .size(15)
-            .shape('personImage', ['personImage'])
+            .shape('type', ['Equipment', 'Personnel', 'Vehicle', 'Stuff'])
             .animate(true);
           scene.current?.addLayer(locationLayer.current);
+          locationLayer.current.on('mousemove', (e) => {
+            console.log(e);
+
+            const popup = new Popup({
+              offsets: [0, 0],
+              closeButton: false,
+            })
+              .setLnglat(e.lngLat)
+              .setHTML(
+                `
+                <span>
+                  <p>deviceId:${e.feature.deviceId}</p>
+                  <p>X:${e.feature.posX}</p>
+                  <p>Y:${e.feature.posY}</p>
+                  <p>${intl.formatMessage({
+                    id: 'pages.device-manage.label.type',
+                    defaultMessage: '类型',
+                  })}: ${TypeLabel[e.feature.type as any]}</p>
+                </span>
+                `,
+              );
+            scene.current?.addPopup(popup);
+          });
         }
       } else {
         if (isEmpty(props.locations)) {
