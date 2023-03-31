@@ -83,10 +83,11 @@ interface IProps {
  * @returns
  */
 
-const prevTimestamp = React.useRef(performance.now());
-const animationDuration = 500; // 1秒
+
 
 export function RealTimeL7Component(props: IProps) {
+  const prevTimestamp = React.useRef(performance.now());
+  const animationDuration = 1000; // 1秒
   const [mapLength, mapWidth] = props.rect;
   const [loaded, setLoaded] = React.useState<boolean>();
 
