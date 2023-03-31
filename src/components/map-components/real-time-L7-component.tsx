@@ -15,7 +15,7 @@ import {
 } from '@antv/l7';
 import { Card } from 'antd';
 import { forEach, isEmpty, isNil } from 'lodash';
-import React from 'react';
+import React, {useState} from 'react';
 import { convertCMtoL, scale } from './convert';
 
 /**
@@ -82,6 +82,10 @@ interface IProps {
  * @param props
  * @returns
  */
+
+const prevTimestamp = React.useRef(performance.now());
+const animationDuration = 500; // 1秒
+
 export function RealTimeL7Component(props: IProps) {
   const [mapLength, mapWidth] = props.rect;
   const [loaded, setLoaded] = React.useState<boolean>();
@@ -100,6 +104,78 @@ export function RealTimeL7Component(props: IProps) {
   /** @type {*} 展示围栏 ‘面’ 图层 */
   const fenceLayers = React.useRef<Record<string | number, ILayer>>({});
   // window.fenceLayers = fenceLayers;
+
+  const [prevLocations, setPrevLocations] = useState<API.AoaDataInfo[] | undefined>(undefined);
+
+  function lerp(start: number, end: number, t: number): number {
+    return start * (1 - t) + end * t;
+  }
+
+  function updateLocationss(timestamp: number) {
+    if (!prevLocations || !props.locations) {
+      setPrevLocations(props.locations);
+      return;
+    }
+  
+    const t = Math.min(1, (timestamp - prevTimestamp.current) / animationDuration);
+    const interpolatedLocations: API.AoaDataInfo[] = [];
+  
+    for (let i = 0; i < props.locations.length; i++) {
+      const currentLocation = props.locations[i];
+      const prevLocation = prevLocations.find((item) => item.id === currentLocation.id);
+  
+      if (prevLocation) {
+        const interpolatedX = lerp(prevLocation.posX!, currentLocation.posX!, t);
+        const interpolatedY = lerp(prevLocation.posY!, currentLocation.posY!, t);
+  
+        interpolatedLocations.push({ ...currentLocation, posX: interpolatedX, posY: interpolatedY });
+      } else {
+        interpolatedLocations.push(currentLocation);
+      }
+    }
+  
+    // 更新位置数据
+    if (loaded && mapWidth) {
+      var source = (props.locations ?? [])?.map((item) => {
+        const [lng, lat] = convertCMtoL([item.posX!, item.posY!], mapWidth) ?? [];
+        return { ...item, lng, lat };
+      });
+
+      if (!locationLayer.current) {
+        if (!isEmpty(source)) {
+          locationLayer.current = new PointLayer({
+            name: 'real-time',
+            zIndex: 3,
+            layerType: 'fillImage',
+          })
+            .source(source, {
+              parser: { type: 'json', x: 'lng', y: 'lat', name: 'name' },
+            })
+            .color(green[3])
+            .size(15)
+            .shape('personImage', ['personImage'])
+            .animate(true);
+          scene.current?.addLayer(locationLayer.current);
+        }
+      } else {
+        if (isEmpty(props.locations)) {
+          // 图层不能设置空数据 ，这里数据为空时直接隐藏图层
+          locationLayer.current.hide();
+        } else {
+          if (!locationLayer.current.isVisible()) {
+            locationLayer.current.show();
+          }
+          locationLayer.current.setData(source);
+          locationLayer.current.setIndex(3);
+        }
+      }
+    }
+  }
+
+  const updateLocations = React.useCallback((timestamp: number) => {
+    updateLocationss(timestamp);
+  }, [props.locations]);
+
   React.useEffect(() => {
     scene.current = new Scene({
       id: mapContainer.current!,
@@ -163,42 +239,9 @@ export function RealTimeL7Component(props: IProps) {
   }, [props.stations, loaded, mapWidth]);
 
   React.useEffect(() => {
-    if (loaded && mapWidth) {
-      const source = (props.locations ?? [])?.map((item) => {
-        const [lng, lat] = convertCMtoL([item.posX!, item.posY!], mapWidth) ?? [];
-        return { ...item, lng, lat };
-      });
-
-      if (!locationLayer.current) {
-        if (!isEmpty(source)) {
-          locationLayer.current = new PointLayer({
-            name: 'real-time',
-            zIndex: 3,
-            layerType: 'fillImage',
-          })
-            .source(source, {
-              parser: { type: 'json', x: 'lng', y: 'lat', name: 'name' },
-            })
-            .color(green[3])
-            .size(15)
-            .shape('personImage', ['personImage'])
-            .animate(true);
-          scene.current?.addLayer(locationLayer.current);
-        }
-      } else {
-        if (isEmpty(props.locations)) {
-          // 图层不能设置空数据 ，这里数据为空时直接隐藏图层
-          locationLayer.current.hide();
-        } else {
-          if (!locationLayer.current.isVisible()) {
-            locationLayer.current.show();
-          }
-          locationLayer.current.setData(source);
-          locationLayer.current.setIndex(3);
-        }
-      }
-    }
-  }, [props.locations, loaded, mapWidth]);
+    updateLocations(performance.now());
+    requestAnimationFrame(updateLocations);
+  }, [updateLocations, loaded, mapWidth]);
 
   // 处理围栏展示内容
   React.useEffect(() => {
