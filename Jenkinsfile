@@ -28,7 +28,7 @@ pipeline {
             steps {
                 script {
                     // 使用 SSH 凭据和 scp 将构建好的文件传输到 EC2 实例
-                    withCredentials([sshUserPrivateKey(credentialsId: 'awsserver', keyFileVariable: 'keyFile')]) {
+                    withCredentials([sshUserPrivateKey(credentialsId: 'aliyun-key', keyFileVariable: 'keyFile')]) {
                         sh 'scp -i $keyFile -r dist/* root@8.217.20.176:/home/ecs-assist-user/frontend'
                     }
                 }
