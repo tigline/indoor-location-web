@@ -22,7 +22,7 @@ export default () => {
   // const [aoas,setAoas] = React.useState<Record<string,API.AoaDataInfo[]>>()
   // const [alarms,setAlarms] = React.useState<Record<string,API.AlarmInfo[]>>()
 
-  const url = location.hostname.replace('localhost', '') || '13.112.168.219';
+  const url = location.hostname.replace('localhost', '') || '8.217.20.176';
 
   // const url = 'localhost:3000';
   const { connect, readyState, latestMessage } = useWebSocket(
