@@ -61,11 +61,11 @@ export default [
         name: 'tracking-manage',
         component: './position-manage/tracking-manage',
       },
-      {
-        path: '/position-manage/tracking-history',
-        name: 'tracking-history',
-        component: './position-manage/tracking-history',
-      },
+      // {
+      //   path: '/position-manage/tracking-history',
+      //   name: 'tracking-history',
+      //   component: './position-manage/tracking-history',
+      // },
     ],
   },
   {
@@ -124,11 +124,11 @@ export default [
         name: 'heatmap-analyze',
         component: './analyze/heatmap-analyze',
       },
-      {
-        path: '/analyze/area-analyze',
-        name: 'area-analyze',
-        component: './analyze/area-analyze',
-      },
+      // {
+      //   path: '/analyze/area-analyze',
+      //   name: 'area-analyze',
+      //   component: './analyze/area-analyze',
+      // },
     ],
   },
   {
@@ -176,11 +176,11 @@ export default [
         name: 'personnel-info',
         component: './personnel-manage/personnel-info',
       },
-      {
-        path: '/personnel-manage/regional-statistics',
-        name: 'regional-statistics',
-        component: './personnel-manage/regional-statistics',
-      },
+      // {
+      //   path: '/personnel-manage/regional-statistics',
+      //   name: 'regional-statistics',
+      //   component: './personnel-manage/regional-statistics',
+      // },
     ],
   },
   {
@@ -208,11 +208,11 @@ export default [
         hideInMenu: true,
         component: './system/map-setup/floor-manager.page',
       },
-      {
-        path: '/system/general-setting',
-        name: 'general-setting',
-        component: './system/general-setting',
-      },
+      // {
+      //   path: '/system/general-setting',
+      //   name: 'general-setting',
+      //   component: './system/general-setting',
+      // },
     ],
   },
   // {
