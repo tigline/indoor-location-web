@@ -3,7 +3,7 @@ import { AlarmPersonChart } from '@/pages/warning-manage/warning-info/components
 import { pageAlarm } from '@/services/swagger/gaojingguanli';
 import { useRequest } from '@@/exports';
 import { PageContainer } from '@ant-design/pro-components';
-import { Card, Col, Row } from 'antd';
+import { Card, Col, DatePicker, Form, Row } from 'antd';
 import dayjs from 'dayjs';
 import { chain } from 'lodash';
 import React from 'react';
@@ -43,6 +43,29 @@ export default function Page() {
   return (
     <PageContainer>
       <Row>
+        <Col span="24">
+          <Form
+            onValuesChange={(values) => {
+              if (values.dateRanger) {
+                const [start, end] = values.dateRanger ?? [];
+                run({
+                  current: '1',
+                  size: `10000000`,
+                  startTime: start.unix(),
+                  endTime: end.unix(),
+                });
+              }
+            }}
+          >
+            <Form.Item name="dateRanger">
+              <DatePicker.RangePicker
+                disabledDate={(current) => {
+                  return current && current < dayjs().endOf('day').add(-1, 'month').endOf('day');
+                }}
+              />
+            </Form.Item>
+          </Form>
+        </Col>
         <Col span="12">
           <Card>
             <AlarmPersonChart data={data?.barData ?? []} />
