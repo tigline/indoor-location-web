@@ -9,35 +9,48 @@ export default {
   'menu.register-result': '登録結果',
 
   // 项目专有菜单
-  'menu.dashboard': '总览',
+  'menu.dashboard.location.info': '位置概要',
+  'menu.dashboard.label-distribution': 'オンラインビーコン分布',
+  'menu.dashboard.map': '地図',
+  'menu.dashboard.warning.last.24.hours': '24時間の警告変化',
+  'menu.dashboard.warning.today': '今日の警告',
+  'menu.dashboard.Today\'s.alarm.analogy.ratio': '今日の警告類似比率',
+  'menu.dashboard.system.running.time': 'システム稼働時間',
+  'menu.dashboard.label.status': 'ビーコン状態',
+  'menu.dashboard.base.station.status': '基地局状態',
+  'menu.dashboard': 'ダッシュボード',
 
   'menu.position-manage': '位置管理',
+  
+  'menu.position-manage.real-time-location': 'リアルタイム位置',
+  'menu.position-manage.tracking-manage': 'トラッキング管理',
+  'menu.position-manage.tracking-history': '履歴トラッキング',
+  'menu.device-manage': 'デバイス管理',
+  'menu.device-manage.base-station': '基地局管理',
+  'menu.device-manage.label-manage': 'ビーコン管理',
 
-  'menu.position-manage.real-time-location': '实时位置',
-  'menu.position-manage.tracking-manage': '轨迹追踪',
-  'menu.position-manage.tracking-history': '历史轨迹',
-  'menu.device-manage': '设备管理',
-  'menu.device-manage.base-station': '基站管理',
-  'menu.device-manage.label-manage': '标签管理',
-
-  'menu.analyze': '数据分析',
-  'menu.analyze.heatmap-analyze': '热图分析',
-  'menu.analyze.area-analyze': '区域分析',
-
-  'menu.warning-manage': '智能告警',
-  'menu.warning-manage.board': '告警看板',
-  'menu.warning-manage.warning-info': '告警明细',
-
-  'menu.personnel-manage': '人员管理',
-  'menu.personnel-manage.organization': '组织管理',
-  'menu.personnel-manage.personnel-classification': '人员分类',
-  'menu.personnel-manage.personnel-info': '人员信息',
-  'menu.personnel-manage.regional-statistics': '区域统计',
-
-  'menu.system': '系统设置',
-  'menu.system.fence-manage': '围栏管理',
-  'menu.system.map-setup': '地图设置',
-  'menu.system.general-setting': '通用设置',
+  'menu.goods-manage': 'アイテム管理',
+  'menu.goods-manage.goods-type': 'アイテムタイプ',
+  'menu.goods-manage.goods-info': 'アイテム情報',
+  
+  'menu.analyze': 'データ分析',
+  'menu.analyze.heatmap-analyze': 'ヒートマップ分析',
+  'menu.analyze.area-analyze': 'エリア分析',
+  
+  'menu.warning-manage': 'インテリジェントアラーム',
+  'menu.warning-manage.board': 'アラームボード',
+  'menu.warning-manage.warning-info': '警告詳細',
+  
+  'menu.personnel-manage': '人事管理',
+  'menu.personnel-manage.organization': '組織管理',
+  'menu.personnel-manage.personnel-classification': '人事分類',
+  'menu.personnel-manage.personnel-info': '人事情報',
+  'menu.personnel-manage.regional-statistics': '地域統計',
+  
+  'menu.system': 'システム設定',
+  'menu.system.fence-manage': 'フェンス管理',
+  'menu.system.map-setup': '地図設定',
+  'menu.system.general-setting': '一般設定',
   // 项目专有菜单
 
   'menu.dashboard.analysis': '分析',

@@ -58,7 +58,7 @@ export function RealTimeMap() {
   return (
     <Card
       bodyStyle={{ minHeight: 400 }}
-      title={intl.formatMessage({ id: 'dashboard.map', defaultMessage: '地图' })}
+      title={intl.formatMessage({ id: 'menu.dashboard.map', defaultMessage: '地图' })}
       extra={
         <ProForm<{ mapId: string[] }>
           submitter={false}

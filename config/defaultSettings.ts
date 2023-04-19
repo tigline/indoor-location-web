@@ -1,8 +1,9 @@
 import { ProLayoutProps } from '@ant-design/pro-components';
-
+import { useIntl } from '@umijs/max';
 /**
  * @name
  */
+
 const Settings: ProLayoutProps & {
   pwa?: boolean;
   logo?: string;
@@ -15,7 +16,7 @@ const Settings: ProLayoutProps & {
   fixedHeader: false,
   fixSiderbar: true,
   colorWeak: false,
-  title: '室内定位平台',
+  title: '屋内ビゲーションプラットフォーム',//useIntl().formatMessage({ id: 'pages.layouts.userLayout.title' }),
   pwa: true,
   logo: '/indoor.svg',
   iconfontUrl: '',

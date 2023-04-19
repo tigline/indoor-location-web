@@ -143,7 +143,7 @@ const Register: React.FC = () => {
             name="username"
             fieldProps={{ size: 'large', prefix: <UserOutlined /> }}
             placeholder={intl.formatMessage({
-              id: 'pages.login.username',
+              id: 'pages.login.username.placeholder',
               defaultMessage: '用户名',
             })}
             rules={[

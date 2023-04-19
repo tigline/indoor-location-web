@@ -96,7 +96,7 @@ export function LabelCountChart(props: IProps) {
         <ProCard
           title={intl.formatMessage({
             id: 'pages.dashboard.equipment.count',
-            defaultMessage: '物资数量',
+            defaultMessage: '设备数量',
           })}
         >
           {data?.total}

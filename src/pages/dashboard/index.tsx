@@ -56,7 +56,7 @@ const Welcome: React.FC = () => {
           <Card
             loading={beaconLoading}
             title={intl.formatMessage({
-              id: 'dashboard.location.info',
+              id: 'menu.dashboard.location.info',
               defaultMessage: '定位概览',
             })}
             // direction="row"
@@ -70,7 +70,7 @@ const Welcome: React.FC = () => {
             loading={beaconLoading}
             bodyStyle={{ minHeight: 400 }}
             title={intl.formatMessage({
-              id: 'dashboard.label-distribution',
+              id: 'menu.dashboard.label-distribution',
               defaultMessage: '在线标签分布',
             })}
           >
@@ -85,7 +85,7 @@ const Welcome: React.FC = () => {
             loading={alarmLoading}
             bodyStyle={{ minHeight: 400 }}
             title={intl.formatMessage({
-              id: 'dashboard.warning.last.24.hours',
+              id: 'menu.dashboard.warning.last.24.hours',
               defaultMessage: '24小时告警变化',
             })}
           >
@@ -97,7 +97,7 @@ const Welcome: React.FC = () => {
             loading={alarmLoading}
             bodyStyle={{ minHeight: 400, paddingTop: 0 }}
             title={intl.formatMessage({
-              id: 'dashboard.warning.today',
+              id: 'menu.dashboard.warning.today',
               defaultMessage: '今日告警',
             })}
           >
@@ -109,7 +109,7 @@ const Welcome: React.FC = () => {
             loading={alarmLoading}
             bodyStyle={{ minHeight: 400 }}
             title={intl.formatMessage({
-              id: "dashboard.Today's.alarm.analogy.ratio",
+              id: "menu.dashboard.Today's.alarm.analogy.ratio",
               defaultMessage: '今日告警类比占比',
             })}
           >
@@ -120,7 +120,7 @@ const Welcome: React.FC = () => {
           <Card
             bodyStyle={{ minHeight: 400 }}
             title={intl.formatMessage({
-              id: 'dashboard.system.running.time',
+              id: 'menu.dashboard.system.running.time',
               defaultMessage: '系统运行时间',
             })}
           >
@@ -131,7 +131,7 @@ const Welcome: React.FC = () => {
           <Card
             loading={beaconLoading}
             bodyStyle={{ minHeight: 400 }}
-            title={intl.formatMessage({ id: 'dashboard.label.status', defaultMessage: '标签状态' })}
+            title={intl.formatMessage({ id: 'menu.dashboard.label.status', defaultMessage: '标签状态' })}
           >
             <LabelCountChart data={data} />
           </Card>
@@ -140,7 +140,7 @@ const Welcome: React.FC = () => {
           <Card
             bodyStyle={{ minHeight: 400 }}
             title={intl.formatMessage({
-              id: 'dashboard.base.station.status',
+              id: 'menu.dashboard.base.station.status',
               defaultMessage: '基站状态',
             })}
           >

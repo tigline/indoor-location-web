@@ -8,6 +8,7 @@ import type { MenuInfo } from 'rc-menu/lib/interface';
 import React, { useCallback } from 'react';
 import { flushSync } from 'react-dom';
 import HeaderDropdown from '../HeaderDropdown';
+import {FormattedMessage,useIntl} from '@umijs/max';
 
 export type GlobalHeaderRightProps = {
   menu?: boolean;
@@ -127,14 +128,14 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
   if (!currentUser || !currentUser.username) {
     return loading;
   }
-
+  const intl = useIntl();
   const menuItems = [
     ...(menu
       ? [
           {
             key: 'center',
             icon: <UserOutlined />,
-            label: '个人中心',
+            label: intl.formatMessage({id: 'menu.account.center'}),
           },
           // {
           //   key: 'settings',
@@ -149,7 +150,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
     {
       key: 'logout',
       icon: <LogoutOutlined />,
-      label: '退出登录',
+      label: intl.formatMessage({id: 'menu.account.logout'}),
     },
   ];
 

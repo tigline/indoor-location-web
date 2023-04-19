@@ -11,6 +11,7 @@ export default {
   'menu.register': '注册',
   'menu.register-result': '注册结果',
   // 项目专有菜单
+
   'menu.dashboard': '总览',
 
   'menu.position-manage': '位置管理',

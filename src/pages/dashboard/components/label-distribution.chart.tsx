@@ -19,13 +19,7 @@ export function LabelDistributionChart(props: IProps) {
   const intl = useIntl();
   React.useEffect(() => {
     const data = [
-      {
-        type: intl.formatMessage({
-          id: 'pages.dashboard.equipment.count',
-          defaultMessage: '装备数量',
-        }),
-        value: props.data?.Equipment.online,
-      },
+
       {
         type: intl.formatMessage({
           id: 'pages.dashboard.personnel.count',
@@ -34,16 +28,27 @@ export function LabelDistributionChart(props: IProps) {
         value: props.data?.Personnel.online,
       },
       {
-        type: intl.formatMessage({
-          id: 'pages.dashboard.vehicle.count',
-          defaultMessage: '车辆数量',
+        type: intl.formatMessage({ 
+          id: 'pages.dashboard.stuff.count', 
+          defaultMessage: '物品数量' 
         }),
         value: props.data?.Stuff.online,
       },
       {
-        type: intl.formatMessage({ id: 'pages.dashboard.stuff.count', defaultMessage: '物资数量' }),
+        type: intl.formatMessage({
+          id: 'pages.dashboard.equipment.count',
+          defaultMessage: '设备数量',
+        }),
+        value: props.data?.Equipment.online,
+      },
+      {
+        type: intl.formatMessage({
+          id: 'pages.dashboard.vehicle.count',
+          defaultMessage: '车辆数量',
+        }),
         value: props.data?.Vehicle.online,
       },
+      
     ];
     const config: PieOptions = {
       // appendPadding: 10,

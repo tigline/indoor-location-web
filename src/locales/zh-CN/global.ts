@@ -3,7 +3,7 @@ export default {
   'app.request.success': '请求成功！',
   'app.action': '操作',
   'app.action.add': '新建',
-  'app.batch.action': '批量操作',
+  'app.batch.action': '批量操作222',
   'app.copy': '复制',
   'app.edit': '编辑',
   'app.action.edit': '编辑',
