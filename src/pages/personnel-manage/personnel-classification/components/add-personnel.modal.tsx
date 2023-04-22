@@ -3,7 +3,7 @@ import { addPersonnelType } from '@/services/swagger/renyuanguanli';
 import { PlusOutlined } from '@ant-design/icons';
 import { ModalForm, ProFormText } from '@ant-design/pro-components';
 import { useIntl, useRequest } from '@umijs/max';
-import { Button, notification } from 'antd';
+import { Button, Form, notification } from 'antd';
 interface IProps {
   refresh?: () => void;
 }
@@ -16,6 +16,7 @@ interface IProps {
  */
 export function AddPersonnelModal(props: IProps) {
   const intl = useIntl();
+  const [form] = Form.useForm();
   const { run } = useRequest(addPersonnelType, {
     manual: true,
     onSuccess(data) {
@@ -38,9 +39,15 @@ export function AddPersonnelModal(props: IProps) {
           {intl.formatMessage({ id: 'app.add', defaultMessage: '新建' })}
         </Button>
       }
+      form={form}
       layout="horizontal"
       labelCol={{ xs: 6 }}
       wrapperCol={{ xs: 16 }}
+      onVisibleChange={(e) => {
+        if (!e) {
+          form.resetFields();
+        }
+      }}
       onFinish={(value) => {
         return run(value);
       }}

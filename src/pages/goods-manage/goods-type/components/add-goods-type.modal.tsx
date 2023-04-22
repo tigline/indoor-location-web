@@ -3,13 +3,15 @@ import { addThingType } from '@/services/swagger/wupinguanli';
 import { PlusOutlined } from '@ant-design/icons';
 import { ModalForm, ProFormText } from '@ant-design/pro-components';
 import { useIntl, useRequest } from '@umijs/max';
-import { Button, notification, UploadFile } from 'antd';
+import { Button, Form, notification, UploadFile } from 'antd';
 
 interface IProps {
   refresh?: () => void;
 }
+
 export function AddGoodsTypeModal(props: IProps) {
   const intl = useIntl();
+  const [form] = Form.useForm();
   const { run } = useRequest(addThingType, {
     manual: true,
     onSuccess(data) {
@@ -27,9 +29,15 @@ export function AddGoodsTypeModal(props: IProps) {
         id: 'pages.goods-manage.goods.type.add',
         defaultMessage: '添加物品类型',
       })}
+      form={form}
       layout="horizontal"
       labelCol={{ xs: 6 }}
       wrapperCol={{ xs: 16 }}
+      onVisibleChange={(e) => {
+        if (!e) {
+          form.resetFields();
+        }
+      }}
       trigger={
         <Button type="primary" icon={<PlusOutlined />}>
           {intl.formatMessage({ id: 'app.action.add', defaultMessage: '新建' })}

@@ -25,6 +25,11 @@ export function EditBuildingModal(props: IProps) {
       disabled={props.disabled}
       labelCol={{ xs: 6 }}
       wrapperCol={{ xs: 16 }}
+      onVisibleChange={(e) => {
+        if (!e) {
+          form.resetFields();
+        }
+      }}
       // request={()=>getbu}
       onFinish={(values) => {
         if (!buildingId) {

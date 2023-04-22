@@ -8,7 +8,7 @@ import {
   ProFormTreeSelect,
 } from '@ant-design/pro-components';
 import { useIntl, useRequest } from '@umijs/max';
-import { Button, notification, UploadFile } from 'antd';
+import { Button, Form, notification, UploadFile } from 'antd';
 import React from 'react';
 import type { NodeType } from '..';
 
@@ -26,6 +26,7 @@ interface IProps {
  */
 export function EditPersonnelModal(props: IProps) {
   const intl = useIntl();
+  const [form] = Form.useForm();
   const { run: update } = useRequest(updatePersonnel, {
     manual: true,
     onSuccess(data) {
@@ -49,6 +50,12 @@ export function EditPersonnelModal(props: IProps) {
         id: 'pages.personnel-manage.organization.department.person.edit',
         defaultMessage: '更换部门',
       })}
+      onVisibleChange={(e) => {
+        if (!e) {
+          form.resetFields();
+        }
+      }}
+      form={form}
       trigger={
         <Button size="small" type="link">
           {intl.formatMessage({

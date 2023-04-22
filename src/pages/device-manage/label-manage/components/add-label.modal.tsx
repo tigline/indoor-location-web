@@ -39,6 +39,11 @@ export function AddLabelModal(props: IProps): JSX.Element {
           return res.code === OK;
         });
       }}
+      onVisibleChange={(e) => {
+        if (!e) {
+          form.resetFields();
+        }
+      }}
       trigger={
         <Button type="primary">
           <PlusOutlined />

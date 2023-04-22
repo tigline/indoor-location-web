@@ -1,17 +1,22 @@
 import { ImageUploadFormItem } from '@/components/image.upload.form.item';
+
+import { Button, Form, notification } from 'antd';
+
 import { pageBeacon } from '@/services/swagger/shebeiguanli';
 import { addThing, pageThingType } from '@/services/swagger/wupinguanli';
 import { PlusOutlined } from '@ant-design/icons';
-import { ModalForm, ProFormSelect, ProFormText } from '@ant-design/pro-components';
+import { ModalForm, ProFormSelect } from '@ant-design/pro-components';
+import { ProFormText } from '@ant-design/pro-form';
 import { useIntl, useRequest } from '@umijs/max';
-import { Button, notification } from 'antd';
 import React from 'react';
 
 interface IProps {
   refresh?: () => void;
 }
+
 export function AddGoodsModal(props: IProps) {
   const intl = useIntl();
+  const [form] = Form.useForm();
   const [open, setOpen] = React.useState<boolean>();
   const { run: beancons, data: beanconOptions } = useRequest(pageBeacon, {
     manual: true,
@@ -36,6 +41,8 @@ export function AddGoodsModal(props: IProps) {
     if (open) {
       query({ current: `1`, size: `200` });
       beancons({ current: `1`, size: `200` });
+    } else {
+      form.resetFields();
     }
   }, [open]);
   const { run } = useRequest(addThing, {
@@ -55,6 +62,7 @@ export function AddGoodsModal(props: IProps) {
         id: 'pages.goods-manage.goods.info.add',
         defaultMessage: '添加物品',
       })}
+      form={form}
       trigger={
         <Button type="primary" icon={<PlusOutlined />}>
           {intl.formatMessage({ id: 'app.action.add', defaultMessage: '新建' })}

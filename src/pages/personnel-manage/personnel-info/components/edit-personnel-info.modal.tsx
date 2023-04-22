@@ -1,7 +1,7 @@
 import { addPersonnel } from '@/services/swagger/renyuanguanli';
 import { ModalForm } from '@ant-design/pro-components';
 import { useIntl, useRequest } from '@umijs/max';
-import { Button, notification } from 'antd';
+import { Button, Form, notification } from 'antd';
 import React from 'react';
 import { PersonnelInfoFormFragment } from './personnel-info.form.fragment';
 
@@ -11,6 +11,7 @@ interface IProps {
 }
 export function EditPersonnelInfoModal(props: IProps) {
   const intl = useIntl();
+  const [form] = Form.useForm();
   const [visible, setVisible] = React.useState<boolean>();
   const { run } = useRequest(addPersonnel, {
     manual: true,
@@ -23,6 +24,11 @@ export function EditPersonnelInfoModal(props: IProps) {
       }
     },
   });
+  React.useEffect(() => {
+    if (!visible) {
+      form.resetFields();
+    }
+  }, [visible]);
   return (
     <ModalForm<API.AddOrUpdatePersonnel>
       title={intl.formatMessage({
@@ -30,6 +36,7 @@ export function EditPersonnelInfoModal(props: IProps) {
         defaultMessage: '添加人员',
       })}
       layout="horizontal"
+      form={form}
       labelCol={{ xs: 6 }}
       wrapperCol={{ xs: 16 }}
       onOpenChange={(val) => setVisible(val)}
