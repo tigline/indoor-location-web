@@ -2,12 +2,15 @@ import { updateGateway } from '@/services/swagger/shebeiguanli';
 import { ModalForm } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl, useRequest } from '@umijs/max';
 import { Button, Form, notification } from 'antd';
+
 import { BaseStationFormFragment } from './form.fragment';
+
 interface IProps {
   // children: JSX.Element;
   refresh?: () => void;
   record: API.GatewayInfo;
 }
+
 /**
  * 功能 模态框
  *
@@ -44,6 +47,11 @@ export function EditBaseStationModal(props: IProps): JSX.Element {
       onFinish={(values) => {
         const { mapId, name, ...rest } = values;
         return run({ gateway: props.record.gateway! }, { mapId: mapId!, name: name!, ...rest });
+      }}
+      onVisibleChange={(e) => {
+        if (!e) {
+          form.resetFields();
+        }
       }}
       trigger={
         <Button type="link" size="small">

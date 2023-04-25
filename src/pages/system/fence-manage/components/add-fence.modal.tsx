@@ -12,7 +12,7 @@ import {
 } from '@ant-design/pro-components';
 import { DrawPolygon } from '@antv/l7-draw';
 import { useIntl, useModel, useRequest } from '@umijs/max';
-import { Button } from 'antd';
+import { Button, Form } from 'antd';
 import React from 'react';
 
 interface IProps {
@@ -20,6 +20,7 @@ interface IProps {
 }
 export function AddFenceModal(props: IProps) {
   const intl = useIntl();
+  const [form] = Form.useForm();
   const { run, data } = useModel('mapModel');
   React.useEffect(() => {
     run();
@@ -42,8 +43,14 @@ export function AddFenceModal(props: IProps) {
         defaultMessage: '添加围栏',
       })}
       layout="horizontal"
+      form={form}
       labelCol={{ xs: 6 }}
       wrapperCol={{ xs: 16 }}
+      onVisibleChange={(e) => {
+        if (!e) {
+          form.resetFields();
+        }
+      }}
       trigger={
         <Button type="primary">
           <PlusOutlined />

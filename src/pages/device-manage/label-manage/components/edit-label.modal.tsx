@@ -54,6 +54,11 @@ export function EditLabelModal(props: IProps): JSX.Element {
           return res.code === OK;
         });
       }}
+      onVisibleChange={(e) => {
+        if (!e) {
+          form.resetFields();
+        }
+      }}
       trigger={
         <Button type="link" size="small">
           {intl.formatMessage({

@@ -1,7 +1,7 @@
 import { addDepartment } from '@/services/swagger/renyuanguanli';
 import { ModalForm, ProFormText } from '@ant-design/pro-components';
 import { useIntl, useRequest } from '@umijs/max';
-import { Button, notification } from 'antd';
+import { Button, Form, notification } from 'antd';
 
 interface FormType extends API.DepartmentTree {
   parentName: string;
@@ -21,6 +21,7 @@ interface IProps {
  */
 export function AddDepartmentModal(props: IProps) {
   const intl = useIntl();
+  const [form] = Form.useForm();
   const { run } = useRequest(addDepartment, {
     manual: true,
     onSuccess(data) {
@@ -43,10 +44,16 @@ export function AddDepartmentModal(props: IProps) {
         id: 'pages.personnel-manage.organization.department.add',
         defaultMessage: '添加部门',
       })}
+      form={form}
       width={520}
       layout="horizontal"
       labelCol={{ xs: 6 }}
       wrapperCol={{ xs: 16 }}
+      onVisibleChange={(e) => {
+        if (!e) {
+          form.resetFields();
+        }
+      }}
       onFinish={(values) => {
         const { name, parentId } = values;
         return run({ name, parentId });

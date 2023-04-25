@@ -30,6 +30,11 @@ export function EditMapModal(props: IProps): JSX.Element {
       labelCol={{ xs: 6 }}
       wrapperCol={{ xs: 16 }}
       disabled={!buildingId}
+      onVisibleChange={(e) => {
+        if (!e) {
+          form.resetFields();
+        }
+      }}
       onFinish={(values) => {
         return updateMap({ mapId: mapId! }, { ...values, buildingId: buildingId! }).then((res) => {
           if (res.code === OK) {

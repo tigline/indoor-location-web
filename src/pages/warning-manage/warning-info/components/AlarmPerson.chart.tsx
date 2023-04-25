@@ -32,5 +32,5 @@ export function AlarmPersonChart(props: IProps) {
   React.useEffect(() => {
     barPlot.current?.changeData(props.data);
   }, [props.data]);
-  return <div ref={ref} style={{ height: 800 }}></div>;
+  return <div ref={ref} style={{ height: 600 }}></div>;
 }

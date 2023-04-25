@@ -44,5 +44,5 @@ export function AlarmCategoryChart(props: IProps) {
   React.useEffect(() => {
     piePlot.current?.changeData(props.data);
   }, [props.data]);
-  return <div ref={ref} style={{ height: 800 }}></div>;
+  return <div ref={ref} style={{ height: 600 }}></div>;
 }

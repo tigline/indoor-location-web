@@ -30,6 +30,11 @@ export function AddMapModal(props: IProps): JSX.Element {
       labelCol={{ xs: 6 }}
       wrapperCol={{ xs: 16 }}
       disabled={!buildingId}
+      onVisibleChange={(e) => {
+        if (!e) {
+          form.resetFields();
+        }
+      }}
       onFinish={(values) => {
         return addMap({ ...values, buildingId: buildingId! }).then((res) => {
           props.refresh?.();
@@ -47,7 +52,7 @@ export function AddMapModal(props: IProps): JSX.Element {
       trigger={
         <Button type="primary">
           <PlusOutlined />
-          {intl.formatMessage({ id: 'app.action', defaultMessage: '新建' })}
+          {intl.formatMessage({ id: 'app.add', defaultMessage: '新建' })}
         </Button>
       }
     >

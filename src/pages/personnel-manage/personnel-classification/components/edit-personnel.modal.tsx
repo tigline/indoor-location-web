@@ -2,7 +2,7 @@ import { ImageUploadFormItem } from '@/components/image.upload.form.item';
 import { updatePersonnelType } from '@/services/swagger/renyuanguanli';
 import { ModalForm, ProFormText } from '@ant-design/pro-components';
 import { useIntl, useRequest } from '@umijs/max';
-import { Button, notification, UploadFile } from 'antd';
+import { Button, Form, notification, UploadFile } from 'antd';
 interface IProps {
   record: API.PersonnelTypeInfo;
   refresh?: () => void;
@@ -16,6 +16,7 @@ interface IProps {
  */
 export function EditPersonnelModal(props: IProps) {
   const intl = useIntl();
+  const [form] = Form.useForm();
   const { run } = useRequest(updatePersonnelType, {
     manual: true,
     onSuccess(data) {
@@ -38,9 +39,15 @@ export function EditPersonnelModal(props: IProps) {
           {intl.formatMessage({ id: 'app.edit', defaultMessage: '编辑' })}
         </Button>
       }
+      form={form}
       layout="horizontal"
       labelCol={{ xs: 6 }}
       wrapperCol={{ xs: 16 }}
+      onVisibleChange={(e) => {
+        if (!e) {
+          form.resetFields();
+        }
+      }}
       onFinish={(value) => {
         return run({ typeId: props.record.typeId! }, value);
       }}

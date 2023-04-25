@@ -43,10 +43,15 @@ export function AddBuildingModal(props: IProps): JSX.Element {
           return res.code === OK;
         });
       }}
+      onVisibleChange={(e) => {
+        if (!e) {
+          form.resetFields();
+        }
+      }}
       trigger={
         <Button type="primary">
           <PlusOutlined />
-          {intl.formatMessage({ id: 'app.action', defaultMessage: '新建' })}
+          {intl.formatMessage({ id: 'app.add', defaultMessage: '新建' })}
         </Button>
       }
     >

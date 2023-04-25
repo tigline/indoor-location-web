@@ -2,14 +2,16 @@ import { ImageUploadFormItem } from '@/components/image.upload.form.item';
 import { updateThingType } from '@/services/swagger/wupinguanli';
 import { ModalForm, ProFormText } from '@ant-design/pro-components';
 import { useIntl, useRequest } from '@umijs/max';
-import { Button, notification, UploadFile } from 'antd';
+import { Button, Form, notification, UploadFile } from 'antd';
 
 interface IProps {
   refresh?: () => void;
   record: API.ThingTypeInfo;
 }
+
 export function EditGoodsTypeModal(props: IProps) {
   const intl = useIntl();
+  const [form] = Form.useForm();
   const { run } = useRequest(updateThingType, {
     manual: true,
     onSuccess(data) {
@@ -30,6 +32,12 @@ export function EditGoodsTypeModal(props: IProps) {
       layout="horizontal"
       labelCol={{ xs: 6 }}
       wrapperCol={{ xs: 16 }}
+      form={form}
+      onVisibleChange={(e) => {
+        if (!e) {
+          form.resetFields();
+        }
+      }}
       trigger={
         <Button size="small" type="link">
           {intl.formatMessage({ id: 'app.action.edit', defaultMessage: '编辑' })}

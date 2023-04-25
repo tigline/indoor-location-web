@@ -46,6 +46,11 @@ export function AddBaseStationModal(props: IProps): JSX.Element {
         const [, mapId] = values.mapId;
         return run({ ...values, mapId });
       }}
+      onVisibleChange={(e) => {
+        if (!e) {
+          form.resetFields();
+        }
+      }}
       trigger={
         <Button type="primary">
           <PlusOutlined />
