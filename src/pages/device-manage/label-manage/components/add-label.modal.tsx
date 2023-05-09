@@ -58,15 +58,15 @@ export function AddLabelModal(props: IProps): JSX.Element {
         width="lg"
         name="mac"
         label={intl.formatMessage({
-          id: 'pages.device-manage.label.device.mac',
-          defaultMessage: '物理地址',
+          id: 'pages.device-manage.label.device.deviceId',
+          defaultMessage: '设备ID',
         })}
         rules={[
           {
             required: true,
             message: intl.formatMessage({
-              id: 'pages.device-manage.label.device.mac.required.failure',
-              defaultMessage: '物理地址必填',
+              id: 'pages.device-manage.label.device.deviceId.required.failure',
+              defaultMessage: '设备ID必填',
             }),
           },
           {

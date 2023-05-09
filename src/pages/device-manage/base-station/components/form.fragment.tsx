@@ -26,8 +26,8 @@ export function BaseStationFormFragment(props: IProps) {
         name="gateway"
         initialValue={props.record?.gateway}
         label={intl.formatMessage({
-          id: 'pages.device-manage.label.device.gateway',
-          defaultMessage: '基站',
+          id: 'pages.device-manage.label.device.deviceId',
+          defaultMessage: '设备ID',
         })}
       />
       <ProFormText

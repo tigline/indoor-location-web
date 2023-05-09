@@ -143,16 +143,16 @@ const Register: React.FC = () => {
             name="username"
             fieldProps={{ size: 'large', prefix: <UserOutlined /> }}
             placeholder={intl.formatMessage({
-              id: 'pages.login.username.placeholder',
-              defaultMessage: '用户名',
+              id: 'pages.register.email',
+              defaultMessage: '邮箱',
             })}
             rules={[
               {
                 required: true,
                 message: (
                   <FormattedMessage
-                    id="pages.login.username.required"
-                    defaultMessage="请输入用户名!"
+                    id="pages.register.email.required"
+                    defaultMessage="请输入邮箱!"
                   />
                 ),
               },
