@@ -61,9 +61,9 @@ export async function getInitialState(): Promise<{
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   return {
     rightContentRender: () => <RightContent />,
-    waterMarkProps: {
-      content: initialState?.currentUser?.nickname,
-    },
+    // waterMarkProps: {
+    //   content: initialState?.currentUser?.nickname,
+    // },
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
