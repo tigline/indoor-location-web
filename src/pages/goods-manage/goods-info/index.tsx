@@ -1,7 +1,10 @@
-import { pageThing, pageThingType } from '@/services/swagger/wupinguanli';
+import { RemoveButtonPopover } from '@/components/remove-button.popover';
+import { EditGoodsModal } from '@/pages/goods-manage/goods-info/components/edit-goods.modal';
+import { deleteThing, pageThing, pageThingType } from '@/services/swagger/wupinguanli';
 import { fmtPage } from '@/utils/global.utils';
 import { PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
 import { useIntl, useRequest } from '@umijs/max';
+import { Button, notification } from 'antd';
 import React from 'react';
 import { AddGoodsModal } from './components/add-goods.modal';
 
@@ -26,6 +29,16 @@ export default function Page() {
     manual: true,
     formatResult(res) {
       return fmtPage(res);
+    },
+  });
+  const { run: remove, fetches } = useRequest(deleteThing, {
+    manual: true,
+    onSuccess: (data) => {
+      if (data) {
+        notification.success({
+          message: intl.formatMessage({ id: 'app.remove.success', defaultMessage: '删除成功' }),
+        });
+      }
     },
   });
   const columns: ProColumns<API.ThingInfo>[] = [
@@ -81,6 +94,25 @@ export default function Page() {
       search: false,
       dataIndex: 'thingId',
     },
+    {
+      title: intl.formatMessage({
+        id: 'app.action',
+        defaultMessage: '操作',
+      }),
+      valueType: 'option',
+      key: 'option',
+      render: (_, record, __, action) => (
+        <Button.Group>
+          <EditGoodsModal record={record} refresh={action?.reload} />
+
+          <RemoveButtonPopover
+            disabled={!record.thingId}
+            onClick={() => remove({ thingId: record.thingId! }).then(() => action?.reload())}
+            loading={fetches?.[record.thingId!]?.loading}
+          />
+        </Button.Group>
+      ),
+    },
   ];
   return (
     <PageContainer>
@@ -92,7 +124,7 @@ export default function Page() {
           return query({ current: current + '', size: pageSize + '', ...rest });
         }}
         toolBarRender={(action) => [<AddGoodsModal key="add" refresh={action?.reload} />]}
-      ></ProTable>
+      />
     </PageContainer>
   );
 }

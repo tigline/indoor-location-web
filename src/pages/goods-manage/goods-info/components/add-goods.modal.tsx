@@ -1,13 +1,11 @@
 import { ImageUploadFormItem } from '@/components/image.upload.form.item';
-
-import { Button, Form, notification } from 'antd';
-
 import { pageBeacon } from '@/services/swagger/shebeiguanli';
 import { addThing, pageThingType } from '@/services/swagger/wupinguanli';
 import { PlusOutlined } from '@ant-design/icons';
 import { ModalForm, ProFormSelect } from '@ant-design/pro-components';
 import { ProFormText } from '@ant-design/pro-form';
 import { useIntl, useRequest } from '@umijs/max';
+import { Button, Form, notification } from 'antd';
 import React from 'react';
 
 interface IProps {
@@ -93,6 +91,7 @@ export function AddGoodsModal(props: IProps) {
         ]}
       />
       <ProFormText
+        name="thingId"
         label={intl.formatMessage({
           id: 'pages.goods-manage.goods.info.deviceId',
           defaultMessage: '设备编码',

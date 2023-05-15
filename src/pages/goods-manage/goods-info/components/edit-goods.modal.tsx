@@ -1,14 +1,17 @@
 import { ImageUploadFormItem } from '@/components/image.upload.form.item';
 import { pageBeacon } from '@/services/swagger/shebeiguanli';
-import { addThing, pageThingType } from '@/services/swagger/wupinguanli';
+import { pageThingType, updateThing } from '@/services/swagger/wupinguanli';
+import { EditOutlined } from '@ant-design/icons';
 import { ModalForm, ProFormSelect, ProFormText } from '@ant-design/pro-components';
 import { useIntl, useRequest } from '@umijs/max';
-import { Button, notification } from 'antd';
+import { Button, notification, UploadFile } from 'antd';
 import React from 'react';
 
 interface IProps {
   refresh?: () => void;
+  record: API.ThingInfo;
 }
+
 export function EditGoodsModal(props: IProps) {
   const intl = useIntl();
   const [open, setOpen] = React.useState<boolean>();
@@ -37,12 +40,12 @@ export function EditGoodsModal(props: IProps) {
       beancons({ current: `1`, size: `200` });
     }
   }, [open]);
-  const { run } = useRequest(addThing, {
+  const { run } = useRequest(updateThing, {
     manual: true,
     onSuccess(data) {
       if (data) {
         notification.success({
-          message: intl.formatMessage({ id: 'app.add.success', defaultMessage: '新建成功' }),
+          message: intl.formatMessage({ id: 'app.edit.success', defaultMessage: '更新成功' }),
         });
         props.refresh?.();
       }
@@ -51,13 +54,20 @@ export function EditGoodsModal(props: IProps) {
   return (
     <ModalForm<API.AddOrUpdateThing>
       title={intl.formatMessage({
-        id: 'pages.goods-manage.goods.info.add',
-        defaultMessage: '添加物品',
+        id: 'pages.goods-manage.goods.info.edit',
+        defaultMessage: '更新物品',
       })}
-      trigger={<Button>{intl.formatMessage({ id: 'app.edit', defaultMessage: '编辑' })}</Button>}
+      trigger={
+        <Button type="link" size="small" icon={<EditOutlined />}>
+          {intl.formatMessage({
+            id: 'app.edit',
+            defaultMessage: '编辑',
+          })}
+        </Button>
+      }
       onOpenChange={(o) => setOpen(o)}
       onFinish={(values) => {
-        return run(values);
+        return run({ thingId: props.record.thingId! }, values);
       }}
     >
       <ProFormText
@@ -66,6 +76,7 @@ export function EditGoodsModal(props: IProps) {
           defaultMessage: '名称',
         })}
         name="name"
+        initialValue={props.record.name}
         rules={[
           {
             required: true,
@@ -77,6 +88,9 @@ export function EditGoodsModal(props: IProps) {
         ]}
       />
       <ProFormText
+        initialValue={props.record.thingId}
+        name="thingId"
+        readonly
         label={intl.formatMessage({
           id: 'pages.goods-manage.goods.info.deviceId',
           defaultMessage: '设备编码',
@@ -87,6 +101,7 @@ export function EditGoodsModal(props: IProps) {
           id: 'pages.goods-manage.goods.info.label',
           defaultMessage: '绑定标签',
         })}
+        initialValue={props.record.tag}
         fieldProps={{
           showSearch: true,
           onSearch(value) {
@@ -111,6 +126,7 @@ export function EditGoodsModal(props: IProps) {
           id: 'pages.goods-manage.goods.info.type',
           defaultMessage: '物品类型',
         })}
+        initialValue={props.record.typeId}
         options={options}
         rules={[
           {
@@ -124,6 +140,15 @@ export function EditGoodsModal(props: IProps) {
       />
       <ImageUploadFormItem
         name="picture"
+        initialValue={
+          [
+            {
+              uid: Date.now() + '',
+              response: props.record?.picture,
+              thumbUrl: props.record?.picture,
+            },
+          ] as UploadFile<any>[]
+        }
         label={intl.formatMessage({
           id: 'pages.goods-manage.goods.info.icon',
           defaultMessage: '类型图标',
