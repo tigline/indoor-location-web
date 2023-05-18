@@ -123,6 +123,7 @@ export function EditPersonnelModal(props: IProps) {
         }}
       />
       <SelectPersonnelTypeSelect
+        initialValue={props.record.typeId}
         label={intl.formatMessage({
           id: 'pages.personnel-manage.organization.department.person.type',
           defaultMessage: '人员类型',

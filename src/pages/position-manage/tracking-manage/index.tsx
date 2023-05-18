@@ -7,15 +7,16 @@ import { fmtDate, OK } from '@/utils/global.utils';
 import {
   PageContainer,
   ProCard,
-  ProForm,
   ProFormDateTimeRangePicker,
   ProFormDigit,
+  QueryFilter,
 } from '@ant-design/pro-components';
 import { useIntl, useRequest } from '@umijs/max';
 import { Card } from 'antd';
 import dayjs from 'dayjs';
 import { Moment } from 'moment';
 import React from 'react';
+import './index.less';
 
 /**
  * 轨迹追踪页面
@@ -37,6 +38,7 @@ export default function Page() {
     manual: true,
     formatResult: (res) => res,
   });
+
   function submit(values: API.listBeaconLocationParams) {
     const { mapId } = values;
     return run({ mapId: mapId })
@@ -44,15 +46,16 @@ export default function Page() {
       .then(() => queryBeacon(values))
       .then((res) => res.code === OK);
   }
+
   return (
     <PageContainer>
       <ProCard>
-        <ProForm<API.listBeaconLocationParams>
+        <QueryFilter<API.listBeaconLocationParams>
           // 隐藏重置按钮
           submitter={{ resetButtonProps: { style: { display: 'none' } } }}
           formRef={formRef}
-          layout="inline"
-          style={{ minWidth: 320 }}
+          layout="vertical"
+          span={6}
           onFinish={(values) => {
             // console.log(values);
             return submit(values);
@@ -81,7 +84,7 @@ export default function Page() {
               }),
             ]}
           />
-        </ProForm>
+        </QueryFilter>
       </ProCard>
       <Card>
         <TrackL7Component

@@ -37,6 +37,7 @@ export function DealAlarmModal(props: IProps) {
             defaultMessage: '处理警告成功',
           }),
         });
+        props.refresh?.();
       }
     },
   });

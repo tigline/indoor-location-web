@@ -234,7 +234,7 @@ const Login: React.FC = () => {
             </>
           )}
 
-          {!isNil(code) && code !== OK && <LoginMessage content="验证码错误" />}
+          {/*{!isNil(code) && code !== OK && <LoginMessage content="验证码错误" />}*/}
           {/* {type === 'mobile' && (
             <>
               <ProFormText

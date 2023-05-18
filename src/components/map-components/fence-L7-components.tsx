@@ -14,7 +14,9 @@ import {
   Scene,
 } from '@antv/l7';
 import { DrawEvent, DrawPolygon } from '@antv/l7-draw';
+import { Feature } from '@turf/turf';
 import { Card } from 'antd';
+import { Polygon } from 'geojson';
 import React from 'react';
 
 const scale = 10;
@@ -32,6 +34,7 @@ export function convertCMtoL(m: Point, width: number = 0) {
   const y = width - prevY;
   return metersToLngLat([x * scale, y * scale]);
 }
+
 export function convertLtoCM(l: Point, width: number = 0) {
   const [x, y] = lngLatToMeters(l);
   return [x / scale, width - y / scale];
@@ -44,7 +47,7 @@ interface IProps {
   rect: [number?, number?];
   drawEnable?: boolean;
   drawRef?: React.MutableRefObject<DrawPolygon | undefined>;
-
+  initialData?: Feature<Polygon>[];
   /**
    * 围栏内容
    *
@@ -53,6 +56,7 @@ interface IProps {
    */
   fence?: API.FenceAndMapInfo;
 }
+
 /**
  * 为了减少图层数，这里将总地图拆开为多个组件
  * 这里只展示围栏
@@ -116,6 +120,7 @@ export function FenceL7Components(props: IProps) {
   React.useEffect(() => {
     if (scene.current && loaded && mapWidth) {
       drawer.current = new DrawPolygon(scene.current, {
+        initialData: props?.initialData,
         distanceOptions: {
           showTotalDistance: false,
           showDashDistance: true,

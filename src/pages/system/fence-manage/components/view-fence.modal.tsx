@@ -7,6 +7,7 @@ import React from 'react';
 interface IProps {
   record: API.FenceAndMapInfo;
 }
+
 /**
  * 查看电子围栏
  *

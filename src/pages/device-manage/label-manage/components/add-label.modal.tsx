@@ -5,10 +5,12 @@ import { ModalForm, ProFormSelect, ProFormText } from '@ant-design/pro-component
 import { useIntl } from '@umijs/max';
 import { Button, Form, notification } from 'antd';
 import { FormattedMessage } from 'umi';
+
 interface IProps {
   // children: JSX.Element;
   refresh?: () => void;
 }
+
 /**
  * 功能 模态框
  *
@@ -29,7 +31,7 @@ export function AddLabelModal(props: IProps): JSX.Element {
       wrapperCol={{ xs: 16 }}
       width={550}
       onFinish={(values) => {
-        return addBeacon({ ...values, deviceId: values.mac! }).then((res) => {
+        return addBeacon({ ...values, name: values.mac, deviceId: values.mac! }).then((res) => {
           props.refresh?.();
           if (res.code === OK) {
             notification.success({
@@ -70,7 +72,7 @@ export function AddLabelModal(props: IProps): JSX.Element {
             }),
           },
           {
-            pattern: /^[0-9a-fA-F]+$/,
+            pattern: /^[0-9a-fA-F,]+$/,
             message: intl.formatMessage({
               id: 'pages.device-manage.label.device.mac.hex.failure',
               defaultMessage: '物理地址必填',

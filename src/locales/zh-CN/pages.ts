@@ -9,6 +9,7 @@ export default {
   'pages.login.success': '登录成功！',
   'pages.login.username.placeholder': '用户名: admin or user',
   'pages.login.username.required': '用户名是必填项！',
+  'pages.login.username.email.validator.required': '请使用邮箱注册！',
   'pages.login.password.placeholder': '密码: ant.design',
   'pages.login.password.required': '密码是必填项！',
   'pages.login.phoneLogin.tab': '手机号登录',
@@ -199,6 +200,7 @@ export default {
   'pages.system.map-setup.map.view': '预览',
 
   'pages.system.fence-manage.add': '添加围栏',
+  'pages.system.fence-manage.update': '更新围栏',
   'pages.system.fence-manage.view': '查看围栏',
   'pages.system.fence-manage.add.map.select': '地图选择',
   'pages.system.fence-manage.add.map.select.required.failure': '请选择地图',

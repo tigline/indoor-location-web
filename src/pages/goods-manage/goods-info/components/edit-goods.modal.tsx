@@ -1,5 +1,5 @@
 import { ImageUploadFormItem } from '@/components/image.upload.form.item';
-import { pageBeacon } from '@/services/swagger/shebeiguanli';
+import { listUnboundBeacon } from '@/services/swagger/shebeiguanli';
 import { pageThingType, updateThing } from '@/services/swagger/wupinguanli';
 import { EditOutlined } from '@ant-design/icons';
 import { ModalForm, ProFormSelect, ProFormText } from '@ant-design/pro-components';
@@ -15,14 +15,19 @@ interface IProps {
 export function EditGoodsModal(props: IProps) {
   const intl = useIntl();
   const [open, setOpen] = React.useState<boolean>();
-  const { run: beancons, data: beanconOptions } = useRequest(pageBeacon, {
+  const { run: beancons, data: beanconOptions } = useRequest(listUnboundBeacon, {
     manual: true,
     debounceInterval: 300,
     formatResult(res) {
-      return res.data?.items?.map((item) => ({
-        label: item.name,
-        value: item.deviceId,
-      }));
+      return (
+        res.data
+          ?.map((item) => ({
+            label: item.deviceId,
+            value: item.deviceId,
+          }))
+          // 更新页面需要添加本条数据对应的标签信息
+          .concat([{ label: props.record.tag, value: props.record.tag }])
+      );
     },
   });
   const { run: query, data: options } = useRequest(pageThingType, {
@@ -37,7 +42,7 @@ export function EditGoodsModal(props: IProps) {
   React.useEffect(() => {
     if (open) {
       query({ current: `1`, size: `200` });
-      beancons({ current: `1`, size: `200` });
+      beancons({});
     }
   }, [open]);
   const { run } = useRequest(updateThing, {
@@ -66,6 +71,9 @@ export function EditGoodsModal(props: IProps) {
         </Button>
       }
       onOpenChange={(o) => setOpen(o)}
+      layout="horizontal"
+      labelCol={{ xs: 6 }}
+      wrapperCol={{ xs: 16 }}
       onFinish={(values) => {
         return run({ thingId: props.record.thingId! }, values);
       }}
@@ -104,9 +112,7 @@ export function EditGoodsModal(props: IProps) {
         initialValue={props.record.tag}
         fieldProps={{
           showSearch: true,
-          onSearch(value) {
-            beancons({ name: value });
-          },
+          optionFilterProp: 'label',
         }}
         options={beanconOptions}
         name="tag"
