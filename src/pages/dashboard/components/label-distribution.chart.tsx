@@ -48,16 +48,17 @@ export function LabelDistributionChart(props: IProps) {
     const config: PieOptions = {
       // appendPadding: 10,
       data,
+
       height: 400 - 48,
       angleField: 'value',
       colorField: 'type',
-      radius: 1,
+      radius: 0.9,
       innerRadius: 0.6,
       legend: {
         position: 'top-left',
       },
       label: {
-        type: 'inner',
+        type: 'outer',
         offset: '-50%',
         content: '{value}',
         style: {
