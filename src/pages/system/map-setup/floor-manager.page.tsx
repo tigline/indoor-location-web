@@ -86,6 +86,7 @@ export default function FloorManagerPage() {
   return (
     <PageContainer>
       <ProTable<API.MapInfo>
+        options={{ setting: false }}
         pagination={false}
         columns={columns}
         toolBarRender={(action) => {

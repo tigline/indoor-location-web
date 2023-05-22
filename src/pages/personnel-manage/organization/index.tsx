@@ -187,6 +187,7 @@ export default function Page() {
         </Col>
         <Col flex="auto">
           <ProTable
+            options={{ setting: false }}
             request={(param) => {
               const { current, pageSize, depId, ...rest } = param;
               if (depId) {

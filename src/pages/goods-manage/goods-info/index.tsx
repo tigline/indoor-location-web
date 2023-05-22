@@ -124,6 +124,7 @@ export default function Page() {
           return query({ current: current + '', size: pageSize + '', ...rest });
         }}
         toolBarRender={(action) => [<AddGoodsModal key="add" refresh={action?.reload} />]}
+        options={{ setting: false }}
       />
     </PageContainer>
   );

@@ -76,6 +76,7 @@ export default function Page() {
           const { current, pageSize, ...rest } = parma;
           return query({ current: current + '', size: pageSize + '', ...rest });
         }}
+        options={{ setting: false }}
       />
     </PageContainer>
   );

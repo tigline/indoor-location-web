@@ -142,6 +142,7 @@ export default function Page() {
           const { current, pageSize, ...rest } = param;
           return run({ current: current + '', size: pageSize + '', ...rest });
         }}
+        options={{ setting: false }}
       />
     </PageContainer>
   );

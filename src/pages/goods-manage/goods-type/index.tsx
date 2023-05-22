@@ -72,6 +72,7 @@ export default function Page() {
   return (
     <PageContainer>
       <ProTable
+      options={{ setting: false }}
         columns={columns}
         search={false}
         request={(param) => {

@@ -157,6 +157,7 @@ export default function Page() {
   return (
     <PageContainer>
       <ProTable
+        options={{ setting: false }}
         actionRef={actionRef}
         columns={columns}
         request={({ current, pageSize, ...rest }) => {

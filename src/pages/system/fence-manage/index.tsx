@@ -103,6 +103,7 @@ export default function Page() {
   return (
     <PageContainer>
       <ProTable
+        options={{ setting: false }}
         columns={columns}
         toolBarRender={(action) => [
           <AddFenceModal key="add" refresh={action?.reload}></AddFenceModal>,
