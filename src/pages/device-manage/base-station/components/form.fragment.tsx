@@ -76,7 +76,7 @@ export function BaseStationFormFragment(props: IProps) {
         width="lg"
         name="angle"
         max={9999}
-        initialValue={props.record?.setZ}
+        initialValue={props.record?.angle}
         fieldProps={{ precision: 2 }}
         label={intl.formatMessage({
           id: 'pages.device-manage.base-station.device.angle',
@@ -86,7 +86,7 @@ export function BaseStationFormFragment(props: IProps) {
       <ProFormText
         width="lg"
         name="groupId"
-        initialValue={props.record?.setZ}
+        initialValue={props.record?.groupId}
         label={intl.formatMessage({
           id: 'pages.device-manage.base-station.device.group',
           defaultMessage: '基站分组',
