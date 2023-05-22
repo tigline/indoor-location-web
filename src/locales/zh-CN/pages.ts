@@ -128,7 +128,7 @@ export default {
   'pages.device-manage.base-station.device.status.online': '在线',
   'pages.device-manage.base-station.device.status.offline': '离线',
 
-  'pages.device-manage.label.device.add': '新建标签',
+  'pages.device-manage.label.device.add': '添加标签',
   'pages.device-manage.label.device.edit': '更新标签',
   'pages.device-manage.label.device.bound': '绑定',
   'pages.device-manage.label.device.unbound': '未绑定',
@@ -154,7 +154,7 @@ export default {
   'pages.device-manage.label.type.required.failure': '类型必填',
   'pages.device-manage.label.type.equipment': '设备',
   'pages.device-manage.label.type.personnel': '人员',
-  'pages.device-manage.label.type.vehicle': '工具',
+  'pages.device-manage.label.type.vehicle': '车辆',
   'pages.device-manage.label.type.stuff': '物品',
 
   'pages.goods-manage.goods.type.name': '类型名称',

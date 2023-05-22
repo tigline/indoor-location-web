@@ -16,7 +16,7 @@ const Settings: ProLayoutProps & {
   fixedHeader: false,
   fixSiderbar: true,
   colorWeak: false,
-  title: '屋内ビゲーションプラットフォーム',//useIntl().formatMessage({ id: 'pages.layouts.userLayout.title' }),
+  title: '屋内ナビゲーションプラットフォーム',//useIntl().formatMessage({ id: 'pages.layouts.userLayout.title' }),
   pwa: true,
   logo: '/indoor.svg',
   iconfontUrl: '',
