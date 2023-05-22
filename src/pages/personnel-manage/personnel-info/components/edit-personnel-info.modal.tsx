@@ -41,7 +41,12 @@ export function EditPersonnelInfoModal(props: IProps) {
       form={form}
       labelCol={{ xs: 6 }}
       wrapperCol={{ xs: 16 }}
-      onOpenChange={(val) => setVisible(val)}
+      //onOpenChange={(val) => setVisible(val)}
+      modalProps={{
+        destroyOnClose: true,
+        onCancel: () => console.log('run'),
+      }}
+
       trigger={
         <Button type="link" size="small">
           {intl.formatMessage({ id: 'app.action.edit', defaultMessage: '编辑' })}

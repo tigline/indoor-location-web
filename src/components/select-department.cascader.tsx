@@ -42,9 +42,9 @@ export function SelectDepartmentCascader(props: IProps) {
     },
   });
   React.useEffect(() => {
-    if (props.visible) {
+    //if (props.visible) {
       run();
-    }
+    //}
   }, [props.visible]);
   return (
     <ProFormCascader

@@ -47,10 +47,9 @@ export function AddFenceModal(props: IProps) {
       form={form}
       labelCol={{ xs: 6 }}
       wrapperCol={{ xs: 16 }}
-      onVisibleChange={(e) => {
-        if (!e) {
-          form.resetFields();
-        }
+      modalProps={{
+        destroyOnClose: true,
+        onCancel: () => console.log('run'),
       }}
       trigger={
         <Button type="primary">

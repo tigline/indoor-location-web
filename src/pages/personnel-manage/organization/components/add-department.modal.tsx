@@ -49,10 +49,9 @@ export function AddDepartmentModal(props: IProps) {
       layout="horizontal"
       labelCol={{ xs: 6 }}
       wrapperCol={{ xs: 16 }}
-      onVisibleChange={(e) => {
-        if (!e) {
-          form.resetFields();
-        }
+      modalProps={{
+        destroyOnClose: true,
+        onCancel: () => console.log('run'),
       }}
       onFinish={(values) => {
         const { name, parentId } = values;

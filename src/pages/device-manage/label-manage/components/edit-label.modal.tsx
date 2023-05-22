@@ -56,10 +56,9 @@ export function EditLabelModal(props: IProps): JSX.Element {
           return res.code === OK;
         });
       }}
-      onVisibleChange={(e) => {
-        if (!e) {
-          form.resetFields();
-        }
+      modalProps={{
+        destroyOnClose: true,
+        onCancel: () => console.log('run'),
       }}
       trigger={
         <Button type="link" size="small">
@@ -72,28 +71,38 @@ export function EditLabelModal(props: IProps): JSX.Element {
     >
       <ProFormText
         width="lg"
-        name="name"
-        initialValue={props.record.mac}
+        name="deviceId"
+        fieldProps={{ disabled: true}}
+        initialValue={props.record.deviceId}
         label={intl.formatMessage({
-          id: 'pages.device-manage.label.device.mac',
-          defaultMessage: '物理地址',
+          id: 'pages.device-manage.base-station.device.code',
+          defaultMessage: '编号',
         })}
         rules={[
           {
-            required: true,
-            message: intl.formatMessage({
-              id: 'pages.device-manage.label.device.mac.required.failure',
-              defaultMessage: '物理地址必填',
-            }),
+            required: false,
+            // message: intl.formatMessage({
+            //   id: 'pages.device-manage.label.device.mac.required.failure',
+            //   defaultMessage: '物理地址必填',
+            // }),
           },
-          {
-            pattern: /^[0-9a-fA-F,]+$/,
-            message: intl.formatMessage({
-              id: 'pages.device-manage.label.device.mac.hex.failure',
-              defaultMessage: '物理地址必填',
-            }),
-          },
+          // {
+          //   pattern: /^[0-9a-fA-F,]+$/,
+          //   message: intl.formatMessage({
+          //     id: 'pages.device-manage.label.device.mac.hex.failure',
+          //     defaultMessage: '物理地址必填',
+          //   }),
+          // },
         ]}
+      />
+      <ProFormText
+        width="lg"
+        name='name'
+        initialValue={props.record.name}
+        label={intl.formatMessage({
+          id: 'pages.device-manage.base-station.device.name',
+          defaultMessage: '名称',
+        })}
       />
       <ProFormSelect
         name="type"

@@ -70,6 +70,10 @@ export function EditGoodsModal(props: IProps) {
           })}
         </Button>
       }
+      modalProps={{
+        destroyOnClose: true,
+        onCancel: () => console.log('run'),
+      }}
       onOpenChange={(o) => setOpen(o)}
       layout="horizontal"
       labelCol={{ xs: 6 }}

@@ -39,7 +39,11 @@ export function AddPersonnelInfoModal(props: IProps) {
       form={form}
       labelCol={{ xs: 6 }}
       wrapperCol={{ xs: 16 }}
-      onOpenChange={(val) => setVisible(val)}
+      modalProps={{
+        destroyOnClose: true,
+        onCancel: () => console.log('run'),
+      }}
+      //onOpenChange={(val) => setVisible(val)}
       trigger={
         <Button type="primary" icon={<PlusOutlined />}>
           {intl.formatMessage({ id: 'app.action.add', defaultMessage: '新建' })}

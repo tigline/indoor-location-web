@@ -69,6 +69,10 @@ export function AddGoodsModal(props: IProps) {
       onFinish={(values) => {
         return run(values);
       }}
+      modalProps={{
+        destroyOnClose: true,
+        onCancel: () => console.log('run'),
+      }}
       onOpenChange={(o) => setOpen(o)}
       layout="horizontal"
       labelCol={{ xs: 6 }}

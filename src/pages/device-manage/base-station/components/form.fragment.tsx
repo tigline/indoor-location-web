@@ -24,6 +24,7 @@ export function BaseStationFormFragment(props: IProps) {
       <ProFormText
         width="lg"
         name="gateway"
+        fieldProps={{ disabled: true}}
         initialValue={props.record?.gateway}
         label={intl.formatMessage({
           id: 'pages.device-manage.label.device.deviceId',

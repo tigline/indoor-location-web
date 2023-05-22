@@ -48,12 +48,15 @@ export function EditBaseStationModal(props: IProps): JSX.Element {
         const { mapId, name, ...rest } = values;
         return run({ gateway: props.record.gateway! }, { mapId: mapId!, name: name!, ...rest });
       }}
-      onChange={(e) => {
-        if (!e) {
-          form.resetFields();
-        }
+      // onChange={(e) => {
+      //   if (!e) {
+      //     form.resetFields();
+      //   }
+      // }}
+      modalProps={{
+        destroyOnClose: true,
+        onCancel: () => console.log('run'),
       }}
-
       trigger={
         <Button type="link" size="small">
           {intl.formatMessage({ id: 'app.action.edit', defaultMessage: '编辑' })}

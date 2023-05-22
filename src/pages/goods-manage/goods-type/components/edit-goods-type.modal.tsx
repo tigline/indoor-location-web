@@ -33,10 +33,9 @@ export function EditGoodsTypeModal(props: IProps) {
       labelCol={{ xs: 6 }}
       wrapperCol={{ xs: 16 }}
       form={form}
-      onVisibleChange={(e) => {
-        if (!e) {
-          form.resetFields();
-        }
+      modalProps={{
+        destroyOnClose: true,
+        onCancel: () => console.log('run'),
       }}
       trigger={
         <Button size="small" type="link">
