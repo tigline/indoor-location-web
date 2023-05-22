@@ -1,4 +1,5 @@
 import { RemoveButtonPopover } from '@/components/remove-button.popover';
+import { UpdateFenceModal } from '@/pages/system/fence-manage/components/update-fence.modal';
 import { deleteFence, pageFence } from '@/services/swagger/xitongguanli';
 import { fmtPage } from '@/utils/global.utils';
 import { PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
@@ -89,6 +90,7 @@ export default function Page() {
         <Button.Group>
           <SwitchFenceButton record={record} refresh={action?.reload} />
           <ViewFenceModal record={record} />
+          <UpdateFenceModal record={record} refresh={action?.reload} />
           <RemoveButtonPopover
             disabled={!record.fenceId}
             loading={fetches?.[record.fenceId!]?.loading}

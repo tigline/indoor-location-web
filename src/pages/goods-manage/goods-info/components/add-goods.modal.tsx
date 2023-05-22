@@ -1,13 +1,11 @@
 import { ImageUploadFormItem } from '@/components/image.upload.form.item';
-
-import { Button, Form, notification } from 'antd';
-
-import { pageBeacon } from '@/services/swagger/shebeiguanli';
+import { listUnboundBeacon } from '@/services/swagger/shebeiguanli';
 import { addThing, pageThingType } from '@/services/swagger/wupinguanli';
 import { PlusOutlined } from '@ant-design/icons';
 import { ModalForm, ProFormSelect } from '@ant-design/pro-components';
 import { ProFormText } from '@ant-design/pro-form';
 import { useIntl, useRequest } from '@umijs/max';
+import { Button, Form, notification } from 'antd';
 import React from 'react';
 
 interface IProps {
@@ -18,12 +16,12 @@ export function AddGoodsModal(props: IProps) {
   const intl = useIntl();
   const [form] = Form.useForm();
   const [open, setOpen] = React.useState<boolean>();
-  const { run: beancons, data: beanconOptions } = useRequest(pageBeacon, {
+  const { run: beancons, data: beanconOptions } = useRequest(listUnboundBeacon, {
     manual: true,
     debounceInterval: 300,
     formatResult(res) {
-      return res.data?.items?.map((item) => ({
-        label: item.name,
+      return res.data?.map((item) => ({
+        label: item.deviceId,
         value: item.deviceId,
       }));
     },
@@ -40,7 +38,7 @@ export function AddGoodsModal(props: IProps) {
   React.useEffect(() => {
     if (open) {
       query({ current: `1`, size: `200` });
-      beancons({ current: `1`, size: `200` });
+      beancons({});
     } else {
       form.resetFields();
     }
@@ -93,6 +91,7 @@ export function AddGoodsModal(props: IProps) {
         ]}
       />
       <ProFormText
+        name="thingId"
         label={intl.formatMessage({
           id: 'pages.goods-manage.goods.info.deviceId',
           defaultMessage: '设备编码',
@@ -105,9 +104,7 @@ export function AddGoodsModal(props: IProps) {
         })}
         fieldProps={{
           showSearch: true,
-          onSearch(value) {
-            beancons({ name: value });
-          },
+          optionFilterProp: 'label',
         }}
         options={beanconOptions}
         name="tag"

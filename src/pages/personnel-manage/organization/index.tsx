@@ -20,6 +20,7 @@ export type NodeType = DataNode & { parentId?: string | number; value?: string |
 export default function Page() {
   const intl = useIntl();
   const [selectedKeys, setSelectedKeys] = React.useState<React.Key[]>();
+
   function convert(list?: API.DepartmentTree[]): NodeType[] | undefined {
     return list?.map((item) => ({
       title: item.name,
@@ -29,6 +30,7 @@ export default function Page() {
       children: convert((item as any).children),
     }));
   }
+
   // 获取部门树形列表
   const { run, data } = useRequest(treeDepartment, {
     manual: true,

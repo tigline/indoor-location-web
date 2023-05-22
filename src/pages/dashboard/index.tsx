@@ -38,7 +38,7 @@ const Welcome: React.FC = () => {
     manual: true,
     formatResult(res) {
       // const datasource = res.data?.items ?? [];
-      return res.data?.items ?? [];
+      return res.data?.items?.reverse() ?? [];
     },
   });
   React.useEffect(() => {

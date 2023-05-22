@@ -5,11 +5,13 @@ import { ModalForm, ProFormSelect, ProFormText } from '@ant-design/pro-component
 import { FormattedMessage, useIntl, useRequest } from '@umijs/max';
 import { Button, Form, notification } from 'antd';
 import React from 'react';
+
 interface IProps {
   // children: JSX.Element;
   record: API.BeaconInfo;
   refresh?: () => void;
 }
+
 /**
  * 功能 模态框
  *
