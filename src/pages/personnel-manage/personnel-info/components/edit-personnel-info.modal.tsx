@@ -1,9 +1,10 @@
-import { addPersonnel } from '@/services/swagger/renyuanguanli';
+import { updatePersonnel } from '@/services/swagger/renyuanguanli';
 import { ModalForm } from '@ant-design/pro-components';
 import { useIntl, useRequest } from '@umijs/max';
 import { Button, Form, notification } from 'antd';
 import React from 'react';
 import { PersonnelInfoFormFragment } from './personnel-info.form.fragment';
+import { listUnboundBeacon } from '@/services/swagger/shebeiguanli';
 
 interface IProps {
   record: API.PersonnelFillInfo;
@@ -13,7 +14,8 @@ export function EditPersonnelInfoModal(props: IProps) {
   const intl = useIntl();
   const [form] = Form.useForm();
   const [visible, setVisible] = React.useState<boolean>();
-  const { run } = useRequest(addPersonnel, {
+  
+  const { run } = useRequest(updatePersonnel, {
     manual: true,
     onSuccess(data) {
       if (data) {
@@ -32,8 +34,8 @@ export function EditPersonnelInfoModal(props: IProps) {
   return (
     <ModalForm<API.AddOrUpdatePersonnel>
       title={intl.formatMessage({
-        id: 'pages.personnel-manage.organization.department.person.info.add',
-        defaultMessage: '添加人员',
+        id: 'pages.personnel-manage.organization.department.person.info.edit',
+        defaultMessage: '编辑人员',
       })}
       layout="horizontal"
       form={form}
@@ -46,7 +48,9 @@ export function EditPersonnelInfoModal(props: IProps) {
         </Button>
       }
       onFinish={(value) => {
-        return run(value);
+        const params = {personnelId: props.record.personnelId || 0};
+        const body = value;
+        return run(params, body);
       }}
     >
       <PersonnelInfoFormFragment record={props.record} visible={visible} />
