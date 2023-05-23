@@ -727,6 +727,7 @@ declare namespace API {
     setX?: number;
     setY?: number;
     setZ?: number;
+    group?: string;
   };
 
   type updateGatewayParams = {

@@ -7,6 +7,7 @@ interface IProps {
   // children: JSX.Element;
   refresh?: () => void;
   record?: API.GatewayInfo;
+  isEdit?: boolean;
 }
 export function BaseStationFormFragment(props: IProps) {
   const intl = useIntl();
@@ -24,7 +25,7 @@ export function BaseStationFormFragment(props: IProps) {
       <ProFormText
         width="lg"
         name="gateway"
-        fieldProps={{ disabled: true}}
+        fieldProps={{ disabled: props.isEdit}}
         initialValue={props.record?.gateway}
         label={intl.formatMessage({
           id: 'pages.device-manage.label.device.deviceId',

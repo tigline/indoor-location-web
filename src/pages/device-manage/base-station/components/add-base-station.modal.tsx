@@ -57,7 +57,7 @@ export function AddBaseStationModal(props: IProps): JSX.Element {
         </Button>
       }
     >
-      <BaseStationFormFragment />
+      <BaseStationFormFragment isEdit = {false}/>
     </ModalForm>
   );
 }
