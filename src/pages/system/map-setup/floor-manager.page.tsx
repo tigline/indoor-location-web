@@ -32,11 +32,11 @@ export default function FloorManagerPage() {
     },
   });
   const columns: ProColumns<API.MapInfo>[] = [
-    {
-      dataIndex: 'index',
-      valueType: 'indexBorder',
-      width: 48,
-    },
+    // {
+    //   dataIndex: 'index',
+    //   valueType: 'indexBorder',
+    //   width: 48,
+    // },
     {
       title: intl.formatMessage({
         id: 'pages.system.map-setup.map.name',
@@ -46,8 +46,8 @@ export default function FloorManagerPage() {
     },
     {
       title: intl.formatMessage({
-        id: 'pages.system.map-setup.map.remark',
-        defaultMessage: '备注',
+        id: 'pages.system.map-setup.map.floor',
+        defaultMessage: '楼层',
       }),
       dataIndex: 'floor',
     },

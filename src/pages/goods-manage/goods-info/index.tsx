@@ -61,15 +61,15 @@ export default function Page() {
         return data?.find((f) => f.key === record.typeId)?.label ?? '';
       },
     },
-    {
-      title: intl.formatMessage({
-        id: 'pages.goods-manage.goods.info.icon',
-        defaultMessage: '图标',
-      }),
-      search: false,
-      dataIndex: 'picture',
-      valueType: 'image',
-    },
+    // {
+    //   title: intl.formatMessage({
+    //     id: 'pages.goods-manage.goods.info.icon',
+    //     defaultMessage: '图标',
+    //   }),
+    //   search: false,
+    //   dataIndex: 'picture',
+    //   valueType: 'image',
+    // },
     {
       title: intl.formatMessage({
         id: 'pages.goods-manage.goods.info.label',

@@ -63,7 +63,7 @@ export function EditGoodsModal(props: IProps) {
         defaultMessage: '更新物品',
       })}
       trigger={
-        <Button type="link" size="small" icon={<EditOutlined />}>
+        <Button type="link" size="small" >
           {intl.formatMessage({
             id: 'app.edit',
             defaultMessage: '编辑',

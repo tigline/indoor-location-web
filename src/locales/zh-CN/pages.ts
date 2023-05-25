@@ -129,7 +129,7 @@ export default {
   'pages.device-manage.base-station.device.status.offline': '离线',
 
   'pages.device-manage.label.device.add': '添加标签',
-  'pages.device-manage.label.device.edit': '更新标签',
+  'pages.device-manage.label.device.edit': '编辑标签',
   'pages.device-manage.label.device.bound': '绑定',
   'pages.device-manage.label.device.unbound': '未绑定',
   'pages.device-manage.label.device.equipment': '装备',
@@ -202,7 +202,7 @@ export default {
   'pages.system.map-setup.map.view': '预览',
 
   'pages.system.fence-manage.add': '添加围栏',
-  'pages.system.fence-manage.update': '更新围栏',
+  'pages.system.fence-manage.edit': '编辑围栏',
   'pages.system.fence-manage.view': '查看围栏',
   'pages.system.fence-manage.add.map.select': '地图选择',
   'pages.system.fence-manage.add.map.select.required.failure': '请选择地图',
@@ -264,4 +264,8 @@ export default {
 
   'pages.personnel-manage.organization.department.person.info.add': '添加人员',
   'pages.personnel-manage.organization.department.person.search.value': '输入名字，标签地址等等',
+
+  'pages.device-manage.track.map.required': '请选择地图',
+  'pages.device-manage.track.beacon.required': '请选择标签',
+
 };

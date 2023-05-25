@@ -71,6 +71,15 @@ export function SelectBeacon(props: React.ComponentProps<typeof ProFormSelect>) 
         id: 'pages.personnel-manage.organization.department.person.tag.placeholder',
         defaultMessage: '请选择标签',
       })}
+      rules={[
+        {
+          required: true,
+          message: intl.formatMessage({
+            id: 'pages.device-manage.track.beacon.required',
+            defaultMessage: '请选择标签',
+          }),
+        },
+      ]}
       fieldProps={{
         showSearch: true,
         style: { minWidth: 180 },

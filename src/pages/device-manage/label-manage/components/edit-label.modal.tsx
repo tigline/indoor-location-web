@@ -36,7 +36,7 @@ export function EditLabelModal(props: IProps): JSX.Element {
   }, []);
   return (
     <ModalForm<API.UpdateBeacon>
-      title={<FormattedMessage id="app.edit" defaultMessage="编辑" />}
+      title={<FormattedMessage id="pages.device-manage.label.device.edit" defaultMessage="编辑" />}
       layout="horizontal"
       form={form}
       labelCol={{ xs: 6 }}
@@ -63,7 +63,7 @@ export function EditLabelModal(props: IProps): JSX.Element {
       trigger={
         <Button type="link" size="small">
           {intl.formatMessage({
-            id: 'pages.device-manage.label.device.edit',
+            id: 'app.edit',
             defaultMessage: '更新标签',
           })}
         </Button>

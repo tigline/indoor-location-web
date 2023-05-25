@@ -62,8 +62,8 @@ export function UpdateFenceModal(props: IProps) {
   return (
     <ModalForm<API.AddOrUpdateFenceInfo>
       title={intl.formatMessage({
-        id: 'pages.system.fence-manage.update',
-        defaultMessage: '更新围栏',
+        id: 'pages.system.fence-manage.edit',
+        defaultMessage: '编辑围栏',
       })}
       layout="horizontal"
       form={form}

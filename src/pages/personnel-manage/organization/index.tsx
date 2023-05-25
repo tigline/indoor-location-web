@@ -98,13 +98,13 @@ export default function Page() {
       }),
       dataIndex: 'depName',
     },
-    {
-      title: intl.formatMessage({
-        id: 'pages.personnel-manage.organization.department.person.id',
-        defaultMessage: '身份证',
-      }),
-      dataIndex: 'personnelId',
-    },
+    // {
+    //   title: intl.formatMessage({
+    //     id: 'pages.personnel-manage.organization.department.person.id',
+    //     defaultMessage: '身份证',
+    //   }),
+    //   dataIndex: 'personnelId',
+    // },
     {
       title: intl.formatMessage({
         id: 'pages.personnel-manage.organization.department.person.type',

@@ -116,17 +116,7 @@ const Welcome: React.FC = () => {
             <AlarmAnalogyRatioChart data={alarms ?? []} />
           </Card>
         </Col>
-        <Col span="12">
-          <Card
-            bodyStyle={{ minHeight: 400 }}
-            title={intl.formatMessage({
-              id: 'menu.dashboard.system.running.time',
-              defaultMessage: '系统运行时间',
-            })}
-          >
-            <SystemRunningTimeChart />
-          </Card>
-        </Col>
+        
         <Col span="12">
           <Card
             loading={beaconLoading}
@@ -148,6 +138,17 @@ const Welcome: React.FC = () => {
           </Card>
         </Col>
         <Col span="6"></Col>
+        <Col span="12">
+          <Card
+            bodyStyle={{ minHeight: 400 }}
+            title={intl.formatMessage({
+              id: 'menu.dashboard.system.running.time',
+              defaultMessage: '系统运行时间',
+            })}
+          >
+          <SystemRunningTimeChart />
+          </Card>
+        </Col>
       </Row>
     </PageContainer>
   );

@@ -128,7 +128,7 @@ export default {
 'pages.device-manage.base-station.device.status.offline': 'オフライン',
 
 'pages.device-manage.label.device.add': 'ビーコンを追加',
-'pages.device-manage.label.device.edit': 'ビーコンを更新',
+'pages.device-manage.label.device.edit': 'ビーコンを編集',
 'pages.device-manage.label.device.bound': 'バインド済み',
 'pages.device-manage.label.device.unbound': '未バインド',
 'pages.device-manage.label.device.equipment': '設備',
@@ -202,6 +202,7 @@ export default {
 'pages.system.map-setup.map.view': 'プレビュー',
 
 'pages.system.fence-manage.add': 'フェンスを追加',
+'pages.system.fence-manage.edit': 'フェンスを編集',
 'pages.system.fence-manage.view': 'フェンスを表示',
 'pages.system.fence-manage.add.map.select': '地図を選択',
 'pages.system.fence-manage.add.map.select.required.failure': '地図を選択してください',
@@ -262,5 +263,8 @@ export default {
 
 'pages.personnel-manage.organization.department.person.info.add': 'スタッフを追加',
 'pages.personnel-manage.organization.department.person.search.value': '名前、タグのアドレスなどを入力してください',
+
+'pages.device-manage.track.map.required': '请选择地图',
+'pages.device-manage.track.beacon.required': '请选择标签',
 
 };

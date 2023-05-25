@@ -38,11 +38,11 @@ export default function Page() {
     },
   );
   const columns: ProColumns<API.GatewayInfo>[] = [
-    {
-      dataIndex: 'index',
-      valueType: 'indexBorder',
-      width: 48,
-    },
+    // {
+    //   dataIndex: 'index',
+    //   valueType: 'indexBorder',
+    //   width: 48,
+    // },
     {
       title: intl.formatMessage({
         id: 'pages.device-manage.base-station.device.code',
@@ -167,11 +167,11 @@ export default function Page() {
             },
           );
         }}
-        rowKey={(o) => `${o.gateway}`}
-        rowSelection={{
-          selectedRowKeys,
-          onChange: (keys) => setSelectedRowKeys(keys),
-        }}
+        // rowKey={(o) => `${o.gateway}`}
+        // rowSelection={{
+        //   selectedRowKeys,
+        //   onChange: (keys) => setSelectedRowKeys(keys),
+        // }}
         tableAlertRender={({ selectedRowKeys }) => (
           <RemoveButtonPopover
             onClick={() =>

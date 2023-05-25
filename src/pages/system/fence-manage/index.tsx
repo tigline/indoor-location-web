@@ -35,11 +35,11 @@ export default function Page() {
     formatResult: (res) => fmtPage(res),
   });
   const columns: ProColumns<API.FenceAndMapInfo>[] = [
-    {
-      dataIndex: 'index',
-      valueType: 'indexBorder',
-      width: 48,
-    },
+    // {
+    //   dataIndex: 'index',
+    //   valueType: 'indexBorder',
+    //   width: 48,
+    // },
     {
       title: intl.formatMessage({
         id: 'pages.system.fence-manage.map.name',
