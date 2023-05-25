@@ -92,6 +92,11 @@ declare namespace API {
     updateTime?: number;
   };
 
+  type DeviceFrequency = {
+    deviceId: string;
+    frequency: number;
+  };
+
   type AlarmRank = {
     count?: number;
     deviceId?: string;

@@ -9,17 +9,19 @@ import { chain } from 'lodash';
 import React from 'react';
 
 export default function Page() {
+
   const { run, data } = useRequest(pageAlarm, {
     manual: true,
     formatResult: (res) => {
-      const barData = chain(res.data?.items ?? [])
-        .groupBy((o) => o.name)
-        .map((item, key) => {
-          return { label: key, type: key, count: item.length };
-        })
-        .sortBy((o) => o.count)
-        .reverse()
-        .value();
+      const barData = res.data?.items ?? []
+      // chain(res.data?.items ?? [])
+      //   .groupBy((o) => o.name)
+      //   .map((item, key) => {
+      //     return { label: key, type: key, count: item.length };
+      //   })
+      //   .sortBy((o) => o.count)
+      //   .reverse()
+      //   .value();
       const pieData = chain(res.data?.items ?? [])
         .groupBy((o) => o.type)
         .map((item, key) => {
