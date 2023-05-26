@@ -17,18 +17,19 @@ export function AlarmPersonChart(props: IProps) {
       xField: 'frequency',
       yField: 'deviceId',
       seriesField: 'type',
-      // color: ({ type }) => {
-      //   return type === '美容洗护' ? '#FAAD14' : '#5B8FF9';
-      // },
-      legend: false,
-      meta: {
-        type: {
-          alias: '类别',
-        },
-        sales: {
-          alias: '销售额',
-        },
+      color: ({ type }) => {
+        return getRandomColor();
       },
+      legend: false,
+      maxBarWidth: 30,
+      // meta: {
+      //   type: {
+      //     alias: '类别',
+      //   },
+      //   sales: {
+      //     alias: '销售额',
+      //   },
+      // },
     });
     barPlot.current.render();
   }, []);
@@ -36,6 +37,15 @@ export function AlarmPersonChart(props: IProps) {
     barPlot.current?.changeData(deviceFrequency);
   }, [props.data]);
   return <div ref={ref} style={{ height: 600 }}></div>;
+}
+
+export function getRandomColor(): string {
+  const letters = '0123456789ABCDEF';
+  let color = '#';
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
 }
 
 
