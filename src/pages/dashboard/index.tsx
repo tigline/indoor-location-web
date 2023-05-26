@@ -1,10 +1,10 @@
 import { pageAlarm } from '@/services/swagger/gaojingguanli';
 import { getBeaconStatusCounts } from '@/services/swagger/shebeiguanli';
-import { PageContainer } from '@ant-design/pro-components';
-import { useIntl, useRequest } from '@umijs/max';
+import { ActionType, PageContainer } from '@ant-design/pro-components';
+import { useIntl, useModel, useRequest } from '@umijs/max';
 import { Card, Col, Row, theme } from 'antd';
 import dayjs from 'dayjs';
-import React from 'react';
+import React, { useRef } from 'react';
 import { AlarmAnalogyRatioChart } from './components/alarm-analogy-ratio.chart';
 import { AlarmLast_24HoursChart } from './components/alarm-last-24-hours.chart';
 import { GatewayCountChart } from './components/gateway-count.chart';
@@ -15,6 +15,7 @@ import { RealTimeMap } from './components/real-time.map';
 import { SystemRunningTimeChart } from './components/system-running-time.chart';
 import { WarningOfTodayTable } from './components/warning-of-today.table';
 import './index.less';
+import { ILocation } from '@/models/messageSocket';
 
 type keyType = Required<API.BeaconInfo>['type'];
 export type LabelDistribution = Record<keyType, { offline: number; online: number; total: number }>;
@@ -49,9 +50,24 @@ const Welcome: React.FC = () => {
       endTime: dayjs().unix(),
     });
   }, []);
+
+
+  // const actionRef = useRef<ActionType>();
+  // const { data } = useModel('messageSocket');
+  // React.useEffect(() => {
+  //   const res = JSON.parse(data) as ILocation;
+  //   if (res.type === 'Alarm') {
+  //     actionRef.current?.reload();
+  //   }
+  // }, [data]);
+
   return (
     <PageContainer className="dashboard">
       <Row gutter={[8, 8]}>
+
+        <Col span="24">
+          <RealTimeMap />
+        </Col>
         <Col span="12">
           <Card
             loading={beaconLoading}
@@ -77,9 +93,7 @@ const Welcome: React.FC = () => {
             <LabelDistributionChart data={data} />
           </Card>
         </Col>
-        <Col span="24">
-          <RealTimeMap />
-        </Col>
+        
         <Col span="24">
           <Card
             loading={alarmLoading}
