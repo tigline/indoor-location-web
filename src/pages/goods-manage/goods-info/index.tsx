@@ -42,6 +42,15 @@ export default function Page() {
     },
   });
   const columns: ProColumns<API.ThingInfo>[] = [
+
+    {
+      title: intl.formatMessage({
+        id: 'pages.goods-manage.goods.info.deviceId',
+        defaultMessage: '物品ID',
+      }),
+      search: false,
+      dataIndex: 'thingId',
+    },
     {
       title: intl.formatMessage({
         id: 'pages.goods-manage.goods.info.name',
@@ -86,14 +95,7 @@ export default function Page() {
     //     return fmt(entity.createtime);
     //   },
     // },
-    {
-      title: intl.formatMessage({
-        id: 'pages.goods-manage.goods.info.deviceId',
-        defaultMessage: '设备编码',
-      }),
-      search: false,
-      dataIndex: 'thingId',
-    },
+    
     {
       title: intl.formatMessage({
         id: 'app.action',

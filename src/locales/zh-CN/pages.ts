@@ -171,7 +171,7 @@ export default {
   'pages.goods-manage.goods.info.tag.required.failure': '请选择物品标签',
   'pages.goods-manage.goods.info.icon': '图标',
   'pages.goods-manage.goods.info.label': '绑定标签',
-  'pages.goods-manage.goods.info.deviceId': '设备编码',
+  'pages.goods-manage.goods.info.deviceId': '物品ID',
 
   'pages.system.map-setup': '地图设置',
   'pages.system.map-setup.building.name': '建筑名',
