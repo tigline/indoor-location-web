@@ -2,6 +2,18 @@
 /* eslint-disable */
 import { request } from '@umijs/max';
 
+
+export async function uploadFile(body: FormData, options?: { [key: string]: any }) {
+  return request('/api/v1/upload', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
 /** 获取建筑列表 GET /api/v1/buildings */
 export async function listBuilding(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)

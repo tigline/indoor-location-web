@@ -10,6 +10,15 @@ declare namespace API {
     type: 'Equipment' | 'Personnel' | 'Vehicle' | 'Stuff';
   };
 
+  type UploadFile = {
+    file: File;
+  }
+
+  type RestValueString = {
+    name: string;
+    url: string;
+  }
+
   type AddGatewayInfo = {
     angle?: number;
     gateway: string;
