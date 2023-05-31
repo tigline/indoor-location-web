@@ -3,6 +3,7 @@ import { useIntl } from '@umijs/max';
 import { Table } from 'antd';
 import { chain, first } from 'lodash';
 import React from 'react';
+import { getDeviceFrequency } from '@/utils/common.functions';
 
 const contentStyle: React.CSSProperties = {
   margin: 0,
@@ -37,15 +38,17 @@ export function WarningOfTodayTable(props: IProps) {
       total: props.data.length ?? 0,
       unprocessed: props.data.filter((f) => f.status === 'Unprocessed').length ?? 0,
       processed: props.data.filter((f) => f.status === 'Processed').length ?? 0,
-      datasource: chain(props.data ?? [])
-        .groupBy((o) => o.alarmId)
-        .mapValues((o) => ({ name: first(o)?.alarmId, count: o.length }))
-        .map((item, key) => ({
-          key,
-          name: item.name,
-          count: item.count,
-        }))
-        .value(),
+
+      datasource: getDeviceFrequency(props.data),
+      // datasource: chain(props.data ?? [])
+      //   .groupBy((o) => o.alarmId)
+      //   .mapValues((o) => ({ name: first(o)?.alarmId, count: o.length }))
+      //   .map((item, key) => ({
+      //     key,
+      //     name: item.name,
+      //     count: item.count,
+      //   }))
+      //   .value(),
     };
   }, [props.data]);
   return (
@@ -99,7 +102,7 @@ export function WarningOfTodayTable(props: IProps) {
               {
                 title: intl.formatMessage({ id: 'pages.alarm.label', defaultMessage: '告警标签' }),
                 render(_, record) {
-                  return record.name;
+                  return record.deviceId;
                 },
               },
               {
@@ -108,7 +111,7 @@ export function WarningOfTodayTable(props: IProps) {
                   defaultMessage: '告警数量',
                 }),
                 render(_, record) {
-                  return record.count;
+                  return record.frequency;
                 },
               },
             ]}
