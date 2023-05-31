@@ -1,5 +1,5 @@
 import { RemoveButtonPopover } from '@/components/remove-button.popover';
-import { pagePersonnelType } from '@/services/swagger/renyuanguanli';
+import { deletePersonType, pagePersonnelType } from '@/services/swagger/renyuanguanli';
 import { fmtPage } from '@/utils/global.utils';
 import { PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
 import { useIntl, useRequest } from '@umijs/max';
@@ -15,19 +15,19 @@ export default function Page() {
       return fmtPage(res);
     },
   });
-  const { run: remove, fetches } = useRequest(
-    (param: { typeId: number }) => Promise.resolve(param),
-    {
-      manual: true,
-      onSuccess: (data) => {
-        if (data) {
-          notification.success({
-            message: intl.formatMessage({ id: 'app.remove.success', defaultMessage: '删除成功' }),
-          });
-        }
-      },
+
+  const { run: remove, fetches } = useRequest(deletePersonType, {
+    manual: true,
+    fetchKey: (o) => o.typeId + '',
+    onSuccess(data) {
+      if (data) {
+        notification.success({
+          message: intl.formatMessage({ id: 'app.remove.success', defaultMessage: '删除成功' }),
+        });
+      }
     },
-  );
+  });
+
   const columns: ProColumns<API.PersonnelTypeInfo>[] = [
     {
       title: intl.formatMessage({

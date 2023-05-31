@@ -206,6 +206,10 @@ declare namespace API {
     typeId: number;
   };
 
+  type deletePersonTypeParams = {
+    typeId: number;
+  };
+
   type DepartmentTree = {
     depId?: number;
     name?: string;
