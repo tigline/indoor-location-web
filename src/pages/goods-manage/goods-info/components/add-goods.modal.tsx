@@ -114,7 +114,7 @@ export function AddGoodsModal(props: IProps) {
         name="tag"
         rules={[
           {
-            required: true,
+            //required: true,
             message: intl.formatMessage({
               id: 'pages.goods-manage.goods.info.tag.required.failure',
               defaultMessage: '请选择物品标签',

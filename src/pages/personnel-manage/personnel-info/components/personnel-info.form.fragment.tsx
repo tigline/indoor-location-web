@@ -121,7 +121,7 @@ export function PersonnelInfoFormFragment(props: IProps) {
         })}
         rules={[
           {
-            required: true,
+            //required: true,
             message: intl.formatMessage({
               id: 'pages.personnel-manage.organization.department.person.icon.required.failure',
               defaultMessage: '请选择头像',

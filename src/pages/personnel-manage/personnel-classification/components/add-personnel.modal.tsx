@@ -75,7 +75,7 @@ export function AddPersonnelModal(props: IProps) {
         name="picture"
         rules={[
           {
-            required: true,
+            //required: true,
             message: intl.formatMessage({
               id: 'pages.personnel-manage.organization.department.person.type.icon.required.failure',
               defaultMessage: '请上传图标',
