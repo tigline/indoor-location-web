@@ -111,7 +111,8 @@ export function RealTimeL7Component(props: IProps) {
   const prevTimestamp = React.useRef(performance.now());
   const animationDuration = 1000; // 1秒
 
-
+  let timer: NodeJS.Timeout | undefined;
+  
   const intl = useIntl();
   const TypeLabel: Record<string, string> = {
     Equipment: intl.formatMessage({
@@ -228,6 +229,7 @@ export function RealTimeL7Component(props: IProps) {
               scene.current?.addLayer(locationLayers.current![index]!);
               locationLayers.current?.[index].on('mousemove', (e) => {
                 console.log(e);
+                clearTimeout(timer);
                 popup.current?.setLnglat(e.lngLat).setHTML(
                   `<span>
                     <p>deviceId:${e.feature.deviceId}</p>
@@ -241,6 +243,9 @@ export function RealTimeL7Component(props: IProps) {
                   `,
                 );
                 scene.current?.addPopup(popup.current!);
+                timer = setTimeout(() => {
+                  scene.current?.removePopup(popup.current!);
+                }, 5000);
               });
             }
           } else {
@@ -351,6 +356,7 @@ export function RealTimeL7Component(props: IProps) {
             .size(10);
           scene.current?.addLayer(stationLayers.current[index]!);
           stationLayers.current?.[index].on('mousemove', (e) => {
+            clearTimeout(timer);
             console.log(e);
             popup.current?.setLnglat(e.lngLat).setHTML(
               `<span>
@@ -365,6 +371,9 @@ export function RealTimeL7Component(props: IProps) {
                 </span>`,
             );
             scene.current?.addPopup(popup.current!);
+            timer = setTimeout(() => {
+              scene.current?.removePopup(popup.current!);
+            }, 5000);
           });
         }
       });
