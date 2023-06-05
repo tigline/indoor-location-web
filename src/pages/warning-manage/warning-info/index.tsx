@@ -43,7 +43,7 @@ export default function Page() {
     });
   }, []);
   return (
-    <PageContainer>
+    <PageContainer childrenContentStyle={{padding:20}}>
       <Row>
         <Col span="24">
           <Form

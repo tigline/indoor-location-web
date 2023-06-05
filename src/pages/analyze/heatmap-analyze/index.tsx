@@ -43,7 +43,7 @@ export default function Page() {
       .then((res) => res.code === OK);
   }
   return (
-    <PageContainer>
+    <PageContainer  childrenContentStyle={{padding:20}}>
       <ProCard>
         <ProForm<API.listBeaconLocationParams>
           // 隐藏重置按钮
@@ -80,7 +80,7 @@ export default function Page() {
           />
         </ProForm>
       </ProCard>
-      <Card>
+      <Card style={{marginTop:12}}>
         <HeatmapL7Component
           map={data?.data?.picture}
           rect={[data?.data?.length, data?.data?.width]}

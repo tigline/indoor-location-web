@@ -43,7 +43,7 @@ export default function Page() {
       search: false,
       dataIndex: 'picture',
       render(_, record) {
-        return <Image width={100} height={100} src={record.picture!} />;
+        return <Image width={32} height={32} src={record.picture!} />;
       },
     },
     {
@@ -70,7 +70,7 @@ export default function Page() {
     },
   ];
   return (
-    <PageContainer>
+    <PageContainer childrenContentStyle={{padding:20}}>
       <ProTable
       options={{ setting: false }}
         columns={columns}

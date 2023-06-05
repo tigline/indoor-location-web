@@ -43,14 +43,14 @@ export default function Page() {
   });
   const columns: ProColumns<API.ThingInfo>[] = [
 
-    {
-      title: intl.formatMessage({
-        id: 'pages.goods-manage.goods.info.deviceId',
-        defaultMessage: '物品ID',
-      }),
-      search: false,
-      dataIndex: 'thingId',
-    },
+    // {
+    //   title: intl.formatMessage({
+    //     id: 'pages.goods-manage.goods.info.deviceId',
+    //     defaultMessage: '物品ID',
+    //   }),
+    //   search: false,
+    //   dataIndex: 'thingId',
+    // },
     {
       title: intl.formatMessage({
         id: 'pages.goods-manage.goods.info.name',
@@ -117,7 +117,7 @@ export default function Page() {
     },
   ];
   return (
-    <PageContainer>
+    <PageContainer childrenContentStyle={{padding:20}}>
       <ProTable
         columns={columns}
         rowKey={(o) => o.thingId + ''}

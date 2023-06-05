@@ -94,7 +94,7 @@ export default function Page() {
     }
   }, []);
   return (
-    <PageContainer>
+    <PageContainer childrenContentStyle={{padding:20}}>
       <ProCard>
         <ProForm<{ mapId: string[] }>
           submitter={false}
@@ -133,7 +133,7 @@ export default function Page() {
           </Row>
         </ProForm>
       </ProCard>
-      <Card>
+      <Card style={{marginTop:12}}>
         <RealTimeL7Component
           map={mapInfo?.data?.picture}
           rect={[mapInfo?.data?.length, mapInfo?.data?.width]}

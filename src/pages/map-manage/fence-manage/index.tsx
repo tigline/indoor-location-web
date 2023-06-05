@@ -56,7 +56,7 @@ export default function Page() {
     );
   }, []);
   return (
-    <PageContainer>
+    <PageContainer childrenContentStyle={{padding:20}}>
       <div
         id="map"
         style={{

@@ -7,6 +7,7 @@ import { Button, notification } from 'antd';
 import dayjs from 'dayjs';
 import { DealAlarmModal } from './components/deal-alarm.modal';
 import { useEffect, useRef } from 'react';
+import { ILocation } from '@/models/messageSocket';
 
 
 export default function Page() {
@@ -14,6 +15,7 @@ export default function Page() {
   const actionRef = useRef<ActionType>();
   const { data } = useModel('messageSocket');
   useEffect(() => {
+    if (!data) return;
     const res = JSON.parse(data) as ILocation;
     if (res.type === 'Alarm') {
       actionRef.current?.reload();
@@ -132,7 +134,7 @@ export default function Page() {
     },
   ];
   return (
-    <PageContainer>
+    <PageContainer childrenContentStyle={{padding:20}}>
       <ProTable<
         API.AlarmInfo,
         API.pageAlarmParams & { createTime: [dayjs.ConfigType, dayjs.ConfigType] }

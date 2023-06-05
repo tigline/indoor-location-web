@@ -67,7 +67,7 @@ export default function Page() {
     },
   ];
   return (
-    <PageContainer>
+    <PageContainer childrenContentStyle={{padding:20}}>
       <ProTable
         columns={columns}
         search={false}

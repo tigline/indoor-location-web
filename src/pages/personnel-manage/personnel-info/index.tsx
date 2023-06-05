@@ -102,17 +102,17 @@ export default function Page() {
       dataIndex: 'depName',
       search: false,
     },
-    // {
-    //   title: intl.formatMessage({
-    //     id: 'pages.personnel-manage.organization.department.person.icon',
-    //     defaultMessage: '头像',
-    //   }),
-    //   dataIndex: 'avatar',
-    //   render(dom, entity) {
-    //     return <Image width={100} height={100} src={entity.avatar}></Image>;
-    //   },
-    //   search: false,
-    // },
+    {
+      title: intl.formatMessage({
+        id: 'pages.personnel-manage.organization.department.person.icon',
+        defaultMessage: '头像',
+      }),
+      dataIndex: 'avatar',
+      render(dom, entity) {
+        return <Image width={32} height={32} src={entity.avatar}></Image>;
+      },
+      search: false,
+    },
     {
       title: intl.formatMessage({ id: 'app.action', defaultMessage: '操作' }),
       search: false,
@@ -134,7 +134,7 @@ export default function Page() {
   ];
 
   return (
-    <PageContainer>
+    <PageContainer childrenContentStyle={{padding:20}}>
       <ProTable
         columns={columns}
         toolBarRender={(action) => [<AddPersonnelInfoModal key="add" refresh={action?.reload} />]}

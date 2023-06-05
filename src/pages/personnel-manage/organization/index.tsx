@@ -112,14 +112,14 @@ export default function Page() {
       }),
       dataIndex: 'typeName',
     },
-    {
-      title: intl.formatMessage({
-        id: 'pages.personnel-manage.organization.department.person.icon',
-        defaultMessage: '头像',
-      }),
-      dataIndex: 'avatar',
-      valueType: 'image',
-    },
+    // {
+    //   title: intl.formatMessage({
+    //     id: 'pages.personnel-manage.organization.department.person.icon',
+    //     defaultMessage: '头像',
+    //   }),
+    //   dataIndex: 'avatar',
+    //   valueType: 'image',
+    // },
     {
       title: intl.formatMessage({ id: 'app.action', defaultMessage: '操作' }),
       render(_, record, __, action) {
@@ -130,7 +130,7 @@ export default function Page() {
     },
   ];
   return (
-    <PageContainer>
+    <PageContainer childrenContentStyle={{padding:20}}>
       <Row gutter={[16, 16]}>
         <Col flex="320px">
           <Card

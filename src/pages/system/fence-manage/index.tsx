@@ -101,7 +101,7 @@ export default function Page() {
     },
   ];
   return (
-    <PageContainer>
+    <PageContainer childrenContentStyle={{padding:20}}>
       <ProTable
         options={{ setting: false }}
         columns={columns}

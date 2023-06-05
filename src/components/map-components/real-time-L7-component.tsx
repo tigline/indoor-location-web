@@ -392,7 +392,7 @@ export function RealTimeL7Component(props: IProps) {
   React.useEffect(() => {
     if (loaded && mapWidth) {
 
-      if (props.fences != undefined && props.fences.length > 0) {
+      if (props.fences !== undefined && props.fences.length > 0) {
          
       } else {
         forEach(fenceLayers.current, (item) => {
@@ -459,7 +459,7 @@ export function RealTimeL7Component(props: IProps) {
       if (props.hiddenFence) {
         forEach(fenceLayers.current, (item) => item?.hide());
       } else {
-        if (props.fences != undefined && props.fences.length > 0) {
+        if (props.fences !== undefined && props.fences.length > 0) {
           forEach(fenceLayers.current, (item) => item?.show());
         } else {
           forEach(fenceLayers.current, (item) => item?.hide());

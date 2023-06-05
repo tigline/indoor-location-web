@@ -1,7 +1,7 @@
 export default {
   'pages.layouts.userLayout.title': '室内定位管理平台',
   'pages.login.accountLogin.tab': '账户密码登录',
-  'pages.login.accountLogin.errorMessage': '错误的用户名和密码(admin/ant.design)',
+  'pages.login.accountLogin.errorMessage': '错误的用户名和密码',
   'pages.account.update': '更新用户信息',
   'pages.account.update.success': '更新用户信息成功',
   'pages.account.userId.failure': '用户ID不能为空',

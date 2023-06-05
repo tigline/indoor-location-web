@@ -48,7 +48,7 @@ export default function Page() {
   }
 
   return (
-    <PageContainer>
+    <PageContainer childrenContentStyle={{padding:20}}>
       <ProCard>
         <QueryFilter<API.listBeaconLocationParams>
           // 隐藏重置按钮
@@ -63,7 +63,7 @@ export default function Page() {
         >
           <SelectMapSelect />
           <SelectBeacon name="deviceId" />
-          <ProFormDigit name="filterValue" />
+          {/* <ProFormDigit name="filterValue" /> */}
           <ProFormDateTimeRangePicker
             name="range"
             transform={(value: [Moment?, Moment?]) => {
@@ -86,7 +86,7 @@ export default function Page() {
           />
         </QueryFilter>
       </ProCard>
-      <Card>
+      <Card style={{marginTop:12}}>
         <TrackL7Component
           map={data?.data?.picture}
           rect={[data?.data?.length, data?.data?.width]}
