@@ -50,6 +50,7 @@ export function AlarmsL7Component(props: IProps) {
   React.useEffect(() => {
     scene.current = new Scene({
       id: mapContainer.current!,
+      logoVisible: false,
       map: new Mapbox({
         style: 'blank',
         center: [0, 0],
