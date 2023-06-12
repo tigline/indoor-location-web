@@ -20,6 +20,7 @@ export type NodeType = DataNode & { parentId?: string | number; value?: string |
 export default function Page() {
   const intl = useIntl();
   const [selectedKeys, setSelectedKeys] = React.useState<React.Key[]>();
+
   function convert(list?: API.DepartmentTree[]): NodeType[] | undefined {
     return list?.map((item) => ({
       title: item.name,
@@ -29,6 +30,7 @@ export default function Page() {
       children: convert((item as any).children),
     }));
   }
+
   // 获取部门树形列表
   const { run, data } = useRequest(treeDepartment, {
     manual: true,
@@ -96,13 +98,13 @@ export default function Page() {
       }),
       dataIndex: 'depName',
     },
-    {
-      title: intl.formatMessage({
-        id: 'pages.personnel-manage.organization.department.person.id',
-        defaultMessage: '身份证',
-      }),
-      dataIndex: 'personnelId',
-    },
+    // {
+    //   title: intl.formatMessage({
+    //     id: 'pages.personnel-manage.organization.department.person.id',
+    //     defaultMessage: '身份证',
+    //   }),
+    //   dataIndex: 'personnelId',
+    // },
     {
       title: intl.formatMessage({
         id: 'pages.personnel-manage.organization.department.person.type',
@@ -110,14 +112,14 @@ export default function Page() {
       }),
       dataIndex: 'typeName',
     },
-    {
-      title: intl.formatMessage({
-        id: 'pages.personnel-manage.organization.department.person.icon',
-        defaultMessage: '头像',
-      }),
-      dataIndex: 'avatar',
-      valueType: 'image',
-    },
+    // {
+    //   title: intl.formatMessage({
+    //     id: 'pages.personnel-manage.organization.department.person.icon',
+    //     defaultMessage: '头像',
+    //   }),
+    //   dataIndex: 'avatar',
+    //   valueType: 'image',
+    // },
     {
       title: intl.formatMessage({ id: 'app.action', defaultMessage: '操作' }),
       render(_, record, __, action) {
@@ -128,7 +130,7 @@ export default function Page() {
     },
   ];
   return (
-    <PageContainer>
+    <PageContainer childrenContentStyle={{padding:20}}>
       <Row gutter={[16, 16]}>
         <Col flex="320px">
           <Card
@@ -185,6 +187,7 @@ export default function Page() {
         </Col>
         <Col flex="auto">
           <ProTable
+            options={{ setting: false }}
             request={(param) => {
               const { current, pageSize, depId, ...rest } = param;
               if (depId) {

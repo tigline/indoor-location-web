@@ -1,9 +1,10 @@
 import { ProFormSelect, ProFormSelectProps } from '@ant-design/pro-components';
-import { useModel } from '@umijs/max';
+import { useModel,useIntl } from '@umijs/max';
 import React from 'react';
 
 type IProps = ProFormSelectProps;
 export function SelectMapSelect(props: IProps) {
+  const intl = useIntl();
   const { run, options, loading, initialValue } = useModel('mapModel');
   React.useEffect(() => {
     run();
@@ -11,6 +12,15 @@ export function SelectMapSelect(props: IProps) {
   return (
     <ProFormSelect
       {...props}
+      rules={[
+        {
+          required: true,
+          message: intl.formatMessage({
+            id: 'pages.device-manage.track.map.required',
+            defaultMessage: '请选择地图',
+          }),
+        },
+      ]}
       width="lg"
       name="mapId"
       style={{ width: 240 }}

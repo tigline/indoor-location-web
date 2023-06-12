@@ -57,7 +57,7 @@ export function RealTimeMap() {
   }, []);
   return (
     <Card
-      bodyStyle={{ minHeight: 400 }}
+      bodyStyle={{ minHeight: 600 }}
       title={intl.formatMessage({ id: 'menu.dashboard.map', defaultMessage: '地图' })}
       extra={
         <ProForm<{ mapId: string[] }>
@@ -76,7 +76,7 @@ export function RealTimeMap() {
       }
     >
       <RealTimeL7Component
-        height={400 - 48}
+        height={600 - 48}
         map={mapInfo?.data?.picture}
         rect={[mapInfo?.data?.length, mapInfo?.data?.width]}
         stations={gateways?.items}

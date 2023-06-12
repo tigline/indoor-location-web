@@ -111,7 +111,8 @@ export function RealTimeL7Component(props: IProps) {
   const prevTimestamp = React.useRef(performance.now());
   const animationDuration = 1000; // 1秒
 
-
+  let timer: NodeJS.Timeout | undefined;
+  
   const intl = useIntl();
   const TypeLabel: Record<string, string> = {
     Equipment: intl.formatMessage({
@@ -228,6 +229,7 @@ export function RealTimeL7Component(props: IProps) {
               scene.current?.addLayer(locationLayers.current![index]!);
               locationLayers.current?.[index].on('mousemove', (e) => {
                 console.log(e);
+                clearTimeout(timer);
                 popup.current?.setLnglat(e.lngLat).setHTML(
                   `<span>
                     <p>deviceId:${e.feature.deviceId}</p>
@@ -241,6 +243,9 @@ export function RealTimeL7Component(props: IProps) {
                   `,
                 );
                 scene.current?.addPopup(popup.current!);
+                timer = setTimeout(() => {
+                  scene.current?.removePopup(popup.current!);
+                }, 5000);
               });
             }
           } else {
@@ -267,6 +272,7 @@ export function RealTimeL7Component(props: IProps) {
   React.useEffect(() => {
     scene.current = new Scene({
       id: mapContainer.current!,
+      logoVisible: false,
       map: new Mapbox({
         style: 'blank',
         center: [0, 0],
@@ -351,6 +357,7 @@ export function RealTimeL7Component(props: IProps) {
             .size(10);
           scene.current?.addLayer(stationLayers.current[index]!);
           stationLayers.current?.[index].on('mousemove', (e) => {
+            clearTimeout(timer);
             console.log(e);
             popup.current?.setLnglat(e.lngLat).setHTML(
               `<span>
@@ -365,6 +372,9 @@ export function RealTimeL7Component(props: IProps) {
                 </span>`,
             );
             scene.current?.addPopup(popup.current!);
+            timer = setTimeout(() => {
+              scene.current?.removePopup(popup.current!);
+            }, 5000);
           });
         }
       });
@@ -378,88 +388,20 @@ export function RealTimeL7Component(props: IProps) {
     updateLocations(performance.now());
     requestAnimationFrame(updateLocations);
   }, [updateLocations, loaded, mapWidth]);
-// =======
-//     if (loaded && mapWidth) {
-//       forEach(
-//         [
-//           'Equipment',
-//           'Personnel',
-//           'Vehicle',
-//           'Stuff',
-//           'Equipment-selected',
-//           'Personnel-selected',
-//           'Vehicle-selected',
-//           'Stuff-selected',
-//         ],
-//         (key, index) => {
-//           const source = (props.locations ?? [])
-//             ?.filter((f) => {
-//               const [type, selected] = key.split('-');
-//               if (selected) {
-//                 return f.type === type && f.deviceId === props.selectedDeviceId;
-//               } else {
-//                 return f.type === type;
-//               }
-//             })
-//             ?.map((item) => {
-//               const [lng, lat] = convertCMtoL([item.posX!, item.posY!], mapWidth) ?? [];
-//               return { ...item, lng, lat };
-//             });
-
-//           if (!locationLayers.current?.[index]) {
-//             if (!isEmpty(source)) {
-//               locationLayers.current![index] = new PointLayer({
-//                 name: 'real-time',
-//                 zIndex: 3,
-//                 layerType: 'fillImage',
-//               })
-//                 .source(source, {
-//                   parser: { type: 'json', x: 'lng', y: 'lat', name: 'type' },
-//                 })
-//                 // .color(green[3])
-//                 // .color('red')
-//                 .size(15)
-//                 .shape(key)
-//                 .animate(true);
-//               scene.current?.addLayer(locationLayers.current![index]!);
-//               locationLayers.current?.[index].on('mousemove', (e) => {
-//                 console.log(e);
-//                 popup.current?.setLnglat(e.lngLat).setHTML(
-//                   `<span>
-//                     <p>deviceId:${e.feature.deviceId}</p>
-//                     <p>X:${e.feature.posX}</p>
-//                     <p>Y:${e.feature.posY}</p>
-//                     <p>${intl.formatMessage({
-//                       id: 'pages.device-manage.label.type',
-//                       defaultMessage: '类型',
-//                     })}: ${TypeLabel[e.feature.type as any]}</p>
-//                   </span>
-//                   `,
-//                 );
-//                 scene.current?.addPopup(popup.current!);
-//               });
-//             }
-//           } else {
-//             if (isEmpty(props.locations)) {
-//               // 图层不能设置空数据 ，这里数据为空时直接隐藏图层
-//               locationLayers.current?.[index].hide();
-//             } else {
-//               if (!locationLayers.current?.[index].isVisible()) {
-//                 locationLayers.current?.[index].show();
-//               }
-//               locationLayers.current?.[index].setData(source);
-//               locationLayers.current?.[index].setIndex(3);
-//             }
-//           }
-//         },
-//       );
-//     }
-//   }, [props.locations, loaded, mapWidth]);
-// >>>>>>> develop-gitee
 
   // 处理围栏展示内容
   React.useEffect(() => {
     if (loaded && mapWidth) {
+
+      if (props.fences !== undefined && props.fences.length > 0) {
+         
+      } else {
+        forEach(fenceLayers.current, (item) => {
+          item.hide();
+        });
+        return;
+      }
+
       forEach(fenceLayers.current, (item) => {
         if (!props.fences?.find((f) => item?.name.endsWith(f.fenceId + ''))) {
           item.hide();
@@ -511,14 +453,19 @@ export function RealTimeL7Component(props: IProps) {
         }
       });
     }
-  }, [props.fences, loaded, mapWidth]);
+  }, [props.fences]);
 
   React.useEffect(() => {
     if (!isNil(props.hiddenFence)) {
       if (props.hiddenFence) {
         forEach(fenceLayers.current, (item) => item?.hide());
       } else {
-        forEach(fenceLayers.current, (item) => item?.show());
+        if (props.fences !== undefined && props.fences.length > 0) {
+          forEach(fenceLayers.current, (item) => item?.show());
+        } else {
+          forEach(fenceLayers.current, (item) => item?.hide());
+        }
+        
       }
     }
   }, [props.hiddenFence]);

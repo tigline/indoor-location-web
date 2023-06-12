@@ -10,6 +10,15 @@ declare namespace API {
     type: 'Equipment' | 'Personnel' | 'Vehicle' | 'Stuff';
   };
 
+  type UploadFile = {
+    file: File;
+  }
+
+  type RestValueString = {
+    name: string;
+    url: string;
+  }
+
   type AddGatewayInfo = {
     angle?: number;
     gateway: string;
@@ -90,6 +99,11 @@ declare namespace API {
     status?: 'Unprocessed' | 'Processed' | 'Ignored';
     type?: 'In' | 'Out';
     updateTime?: number;
+  };
+
+  type DeviceFrequency = {
+    deviceId: string;
+    frequency: number;
   };
 
   type AlarmRank = {
@@ -189,6 +203,10 @@ declare namespace API {
   };
 
   type deleteThingTypeParams = {
+    typeId: number;
+  };
+
+  type deletePersonTypeParams = {
     typeId: number;
   };
 
@@ -727,6 +745,7 @@ declare namespace API {
     setX?: number;
     setY?: number;
     setZ?: number;
+    group?: string;
   };
 
   type updateGatewayParams = {

@@ -25,7 +25,7 @@ export default function Page() {
     },
   });
   return (
-    <PageContainer>
+    <PageContainer childrenContentStyle={{padding:20}}>
       <ProList<API.BuildingInfo>
         pagination={false}
         request={(param) => {

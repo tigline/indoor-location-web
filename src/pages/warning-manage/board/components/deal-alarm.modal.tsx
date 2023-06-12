@@ -37,6 +37,7 @@ export function DealAlarmModal(props: IProps) {
             defaultMessage: '处理警告成功',
           }),
         });
+        props.refresh?.();
       }
     },
   });
@@ -73,7 +74,7 @@ export function DealAlarmModal(props: IProps) {
               <Button
                 loading={dealFetches?.[props.record!.alarmId!]?.loading}
                 type="primary"
-                disabled={!props.record?.alarmId}
+                disabled={!props.record?.alarmId || props.record?.status != 'Unprocessed'}
                 onClick={() =>
                   deal({ alarmId: props.record!.alarmId!, status: 'Processed' }).then((res) =>
                     setOpen(!res.data),
@@ -87,7 +88,7 @@ export function DealAlarmModal(props: IProps) {
               </Button>
               <Button
                 loading={dealFetches?.[props.record!.alarmId!]?.loading}
-                disabled={!props.record?.alarmId}
+                disabled={!props.record?.alarmId || props.record?.status != 'Unprocessed'}
                 onClick={() =>
                   deal({ alarmId: props.record!.alarmId!, status: 'Ignored' }).then((res) =>
                     setOpen(!res.data),

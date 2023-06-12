@@ -148,6 +148,15 @@ const Register: React.FC = () => {
             })}
             rules={[
               {
+                type: 'email',
+                message: (
+                  <FormattedMessage
+                    id="pages.login.username.email.validator.required"
+                    defaultMessage="请使用邮箱注册"
+                  />
+                ),
+              },
+              {
                 required: true,
                 message: (
                   <FormattedMessage

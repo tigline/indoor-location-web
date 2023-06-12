@@ -43,7 +43,7 @@ export default function Page() {
     );
   }
   return (
-    <PageContainer>
+    <PageContainer childrenContentStyle={{padding:20}}>
       <ProCard>
         <ProForm
           // 隐藏重置按钮

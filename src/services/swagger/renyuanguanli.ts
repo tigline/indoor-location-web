@@ -1,6 +1,7 @@
 // @ts-ignore
 /* eslint-disable */
 import { request } from '@umijs/max';
+import { query } from 'express';
 
 /** 分页获取部门人员信息 GET /api/v1/dep/personnel */
 export async function pageDepPersonnel(
@@ -180,6 +181,20 @@ export async function addPersonnelType(
       'Content-Type': 'application/json',
     },
     data: body,
+    ...(options || {}),
+  });
+}
+
+/** 删除物品分类 DELETE /api/v1/personnelTypes/${param0} */
+export async function deletePersonType (
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.deletePersonTypeParams,
+  options?: {[key:string]:any}
+) {
+  const {typeId: param0, ...queryParams} = params;
+  return request<API.RestValueBoolean>(`/api/v1/personnelTypes/${param0}`, {
+    method: 'DELETE',
+    params: {...queryParams},
     ...(options || {}),
   });
 }

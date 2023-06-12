@@ -1,9 +1,9 @@
 import { convertLtoCM } from '@/components/map-components/antd-L7-component';
+import { convertCMtoL } from '@/components/map-components/convert';
 import { FenceL7Components } from '@/components/map-components/fence-L7-components';
 import { SelectMapSelect } from '@/components/select-map.select';
-import { addFence } from '@/services/swagger/xitongguanli';
+import { updateFence } from '@/services/swagger/xitongguanli';
 import { OK } from '@/utils/global.utils';
-import { PlusOutlined } from '@ant-design/icons';
 import {
   ModalForm,
   ProFormDependency,
@@ -11,15 +11,19 @@ import {
   ProFormText,
 } from '@ant-design/pro-components';
 import { DrawPolygon } from '@antv/l7-draw';
+import { Feature } from '@turf/turf';
 import { useIntl, useModel, useRequest } from '@umijs/max';
 import { Button, Form } from 'antd';
+import { Polygon } from 'geojson';
+import { compact, isEmpty } from 'lodash';
 import React from 'react';
 
 interface IProps {
   refresh?: () => void;
+  record: API.FenceAndMapInfo;
 }
 
-export function AddFenceModal(props: IProps) {
+export function UpdateFenceModal(props: IProps) {
   const intl = useIntl();
   const [form] = Form.useForm();
   const { run, data } = useModel('mapModel');
@@ -27,9 +31,27 @@ export function AddFenceModal(props: IProps) {
     run();
   }, []);
   const drawRef = React.useRef<DrawPolygon>();
-  const { run: add } = useRequest(addFence, {
+  const initData = React.useMemo<Feature<Polygon>[] | undefined>(() => {
+    const map = data?.find((s) => s.mapId === props.record.mapId);
+    const coordinates = props.record.points?.map(({ x, y }) => {
+      return convertCMtoL([x, y], map?.width ?? 0);
+    });
+    if (isEmpty(coordinates)) {
+      return;
+    }
+    return compact([
+      {
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          type: 'Polygon',
+          coordinates: [coordinates ?? []],
+        },
+      },
+    ]);
+  }, []);
+  const { run: update } = useRequest(updateFence, {
     manual: true,
-    fetchKey: (o) => o.mapId,
     formatResult: (res) => res,
     onSuccess(res) {
       if (res.code === OK) {
@@ -40,8 +62,8 @@ export function AddFenceModal(props: IProps) {
   return (
     <ModalForm<API.AddOrUpdateFenceInfo>
       title={intl.formatMessage({
-        id: 'pages.system.fence-manage.add',
-        defaultMessage: '添加围栏',
+        id: 'pages.system.fence-manage.edit',
+        defaultMessage: '编辑围栏',
       })}
       layout="horizontal"
       form={form}
@@ -52,9 +74,8 @@ export function AddFenceModal(props: IProps) {
         onCancel: () => console.log('run'),
       }}
       trigger={
-        <Button type="primary">
-          <PlusOutlined />
-          {intl.formatMessage({ id: 'app.action.add', defaultMessage: '新建' })}
+        <Button type="link" size="small">
+          {intl.formatMessage({ id: 'app.edit', defaultMessage: '编辑' })}
         </Button>
       }
       onFinish={(values) => {
@@ -72,7 +93,7 @@ export function AddFenceModal(props: IProps) {
         console.log(points);
         return Promise.all(
           points.map((item) => {
-            return add({ ...values, points: item });
+            return update({ fenceId: props.record.fenceId! }, { ...values, points: item });
           }),
         ).then((arr) => {
           return arr.reduce((prev, next) => prev && next.code === OK, true);
@@ -80,6 +101,7 @@ export function AddFenceModal(props: IProps) {
       }}
     >
       <SelectMapSelect
+        initialValue={props.record.mapId}
         label={intl.formatMessage({
           id: 'pages.system.fence-manage.add.map.select',
           defaultMessage: '地图选择',
@@ -95,6 +117,7 @@ export function AddFenceModal(props: IProps) {
         ]}
       />
       <ProFormText
+        initialValue={props.record.name}
         label={intl.formatMessage({
           id: 'pages.system.fence-manage.fence.name',
           defaultMessage: '围栏名称',
@@ -111,6 +134,7 @@ export function AddFenceModal(props: IProps) {
         ]}
       />
       <ProFormSelect
+        initialValue={props.record.type}
         label={intl.formatMessage({
           id: 'pages.system.fence-manage.fence.type',
           defaultMessage: '围栏类型',
@@ -145,6 +169,7 @@ export function AddFenceModal(props: IProps) {
           return (
             <FenceL7Components
               drawRef={drawRef}
+              initialData={initData}
               map={map?.picture}
               drawEnable
               rect={[map?.length, map?.width]}

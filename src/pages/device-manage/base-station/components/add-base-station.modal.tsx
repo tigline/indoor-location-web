@@ -46,10 +46,9 @@ export function AddBaseStationModal(props: IProps): JSX.Element {
         const [, mapId] = values.mapId;
         return run({ ...values, mapId });
       }}
-      onVisibleChange={(e) => {
-        if (!e) {
-          form.resetFields();
-        }
+      modalProps={{
+        destroyOnClose: true,
+        onCancel: () => console.log('run'),
       }}
       trigger={
         <Button type="primary">
@@ -58,7 +57,7 @@ export function AddBaseStationModal(props: IProps): JSX.Element {
         </Button>
       }
     >
-      <BaseStationFormFragment />
+      <BaseStationFormFragment isEdit = {false}/>
     </ModalForm>
   );
 }

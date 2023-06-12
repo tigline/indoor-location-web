@@ -5,11 +5,13 @@ import { ModalForm, ProFormSelect, ProFormText } from '@ant-design/pro-component
 import { FormattedMessage, useIntl, useRequest } from '@umijs/max';
 import { Button, Form, notification } from 'antd';
 import React from 'react';
+
 interface IProps {
   // children: JSX.Element;
   record: API.BeaconInfo;
   refresh?: () => void;
 }
+
 /**
  * 功能 模态框
  *
@@ -34,7 +36,7 @@ export function EditLabelModal(props: IProps): JSX.Element {
   }, []);
   return (
     <ModalForm<API.UpdateBeacon>
-      title={<FormattedMessage id="app.edit" defaultMessage="编辑" />}
+      title={<FormattedMessage id="pages.device-manage.label.device.edit" defaultMessage="编辑" />}
       layout="horizontal"
       form={form}
       labelCol={{ xs: 6 }}
@@ -54,15 +56,14 @@ export function EditLabelModal(props: IProps): JSX.Element {
           return res.code === OK;
         });
       }}
-      onVisibleChange={(e) => {
-        if (!e) {
-          form.resetFields();
-        }
+      modalProps={{
+        destroyOnClose: true,
+        onCancel: () => console.log('run'),
       }}
       trigger={
         <Button type="link" size="small">
           {intl.formatMessage({
-            id: 'pages.device-manage.label.device.edit',
+            id: 'app.edit',
             defaultMessage: '更新标签',
           })}
         </Button>
@@ -70,28 +71,38 @@ export function EditLabelModal(props: IProps): JSX.Element {
     >
       <ProFormText
         width="lg"
-        name="name"
-        initialValue={props.record.mac}
+        name="deviceId"
+        fieldProps={{ disabled: true}}
+        initialValue={props.record.deviceId}
         label={intl.formatMessage({
-          id: 'pages.device-manage.label.device.mac',
-          defaultMessage: '物理地址',
+          id: 'pages.device-manage.base-station.device.code',
+          defaultMessage: '编号',
         })}
         rules={[
           {
-            required: true,
-            message: intl.formatMessage({
-              id: 'pages.device-manage.label.device.mac.required.failure',
-              defaultMessage: '物理地址必填',
-            }),
+            required: false,
+            // message: intl.formatMessage({
+            //   id: 'pages.device-manage.label.device.mac.required.failure',
+            //   defaultMessage: '物理地址必填',
+            // }),
           },
-          {
-            pattern: /^[0-9a-fA-F,]+$/,
-            message: intl.formatMessage({
-              id: 'pages.device-manage.label.device.mac.hex.failure',
-              defaultMessage: '物理地址必填',
-            }),
-          },
+          // {
+          //   pattern: /^[0-9a-fA-F,]+$/,
+          //   message: intl.formatMessage({
+          //     id: 'pages.device-manage.label.device.mac.hex.failure',
+          //     defaultMessage: '物理地址必填',
+          //   }),
+          // },
         ]}
+      />
+      <ProFormText
+        width="lg"
+        name='name'
+        initialValue={props.record.name}
+        label={intl.formatMessage({
+          id: 'pages.device-manage.base-station.device.name',
+          defaultMessage: '名称',
+        })}
       />
       <ProFormSelect
         name="type"

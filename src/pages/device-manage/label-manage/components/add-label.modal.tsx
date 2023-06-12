@@ -5,10 +5,12 @@ import { ModalForm, ProFormSelect, ProFormText } from '@ant-design/pro-component
 import { useIntl } from '@umijs/max';
 import { Button, Form, notification } from 'antd';
 import { FormattedMessage } from 'umi';
+
 interface IProps {
   // children: JSX.Element;
   refresh?: () => void;
 }
+
 /**
  * 功能 模态框
  *
@@ -22,14 +24,14 @@ export function AddLabelModal(props: IProps): JSX.Element {
 
   return (
     <ModalForm<API.AddBeaconInfo>
-      title={<FormattedMessage id="app.action" defaultMessage="新建" />}
+      title={<FormattedMessage id="pages.device-manage.label.device.add" defaultMessage="添加标签" />}
       layout="horizontal"
       form={form}
       labelCol={{ xs: 6 }}
       wrapperCol={{ xs: 16 }}
       width={550}
       onFinish={(values) => {
-        return addBeacon({ ...values, deviceId: values.mac! }).then((res) => {
+        return addBeacon({ ...values, name: values.name, deviceId: values.deviceId! }).then((res) => {
           props.refresh?.();
           if (res.code === OK) {
             notification.success({
@@ -39,24 +41,23 @@ export function AddLabelModal(props: IProps): JSX.Element {
           return res.code === OK;
         });
       }}
-      onVisibleChange={(e) => {
-        if (!e) {
-          form.resetFields();
-        }
+      modalProps={{
+        destroyOnClose: true,
+        onCancel: () => console.log('run'),
       }}
       trigger={
         <Button type="primary">
           <PlusOutlined />
           {intl.formatMessage({
-            id: 'pages.device-manage.label.device.add',
-            defaultMessage: '新建标签',
+            id: 'app.action.add',
+            defaultMessage: '添加',
           })}
         </Button>
       }
     >
       <ProFormText
         width="lg"
-        name="mac"
+        name="deviceId"
         label={intl.formatMessage({
           id: 'pages.device-manage.label.device.deviceId',
           defaultMessage: '设备ID',
@@ -70,13 +71,22 @@ export function AddLabelModal(props: IProps): JSX.Element {
             }),
           },
           {
-            pattern: /^[0-9a-fA-F]+$/,
+            pattern: /^[0-9a-fA-F,]+$/,
             message: intl.formatMessage({
               id: 'pages.device-manage.label.device.mac.hex.failure',
               defaultMessage: '物理地址必填',
             }),
           },
         ]}
+      />
+      <ProFormText
+        width="lg"
+        name='name'
+        //initialValue={props.record.name}
+        label={intl.formatMessage({
+          id: 'pages.device-manage.base-station.device.name',
+          defaultMessage: '名称',
+        })}
       />
       <ProFormSelect
         name="type"

@@ -50,17 +50,16 @@ export function EditPersonnelModal(props: IProps) {
         id: 'pages.personnel-manage.organization.department.person.edit',
         defaultMessage: '更换部门',
       })}
-      onVisibleChange={(e) => {
-        if (!e) {
-          form.resetFields();
-        }
+      modalProps={{
+        destroyOnClose: true,
+        onCancel: () => console.log('run'),
       }}
       form={form}
       trigger={
         <Button size="small" type="link">
           {intl.formatMessage({
-            id: 'pages.personnel-manage.organization.department.person.update',
-            defaultMessage: '更新人员信息',
+            id: 'pages.personnel-manage.organization.department.person.edit',
+            defaultMessage: '更换部门',
           })}
         </Button>
       }
@@ -97,6 +96,7 @@ export function EditPersonnelModal(props: IProps) {
         })}
       />
       <ProFormText
+        readonly
         name="name"
         initialValue={props.record.name}
         label={intl.formatMessage({
@@ -105,6 +105,7 @@ export function EditPersonnelModal(props: IProps) {
         })}
       />
       <ProFormSelect
+        readonly
         label={intl.formatMessage({
           id: 'pages.personnel-manage.organization.department.person.gender',
           defaultMessage: '性别',
@@ -123,6 +124,8 @@ export function EditPersonnelModal(props: IProps) {
         }}
       />
       <SelectPersonnelTypeSelect
+        readonly
+        initialValue={props.record.typeId}
         label={intl.formatMessage({
           id: 'pages.personnel-manage.organization.department.person.type',
           defaultMessage: '人员类型',

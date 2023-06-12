@@ -1,8 +1,9 @@
 import { RemoveButtonPopover } from '@/components/remove-button.popover';
 import { deleteGateway, pageGateway } from '@/services/swagger/shebeiguanli';
 import { fmt, fmtPage } from '@/utils/global.utils';
+import { FormattedMessage } from '@@/exports';
 import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
-import { FormattedMessage, Link, useIntl, useRequest } from '@umijs/max';
+import { Link, useIntl, useRequest } from '@umijs/max';
 import { Button, notification, Tag } from 'antd';
 import qs from 'qs';
 import React from 'react';
@@ -12,6 +13,7 @@ import { EditBaseStationModal } from './components/edit-base-station.modal';
 export default function Page() {
   const actionRef = React.useRef<ActionType>();
   const intl = useIntl();
+  const [selectedRowKeys, setSelectedRowKeys] = React.useState<React.Key[]>([]);
   const { run: remove } = useRequest(deleteGateway, {
     manual: true,
     onSuccess(data) {
@@ -22,12 +24,25 @@ export default function Page() {
       }
     },
   });
-  const columns: ProColumns<API.GatewayInfo>[] = [
+  const { run: batchRemove, loading } = useRequest(
+    (param: { gateways: string[] }) => Promise.resolve(param),
     {
-      dataIndex: 'index',
-      valueType: 'indexBorder',
-      width: 48,
+      manual: true,
+      onSuccess(res) {
+        if (res) {
+          notification.success({
+            message: intl.formatMessage({ id: 'app.remove.success', defaultMessage: '删除成功' }),
+          });
+        }
+      },
     },
+  );
+  const columns: ProColumns<API.GatewayInfo>[] = [
+    // {
+    //   dataIndex: 'index',
+    //   valueType: 'indexBorder',
+    //   width: 48,
+    // },
     {
       title: intl.formatMessage({
         id: 'pages.device-manage.base-station.device.code',
@@ -130,14 +145,19 @@ export default function Page() {
           <RemoveButtonPopover
             disabled={!record.gateway}
             onClick={() => remove({ gateway: record.gateway! }).then(() => action?.reload())}
+            title={intl.formatMessage({
+              id: 'pages.searchTable.batchDeletion',
+              defaultMessage: '你确定要删除此项吗?',
+            })}
           />
         </Button.Group>
       ),
     },
   ];
   return (
-    <PageContainer>
+    <PageContainer childrenContentStyle={{padding:20}}>
       <ProTable
+        options={{ setting: false }}
         actionRef={actionRef}
         columns={columns}
         request={({ current, pageSize, ...rest }) => {
@@ -147,11 +167,27 @@ export default function Page() {
             },
           );
         }}
+        // rowKey={(o) => `${o.gateway}`}
+        // rowSelection={{
+        //   selectedRowKeys,
+        //   onChange: (keys) => setSelectedRowKeys(keys),
+        // }}
+        tableAlertRender={({ selectedRowKeys }) => (
+          <RemoveButtonPopover
+            onClick={() =>
+              batchRemove({ gateways: selectedRowKeys.map((item) => `${item}`) }).then(() =>
+                actionRef.current?.reload(),
+              )
+            }
+            loading={loading}
+          >
+            <Button type="link">
+              <FormattedMessage id="pages.searchTable.batchDeletion" defaultMessage="批量删除" />
+            </Button>
+          </RemoveButtonPopover>
+        )}
         toolBarRender={(action) => [
           <AddBaseStationModal key="add" refresh={action?.reload}></AddBaseStationModal>,
-          <Button key="batch" type="primary">
-            <FormattedMessage id="app.batch.action" defaultMessage="批量操作" />
-          </Button>,
         ]}
       />
     </PageContainer>

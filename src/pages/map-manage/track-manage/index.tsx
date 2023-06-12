@@ -7,7 +7,7 @@ import { PageContainer } from '@ant-design/pro-components';
  */
 export default function Page() {
   return (
-    <PageContainer>
+    <PageContainer childrenContentStyle={{padding:20}}>
       <ZrenderComponent></ZrenderComponent>
     </PageContainer>
   );

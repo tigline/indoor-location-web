@@ -1,7 +1,7 @@
 export default {
   'pages.layouts.userLayout.title': '室内定位管理平台',
   'pages.login.accountLogin.tab': '账户密码登录',
-  'pages.login.accountLogin.errorMessage': '错误的用户名和密码(admin/ant.design)',
+  'pages.login.accountLogin.errorMessage': '错误的用户名和密码',
   'pages.account.update': '更新用户信息',
   'pages.account.update.success': '更新用户信息成功',
   'pages.account.userId.failure': '用户ID不能为空',
@@ -9,7 +9,10 @@ export default {
   'pages.login.success': '登录成功！',
   'pages.login.username.placeholder': '用户名',
   'pages.login.username.required': '用户名是必填项！',
+
+
   'pages.login.password.placeholder': '密码',
+  'pages.login.username.email.validator.required': '请使用邮箱注册！',
   'pages.login.password.required': '密码是必填项！',
   'pages.login.phoneLogin.tab': '手机号登录',
   'pages.login.phoneLogin.errorMessage': '验证码错误',
@@ -125,8 +128,8 @@ export default {
   'pages.device-manage.base-station.device.status.online': '在线',
   'pages.device-manage.base-station.device.status.offline': '离线',
 
-  'pages.device-manage.label.device.add': '新建标签',
-  'pages.device-manage.label.device.edit': '更新标签',
+  'pages.device-manage.label.device.add': '添加标签',
+  'pages.device-manage.label.device.edit': '编辑标签',
   'pages.device-manage.label.device.bound': '绑定',
   'pages.device-manage.label.device.unbound': '未绑定',
   'pages.device-manage.label.device.equipment': '装备',
@@ -151,7 +154,7 @@ export default {
   'pages.device-manage.label.type.required.failure': '类型必填',
   'pages.device-manage.label.type.equipment': '设备',
   'pages.device-manage.label.type.personnel': '人员',
-  'pages.device-manage.label.type.vehicle': '工具',
+  'pages.device-manage.label.type.vehicle': '车辆',
   'pages.device-manage.label.type.stuff': '物品',
 
   'pages.goods-manage.goods.type.name': '类型名称',
@@ -161,13 +164,14 @@ export default {
   'pages.goods-manage.goods.info.name': '名称',
   'pages.goods-manage.goods.info.name.required.failure': '名称必填',
   'pages.goods-manage.goods.info.add': '添加物品',
+  'pages.goods-manage.goods.info.edit': '更新物品',
   'pages.goods-manage.goods.info.type': '物品类型',
   'pages.goods-manage.goods.info.type.required.failure': '请输入物品类型',
   'pages.goods-manage.goods.info.tag': '物品标签',
   'pages.goods-manage.goods.info.tag.required.failure': '请选择物品标签',
   'pages.goods-manage.goods.info.icon': '图标',
   'pages.goods-manage.goods.info.label': '绑定标签',
-  'pages.goods-manage.goods.info.deviceId': '设备编码',
+  'pages.goods-manage.goods.info.deviceId': '物品ID',
 
   'pages.system.map-setup': '地图设置',
   'pages.system.map-setup.building.name': '建筑名',
@@ -198,6 +202,7 @@ export default {
   'pages.system.map-setup.map.view': '预览',
 
   'pages.system.fence-manage.add': '添加围栏',
+  'pages.system.fence-manage.edit': '编辑围栏',
   'pages.system.fence-manage.view': '查看围栏',
   'pages.system.fence-manage.add.map.select': '地图选择',
   'pages.system.fence-manage.add.map.select.required.failure': '请选择地图',
@@ -259,4 +264,8 @@ export default {
 
   'pages.personnel-manage.organization.department.person.info.add': '添加人员',
   'pages.personnel-manage.organization.department.person.search.value': '输入名字，标签地址等等',
+
+  'pages.device-manage.track.map.required': '请选择地图',
+  'pages.device-manage.track.beacon.required': '请选择标签',
+
 };

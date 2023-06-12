@@ -1,15 +1,26 @@
 import { RemoveButtonPopover } from '@/components/remove-button.popover';
 import { deleteAlarm, pageAlarm } from '@/services/swagger/gaojingguanli';
 import { fmt, fmtPage, OK } from '@/utils/global.utils';
-import { PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
-import { useIntl, useRequest } from '@umijs/max';
+import { ActionType, PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
+import { useIntl, useModel, useRequest } from '@umijs/max';
 import { Button, notification } from 'antd';
 import dayjs from 'dayjs';
 import { DealAlarmModal } from './components/deal-alarm.modal';
+import { useEffect, useRef } from 'react';
+import { ILocation } from '@/models/messageSocket';
+
 
 export default function Page() {
   const intl = useIntl();
-
+  const actionRef = useRef<ActionType>();
+  const { data } = useModel('messageSocket');
+  useEffect(() => {
+    if (!data) return;
+    const res = JSON.parse(data) as ILocation;
+    if (res.type === 'Alarm') {
+      actionRef.current?.reload();
+    }
+  }, [data]);
   const { run: remove, fetches } = useRequest(deleteAlarm, {
     manual: true,
     fetchKey: (o) => o.alarmIds.join('-'),
@@ -25,13 +36,14 @@ export default function Page() {
       }
     },
   });
+
   const columns: ProColumns<API.AlarmInfo>[] = [
     {
       title: intl.formatMessage({
         id: 'pages.system.warning-manage.board.fence',
         defaultMessage: '标签',
       }),
-      dataIndex: 'fenceId',
+      dataIndex: 'deviceId',
     },
     {
       title: intl.formatMessage({
@@ -122,11 +134,13 @@ export default function Page() {
     },
   ];
   return (
-    <PageContainer>
+    <PageContainer childrenContentStyle={{padding:20}}>
       <ProTable<
         API.AlarmInfo,
         API.pageAlarmParams & { createTime: [dayjs.ConfigType, dayjs.ConfigType] }
       >
+       options={{ setting: false }}
+       actionRef={actionRef} 
         columns={columns}
         beforeSearchSubmit={(values) => {
           const { createTime, ...rest } = values;

@@ -42,7 +42,8 @@ export default () => {
   React.useEffect(() => {
     if (latestMessage?.data) {
       const res = JSON.parse(latestMessage?.data) as ILocation;
-      // 这里只处理'定位数据'
+      //console.log('socket message:', res);
+      //这里只处理'定位数据'
       if (res.type === 'AOAData') {
         setBeacons((pre) => {
           return { ...pre, [res.data.deviceId!]: res.data as API.AoaDataInfo };

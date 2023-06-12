@@ -45,13 +45,17 @@ export function EditBaseStationModal(props: IProps): JSX.Element {
       labelCol={{ xs: 6 }}
       wrapperCol={{ xs: 16 }}
       onFinish={(values) => {
-        const { mapId, name, ...rest } = values;
-        return run({ gateway: props.record.gateway! }, { mapId: mapId!, name: name!, ...rest });
+        const { mapId, name, groupId,...rest } = values;
+        return run({ gateway: props.record.gateway! }, { mapId: mapId!, name: name!, group:groupId, ...rest });
       }}
-      onVisibleChange={(e) => {
-        if (!e) {
-          form.resetFields();
-        }
+      // onChange={(e) => {
+      //   if (!e) {
+      //     form.resetFields();
+      //   }
+      // }}
+      modalProps={{
+        destroyOnClose: true,
+        onCancel: () => console.log('run'),
       }}
       trigger={
         <Button type="link" size="small">
@@ -59,7 +63,7 @@ export function EditBaseStationModal(props: IProps): JSX.Element {
         </Button>
       }
     >
-      <BaseStationFormFragment record={props.record} />
+      <BaseStationFormFragment record={props.record} isEdit = {true} />
     </ModalForm>
   );
 }

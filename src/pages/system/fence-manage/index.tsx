@@ -1,4 +1,5 @@
 import { RemoveButtonPopover } from '@/components/remove-button.popover';
+import { UpdateFenceModal } from '@/pages/system/fence-manage/components/update-fence.modal';
 import { deleteFence, pageFence } from '@/services/swagger/xitongguanli';
 import { fmtPage } from '@/utils/global.utils';
 import { PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
@@ -34,11 +35,11 @@ export default function Page() {
     formatResult: (res) => fmtPage(res),
   });
   const columns: ProColumns<API.FenceAndMapInfo>[] = [
-    {
-      dataIndex: 'index',
-      valueType: 'indexBorder',
-      width: 48,
-    },
+    // {
+    //   dataIndex: 'index',
+    //   valueType: 'indexBorder',
+    //   width: 48,
+    // },
     {
       title: intl.formatMessage({
         id: 'pages.system.fence-manage.map.name',
@@ -89,6 +90,7 @@ export default function Page() {
         <Button.Group>
           <SwitchFenceButton record={record} refresh={action?.reload} />
           <ViewFenceModal record={record} />
+          <UpdateFenceModal record={record} refresh={action?.reload} />
           <RemoveButtonPopover
             disabled={!record.fenceId}
             loading={fetches?.[record.fenceId!]?.loading}
@@ -99,8 +101,9 @@ export default function Page() {
     },
   ];
   return (
-    <PageContainer>
+    <PageContainer childrenContentStyle={{padding:20}}>
       <ProTable
+        options={{ setting: false }}
         columns={columns}
         toolBarRender={(action) => [
           <AddFenceModal key="add" refresh={action?.reload}></AddFenceModal>,

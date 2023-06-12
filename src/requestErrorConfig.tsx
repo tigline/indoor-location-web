@@ -3,6 +3,7 @@ import { FormattedMessage, history, RequestConfig } from '@umijs/max';
 import { message, notification } from 'antd';
 import qs from 'qs';
 import { NO_AUTHOR, OK } from './utils/global.utils';
+import { response } from 'express';
 
 // 错误处理方案： 错误类型
 enum ErrorShowType {
@@ -74,7 +75,12 @@ export const errorConfig: RequestConfig = {
       } else if (error.response) {
         // Axios 的错误
         // 请求成功发出且服务器也响应了状态码，但状态代码超出了 2xx 的范围
-        message.error(`Response status:${error.response.status}`);
+        
+        //message.error(`Response status:${error.response.data}`);
+        notification.error({
+          message: <FormattedMessage id="app.request.failure" defaultMessage="请求失败！" />,
+          description: error.response.data,
+        });
       } else if (error.request) {
         // 请求已经成功发起，但没有收到响应
         // \`error.request\` 在浏览器中是 XMLHttpRequest 的实例，

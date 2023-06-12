@@ -2,7 +2,7 @@ import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import { setAlpha } from '@ant-design/pro-components';
 import { useEmotionCss } from '@ant-design/use-emotion-css';
 import { history, useModel } from '@umijs/max';
-import { Avatar, Spin } from 'antd';
+import { Avatar, Dropdown, Spin } from 'antd';
 import { stringify } from 'querystring';
 import type { MenuInfo } from 'rc-menu/lib/interface';
 import React, { useCallback } from 'react';
@@ -155,7 +155,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
   ];
 
   return (
-    <HeaderDropdown
+    <Dropdown
       menu={{
         selectedKeys: [],
         onClick: onMenuClick,
@@ -166,7 +166,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
         <AvatarLogo />
         <Name />
       </span>
-    </HeaderDropdown>
+    </Dropdown>
   );
 };
 

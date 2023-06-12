@@ -43,10 +43,9 @@ export function AddBuildingModal(props: IProps): JSX.Element {
           return res.code === OK;
         });
       }}
-      onVisibleChange={(e) => {
-        if (!e) {
-          form.resetFields();
-        }
+      modalProps={{
+        destroyOnClose: true,
+        onCancel: () => console.log('run'),
       }}
       trigger={
         <Button type="primary">

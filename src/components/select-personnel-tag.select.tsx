@@ -1,4 +1,4 @@
-import { pageBeacon } from '@/services/swagger/shebeiguanli';
+import { listUnboundBeacon, pageBeacon } from '@/services/swagger/shebeiguanli';
 import { fmtPage } from '@/utils/global.utils';
 import { ProFormSelect } from '@ant-design/pro-components';
 import { useIntl, useRequest } from '@umijs/max';
@@ -11,16 +11,33 @@ import { useIntl, useRequest } from '@umijs/max';
  */
 export function SelectPersonnelTagSelect(props: React.ComponentProps<typeof ProFormSelect>) {
   const intl = useIntl();
-  const { run } = useRequest(pageBeacon, {
+  // const { run } = useRequest(pageBeacon, {
+  //   manual: true,
+  //   formatResult(res) {
+  //     return (
+  //       fmtPage(res).data?.map((item) => ({
+  //         label: item.name,
+  //         value: item.mac,
+  //         key: item.deviceId,
+  //       })) ?? []
+  //     );
+  //   },
+  // });
+
+  const { run } = useRequest(listUnboundBeacon, {
     manual: true,
+    //debounceInterval: 300,
     formatResult(res) {
-      return (
-        fmtPage(res).data?.map((item) => ({
-          label: item.name,
-          value: item.mac,
-          key: item.deviceId,
-        })) ?? []
-      );
+      const list =
+        res.data
+          ?.map((item) => ({
+            label: item.deviceId,
+            value: item.deviceId,
+            key: item.deviceId,
+          })) ?? []
+          // 更新页面需要添加本条数据对应的标签信息
+          //.concat([{ label: props.record.tag, value: props.record.tag }])
+      return list;
     },
   });
   return (
@@ -29,7 +46,7 @@ export function SelectPersonnelTagSelect(props: React.ComponentProps<typeof ProF
         id: 'pages.personnel-manage.organization.department.person.tag',
         defaultMessage: '绑定标签',
       })}
-      request={() => run({ current: '1', size: '1000' })}
+      request={() => run({})}
       {...props}
     />
   );
@@ -54,6 +71,15 @@ export function SelectBeacon(props: React.ComponentProps<typeof ProFormSelect>) 
         id: 'pages.personnel-manage.organization.department.person.tag.placeholder',
         defaultMessage: '请选择标签',
       })}
+      rules={[
+        {
+          required: true,
+          message: intl.formatMessage({
+            id: 'pages.device-manage.track.beacon.required',
+            defaultMessage: '请选择标签',
+          }),
+        },
+      ]}
       fieldProps={{
         showSearch: true,
         style: { minWidth: 180 },

@@ -104,7 +104,7 @@ export async function addThingType(
   body: API.AddOrUpdateThingType,
   options?: { [key: string]: any },
 ) {
-  return request<API.RestValueBoolean>('/api/v1/thingTypes', {
+  const response = await request<API.RestValueBoolean>('/api/v1/thingTypes', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -112,6 +112,7 @@ export async function addThingType(
     data: body,
     ...(options || {}),
   });
+  return response;
 }
 
 /** 修改物品分类 PUT /api/v1/thingTypes/${param0} */

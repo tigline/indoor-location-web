@@ -1,9 +1,10 @@
-import { getFileBase64 } from '@/utils/global.utils';
+import { getFileBase64, getFileText } from '@/utils/global.utils';
 import { ProFormUploadButton, ProFormUploadButtonProps } from '@ant-design/pro-components';
 import { useIntl } from '@umijs/max';
 import { Image, Modal, notification } from 'antd';
 import { RcFile, UploadFile } from 'antd/es/upload';
 import { first, set } from 'lodash';
+import { uploadFile } from '@/services/swagger/xitongguanli';
 
 export function ImageUploadFormItem(props: ProFormUploadButtonProps) {
   const intl = useIntl();
@@ -26,27 +27,47 @@ export function ImageUploadFormItem(props: ProFormUploadButtonProps) {
             icon: ' ',
           });
         },
-        customRequest(options) {
+        
+        customRequest: async (options) => {
+          const { file } = options;
+          const formData = new FormData();
+          formData.append("file", file);
+          // 调用你的 uploadFile 函数
+          try {
+            const result = await uploadFile(formData);
+            
+            console.log(result);
+            // 根据你的 uploadFile 函数的返回值进行下一步操作
+            // 例如，你可能需要在这里调用 options.onSuccess 或 options.onError
+            options.onSuccess?.(result.data.url)
+            
+          } catch (error) {
+            console.log(error);
+            //options.onError?.(error ?? new Error('上传失败'));
+          }
+        },
+        
+      }}
+    />
+  );
+}
+
+
           // if (props.accept === 'image/svg+xml') {
           //   getFileText(options.file as RcFile).then((res) => {
           //     options.onSuccess?.(res);
           //   });
           // } else {
-          if (options.file.length > 5 * 1000 * 1000) {
-            notification.error({
-              message: intl.formatMessage({
-                id: 'pages.system.map-setup.building.picture.big.failure',
-                defaultMessage: '图片太大了，不能超过5M',
-              }),
-            });
-            return;
-          }
-          getFileBase64(options.file as RcFile).then((res) => {
-            options.onSuccess?.(res);
-          });
+          // if (options.file.length > 5 * 1000 * 1000) {
+          //   notification.error({
+          //     message: intl.formatMessage({
+          //       id: 'pages.system.map-setup.building.picture.big.failure',
+          //       defaultMessage: '图片太大了，不能超过5M',
+          //     }),
+          //   });
+          //   return;
           // }
-        },
-      }}
-    />
-  );
-}
+          // getFileBase64(options.file as RcFile).then((res) => {
+          //   options.onSuccess?.(res);
+          // });
+          // }

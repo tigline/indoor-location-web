@@ -30,10 +30,9 @@ export function AddMapModal(props: IProps): JSX.Element {
       labelCol={{ xs: 6 }}
       wrapperCol={{ xs: 16 }}
       disabled={!buildingId}
-      onVisibleChange={(e) => {
-        if (!e) {
-          form.resetFields();
-        }
+      modalProps={{
+        destroyOnClose: true,
+        onCancel: () => console.log('run'),
       }}
       onFinish={(values) => {
         return addMap({ ...values, buildingId: buildingId! }).then((res) => {

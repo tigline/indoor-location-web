@@ -4,6 +4,7 @@ import { Button, ButtonProps, Popconfirm, PopconfirmProps } from 'antd';
 interface IProps extends Omit<ButtonProps, 'title' | 'color'>, Partial<PopconfirmProps> {
   onClick?: () => void;
 }
+
 /**
  * 通用删除组件
  * @param props
@@ -30,9 +31,11 @@ export function RemoveButtonPopover(props: IProps) {
       getPopupContainer={props.getPopupContainer}
       onConfirm={() => props?.onClick?.()}
     >
-      <Button type={props.type ?? 'link'} size={props.size ?? 'small'} disabled={props.disabled}>
-        <FormattedMessage id="app.remove" defaultMessage="删除" />
-      </Button>
+      {!props.children && (
+        <Button type={props.type ?? 'link'} size={props.size ?? 'small'} disabled={props.disabled}>
+          <FormattedMessage id="app.remove" defaultMessage="删除" />
+        </Button>
+      )}
     </Popconfirm>
   );
 }

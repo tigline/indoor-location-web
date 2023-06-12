@@ -184,7 +184,7 @@ const Login: React.FC = () => {
             <LoginMessage
               content={intl.formatMessage({
                 id: 'pages.login.accountLogin.errorMessage',
-                defaultMessage: '账户或密码错误(admin/ant.design)',
+                defaultMessage: '账户或密码错误',
               })}
             />
           )}
@@ -234,7 +234,7 @@ const Login: React.FC = () => {
             </>
           )}
 
-          {!isNil(code) && code !== OK && <LoginMessage content="验证码错误" />}
+          {/*{!isNil(code) && code !== OK && <LoginMessage content="验证码错误" />}*/}
           {/* {type === 'mobile' && (
             <>
               <ProFormText

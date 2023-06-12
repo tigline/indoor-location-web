@@ -2,7 +2,7 @@ export default {
   'pages.layouts.userLayout.title': 'インドアナビゲーションプラットフォーム',
   'pages.login.accountLogin.tab': 'アカウントログイン',
   'pages.login.accountLogin.errorMessage':
-    'ユーザー名/パスワードが正しくありません(admin/ant.design)',
+    'ユーザー名/パスワードが正しくありません',
   'pages.login.failure': 'ログインに失敗したら、もう一度試してください!',
   'pages.login.success': 'ログイン成功!',
   'pages.login.username.placeholder': 'ユーザー名',
@@ -127,8 +127,8 @@ export default {
 'pages.device-manage.base-station.device.status.online': 'オンライン',
 'pages.device-manage.base-station.device.status.offline': 'オフライン',
 
-'pages.device-manage.label.device.add': 'ビーコンを作成',
-'pages.device-manage.label.device.edit': 'ビーコンを更新',
+'pages.device-manage.label.device.add': 'ビーコンを追加',
+'pages.device-manage.label.device.edit': 'ビーコンを編集',
 'pages.device-manage.label.device.bound': 'バインド済み',
 'pages.device-manage.label.device.unbound': '未バインド',
 'pages.device-manage.label.device.equipment': '設備',
@@ -164,14 +164,14 @@ export default {
 
 'pages.goods-manage.goods.info.name': '名前',
 'pages.goods-manage.goods.info.name.required.failure': '名前は必須です',
-'pages.goods-manage.goods.info.add': '商品を追加',
-'pages.goods-manage.goods.info.type': '商品タイプ',
-'pages.goods-manage.goods.info.type.required.failure': '商品タイプを入力してください',
-'pages.goods-manage.goods.info.tag': '商品タグ',
-'pages.goods-manage.goods.info.tag.required.failure': '商品タグを選択してください',
+'pages.goods-manage.goods.info.add': '品物を追加',
+'pages.goods-manage.goods.info.type': '品物タイプ',
+'pages.goods-manage.goods.info.type.required.failure': '品物タイプを入力してください',
+'pages.goods-manage.goods.info.tag': '品物タグ',
+'pages.goods-manage.goods.info.tag.required.failure': '品物タグを選択してください',
 'pages.goods-manage.goods.info.icon': 'アイコン',
 'pages.goods-manage.goods.info.label': 'ビーコンをバインド',
-'pages.goods-manage.goods.info.deviceId': 'デバイスコード',
+'pages.goods-manage.goods.info.deviceId': '品物コード',
 
 'pages.system.map-setup': '地図設定',
 'pages.system.map-setup.building.name': '建物名',
@@ -202,6 +202,7 @@ export default {
 'pages.system.map-setup.map.view': 'プレビュー',
 
 'pages.system.fence-manage.add': 'フェンスを追加',
+'pages.system.fence-manage.edit': 'フェンスを編集',
 'pages.system.fence-manage.view': 'フェンスを表示',
 'pages.system.fence-manage.add.map.select': '地図を選択',
 'pages.system.fence-manage.add.map.select.required.failure': '地図を選択してください',
@@ -262,5 +263,8 @@ export default {
 
 'pages.personnel-manage.organization.department.person.info.add': 'スタッフを追加',
 'pages.personnel-manage.organization.department.person.search.value': '名前、タグのアドレスなどを入力してください',
+
+'pages.device-manage.track.map.required': '请选择地图',
+'pages.device-manage.track.beacon.required': '请选择标签',
 
 };
