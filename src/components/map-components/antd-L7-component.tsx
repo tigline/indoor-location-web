@@ -239,7 +239,7 @@ export function AntdL7Component(props: IProps) {
           })
           .shape('line')
           .size(2)
-          // .texture('arrow')
+          //.texture('arrow')
           .color(green[3])
           .animate({
             interval: 0.4, // 间隔
