@@ -27,7 +27,7 @@ export default function Page() {
   return (
     <PageContainer childrenContentStyle={{padding:20}}>
       <ProList<API.BuildingInfo>
-        pagination={false} // 不分页
+        pagination={false}
         request={(param) => {
           return listBuilding({ name: param.name }).then((res) => {
             return {

@@ -9,7 +9,6 @@ import * as shebeiguanli from './shebeiguanli';
 import * as wupinguanli from './wupinguanli';
 import * as xitongguanli from './xitongguanli';
 import * as yonghuguanli from './yonghuguanli';
-import * as vendorguanli from './vendorguanli';
 export default {
   gaojingguanli,
   shebeiguanli,

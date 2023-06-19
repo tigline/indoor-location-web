@@ -87,23 +87,6 @@ export default [
         name: 'label-manage',
         component: './device-manage/label-manage',
       },
-      {
-        path: '/device-manage/vendor-manage',
-        name: 'vendor-manage',
-        component: './device-manage/vendor-manage',
-      },
-      {
-        path: '/device-manage/vendor-manage/vendor-models.page/:CompanyId',
-        name: 'vendor-models',
-        hideInMenu: true,
-        component: './device-manage/vendor-manage/vendor-models.page',
-      },
-      {
-        path: '/device-manage/vendor-manage/thing-models-manage/add-thing-model',
-        name: 'add-thing-model',
-        hideInMenu: true,
-        component: './device-manage/vendor-manage/thing-models-manage/add-thing-model',
-      }
     ],
   },
   {

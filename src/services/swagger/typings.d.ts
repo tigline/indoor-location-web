@@ -153,91 +153,6 @@ declare namespace API {
     updateTime?: number;
   };
 
-  type CompanyInfo = {
-    companyId?: number;
-    companyCode?: String;
-    companyName?: String; 
-    simpleName?: String; 
-    contactName?: String; 
-    contactPhone?: String; 
-    beginCreateTime?: Date; 
-    active?: Boolean; 
-    createTime?: Date; 
-    updateTime?: Date; 
-  };
-
-  type AddOrUpdateCompanyInfo = {
-    companyCode?: String;
-    companyName?: String;
-  }
-
-  type updateCompanyParams = {
-    companyCode: String;
-  };
-
-  type deleteCompanyParams = {
-    companyCode: String;
-  }
-
-  type TSLModelInfo = {
-    id?: number;
-    modelCode?: string;
-    jsonType?: number;
-    versionName?: string;
-    versionCode?: number;
-    companyId?: number;
-    topics?: any[];
-    active?: boolean;
-    createTime?: Date;
-    updateTime?: Date;
-    companyCode?: string;
-  };
-
-  type RestValueListTSLModelInfo = {
-    code?: number;
-    data?: TSLModelInfo[];
-    errorDetail?: string;
-    message?: string;
-  };
-
-  type TSLTopics = {
-    id?: number;
-    vendor?: string;
-    jsonType?: number;
-    versionName?: string;
-    versionCode?: number;
-    companyId?: number;
-    topics?: TopicInfo[];
-    active?: boolean;
-    createTime?: Date;
-    updateTime?: Date;
-    companyCode?: string;
-  };
-
-  type TopicInfo = {
-    topicName?: string;
-    topic?: string;
-    mapKeys?: Map<String,any>;
-    properties?: Map<String,any>;
-  }
-
-  type AddOrUpdateTSLModelInfo = {
-    vendor?: string;
-    jsonType?: number;
-    versionName?: string;
-    versionCode?: number;
-    companyId?: number;
-    topics?: TopicInfo[];
-    active?: boolean;
-    createTime?: Date;
-    updateTime?: Date;
-  }
-
-  type listTSLModelInfoParams = {
-    vendor: String?, 
-    companyId: Int?
-  };
-
   type BuildingInfo = {
     address?: string;
     buildingId?: string;
@@ -656,13 +571,6 @@ declare namespace API {
   type RestValueListMapInfo = {
     code?: number;
     data?: MapInfo[];
-    errorDetail?: string;
-    message?: string;
-  };
-
-  type RestValueListCompanyInfo = {
-    code?: number;
-    data?: CompanyInfo[];
     errorDetail?: string;
     message?: string;
   };
