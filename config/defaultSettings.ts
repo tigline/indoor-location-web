@@ -1,5 +1,4 @@
 import { ProLayoutProps } from '@ant-design/pro-components';
-import { useIntl } from '@umijs/max';
 /**
  * @name
  */
@@ -16,7 +15,7 @@ const Settings: ProLayoutProps & {
   fixedHeader: false,
   fixSiderbar: true,
   colorWeak: false,
-  title: '屋内ナビゲーションプラットフォーム',//useIntl().formatMessage({ id: 'pages.layouts.userLayout.title' }),
+  title: '屋内ナビゲーションプラットフォーム', //useIntl().formatMessage({ id: 'pages.layouts.userLayout.title' }),
   pwa: true,
   logo: '/indoor.svg',
   iconfontUrl: '',
