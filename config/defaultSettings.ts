@@ -17,7 +17,7 @@ const Settings: ProLayoutProps & {
   colorWeak: false,
   title: '屋内ナビゲーションプラットフォーム', //useIntl().formatMessage({ id: 'pages.layouts.userLayout.title' }),
   pwa: true,
-  logo: '/indoor.svg',
+  logo: 'indoor.svg',
   iconfontUrl: '',
   token: {
     // 参见ts声明，demo 见文档，通过token 修改样式/indoor-location-web/public

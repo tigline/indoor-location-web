@@ -14,12 +14,16 @@ export default {
   dev: {
     // localhost:8000/api/** -> https://preview.pro.ant.design/api/**'http://8.217.20.176/' http://localhost:9050'^/ips/api/': '/api'
     '/ips/api/': {
-      // 要代理的地址
-      target: 'http://localhost:9050',
-      // 配置了这个可以从 http 代理到 https
+      
       // 依赖 origin 的功能可能需要这个，比如 cookie
       changeOrigin: true,
-      pathRewrite: { '^/ips/api/': '/api/' },
+      // 要代理的地址
+      // 配置了这个可以从 http 代理到 https
+      target: 'http://8.217.20.176/',
+      pathRewrite: { '^': '' },
+
+      // target: 'http://localhost:9050',
+      // pathRewrite: { '^/ips/api/': '/api/' },
     },
   },
 

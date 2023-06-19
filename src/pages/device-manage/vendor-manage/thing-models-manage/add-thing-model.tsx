@@ -171,7 +171,7 @@ const MyForm: React.FC = () => {
                 {/* 第三区域为 动态 ProFormList，用于输入 Topics 项 */}
                 <ProFormList
                     name="topics"
-                    label="用户信息"
+                    label="MQTT Topics"
                     initialValue={initialValues.topics}
                     creatorRecord={() => ({})}
                     itemRender={({ listDom, action }, { record }) => {
@@ -198,7 +198,7 @@ const MyForm: React.FC = () => {
                         <ProFormGroup>
                             <ProFormText name="key" label="系统键值" />
                             <ProFormText name="value" label="厂商键值路径" />
-                            <ProFormText name="value" label="" />
+                            
                         </ProFormGroup>
                     </ProFormList> 
 

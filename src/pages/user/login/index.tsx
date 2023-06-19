@@ -17,6 +17,8 @@ import { isNil } from 'lodash';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
 import Settings from '../../../../config/defaultSettings';
+import logo from '@/assets/logo.svg';
+import { HashRouter as Router, Link } from 'react-router-dom';
 
 // const ActionIcons = () => {
 //   const langClassName = useEmotionCss(({ token }) => {
@@ -142,7 +144,7 @@ const Login: React.FC = () => {
       <div style={{ flex: '1', padding: '32px 0' }}>
         <LoginForm
           contentStyle={{ minWidth: 280, maxWidth: '75vw' }}
-          logo={<img alt="logo" src="/logo.svg" />}
+          logo={<img alt="logo" src="/indoor-location-web/logo.svg" />}
           title={intl.formatMessage({ id: 'pages.layouts.userLayout.title' })}
           subTitle={intl.formatMessage({ id: 'pages.layouts.userLayout.title' })}
           initialValues={{ autoLogin: true }}
@@ -316,13 +318,17 @@ const Login: React.FC = () => {
               />
             </>
           )} */}
-          <div style={{ marginBottom: 24 }}>
+          <div style={{ marginBottom: 24}}>
             <ProFormCheckbox noStyle name="autoLogin">
               <FormattedMessage id="pages.login.rememberMe" defaultMessage="自动登录" />
             </ProFormCheckbox>
-            <a href="/user/register" style={{ float: 'right' }}>
+            
+              <Link to="/user/register" style={{ float: 'right' }}>注册</Link>
+                
+            
+            {/* <a href="/user/register" style={{ float: 'right' }}>
               <FormattedMessage id="menu.register" defaultMessage="注册" />
-            </a>
+            </a> */}
           </div>
         </LoginForm>
       </div>

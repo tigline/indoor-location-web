@@ -4,7 +4,7 @@ import { OK } from '@/utils/global.utils';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { ProForm, ProFormText } from '@ant-design/pro-components';
 import { useEmotionCss } from '@ant-design/use-emotion-css';
-import { FormattedMessage, Helmet, history, SelectLang, useIntl } from '@umijs/max';
+import { FormattedMessage, Helmet, history, Link, SelectLang, useIntl } from '@umijs/max';
 import { Button, Col, notification, Row, Typography } from 'antd';
 import React from 'react';
 import Settings from '../../../../config/defaultSettings';
@@ -102,12 +102,16 @@ const Register: React.FC = () => {
                     </Button>
                   </Col>
                   <Col span="12">
-                    <Button block type="link" href="/user/login">
+                  <Link to="/user/login" style={{ float: 'right' }}>{intl.formatMessage({
+                        id: 'pages.register.link.login',
+                        defaultMessage: '使用已有账户登录',
+                      })}</Link>
+                    {/* <Button block type="link" href="/user/login">
                       {intl.formatMessage({
                         id: 'pages.register.link.login',
                         defaultMessage: '使用已有账户登录',
                       })}
-                    </Button>
+                    </Button> */}
                   </Col>
                 </Row>
               );
