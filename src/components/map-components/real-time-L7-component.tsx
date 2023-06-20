@@ -25,7 +25,7 @@ import {
 import { useIntl } from '@umijs/max';
 import { Card } from 'antd';
 import { forEach, isEmpty, isNil } from 'lodash';
-import React, {useState} from 'react';
+import React from 'react';
 import { convertCMtoL, scale } from './convert';
 
 /**
@@ -102,18 +102,10 @@ interface IProps {
  * @param props
  * @returns
  */
-
-
-
 export function RealTimeL7Component(props: IProps) {
-
-
-  const prevTimestamp = React.useRef(performance.now());
-  const animationDuration = 1000; // 1秒
-
-  let timer: NodeJS.Timeout | undefined;
-  
   const intl = useIntl();
+  let timer: NodeJS.Timeout | undefined;
+
   const TypeLabel: Record<string, string> = {
     Equipment: intl.formatMessage({
       id: 'pages.device-manage.label.type.equipment',
@@ -132,7 +124,6 @@ export function RealTimeL7Component(props: IProps) {
       defaultMessage: '材料',
     }),
   };
-
   const [mapLength, mapWidth] = props.rect;
   const [loaded, setLoaded] = React.useState<boolean>();
 
@@ -152,123 +143,6 @@ export function RealTimeL7Component(props: IProps) {
   /** @type {*} 展示围栏 ‘面’ 图层 */
   const fenceLayers = React.useRef<Record<string | number, ILayer>>({});
   // window.fenceLayers = fenceLayers;
-
-  const [prevLocations, setPrevLocations] = useState<API.AoaDataInfo[] | undefined>(undefined);
-
-  function lerp(start: number, end: number, t: number): number {
-    return start * (1 - t) + end * t;
-  }
-
-  function updateLocationss(timestamp: number) {
-    if (!prevLocations || !props.locations) {
-      setPrevLocations(props.locations);
-      return;
-    }
-  
-    const t = Math.min(1, (timestamp - prevTimestamp.current) / animationDuration);
-    const interpolatedLocations: API.AoaDataInfo[] = [];
-  
-    for (let i = 0; i < props.locations.length; i++) {
-      const currentLocation = props.locations[i];
-      const prevLocation = prevLocations.find((item) => item.id === currentLocation.id);
-  
-      if (prevLocation) {
-        const interpolatedX = lerp(prevLocation.posX!, currentLocation.posX!, t);
-        const interpolatedY = lerp(prevLocation.posY!, currentLocation.posY!, t);
-  
-        interpolatedLocations.push({ ...currentLocation, posX: interpolatedX, posY: interpolatedY });
-      } else {
-        interpolatedLocations.push(currentLocation);
-      }
-    }
-  
-    // 更新位置数据
-    
-    if (loaded && mapWidth) {
-      forEach(
-        [
-          'Equipment',
-          'Personnel',
-          'Vehicle',
-          'Stuff',
-          'Equipment-selected',
-          'Personnel-selected',
-          'Vehicle-selected',
-          'Stuff-selected',
-        ],
-        (key, index) => {
-          const source = (props.locations ?? [])
-            ?.filter((f) => {
-              const [type, selected] = key.split('-');
-              if (selected) {
-                return f.type === type && f.deviceId === props.selectedDeviceId;
-              } else {
-                return f.type === type;
-              }
-            })
-            ?.map((item) => {
-              const [lng, lat] = convertCMtoL([item.posX!, item.posY!], mapWidth) ?? [];
-              return { ...item, lng, lat };
-            });
-
-          if (!locationLayers.current?.[index]) {
-            if (!isEmpty(source)) {
-              locationLayers.current![index] = new PointLayer({
-                name: 'real-time',
-                zIndex: 3,
-                layerType: 'fillImage',
-              })
-                .source(source, {
-                  parser: { type: 'json', x: 'lng', y: 'lat', name: 'type' },
-                })
-                // .color(green[3])
-                // .color('red')
-                .size(15)
-                .shape(key)
-                .animate(true);
-              scene.current?.addLayer(locationLayers.current![index]!);
-              locationLayers.current?.[index].on('mousemove', (e) => {
-                console.log(e);
-                clearTimeout(timer);
-                popup.current?.setLnglat(e.lngLat).setHTML(
-                  `<span>
-                    <p>deviceId:${e.feature.deviceId}</p>
-                    <p>X:${e.feature.posX}</p>
-                    <p>Y:${e.feature.posY}</p>
-                    <p>${intl.formatMessage({
-                      id: 'pages.device-manage.label.type',
-                      defaultMessage: '类型',
-                    })}: ${TypeLabel[e.feature.type as any]}</p>
-                  </span>
-                  `,
-                );
-                scene.current?.addPopup(popup.current!);
-                timer = setTimeout(() => {
-                  scene.current?.removePopup(popup.current!);
-                }, 5000);
-              });
-            }
-          } else {
-            if (isEmpty(props.locations)) {
-              // 图层不能设置空数据 ，这里数据为空时直接隐藏图层
-              locationLayers.current?.[index].hide();
-            } else {
-              if (!locationLayers.current?.[index].isVisible()) {
-                locationLayers.current?.[index].show();
-              }
-              locationLayers.current?.[index].setData(source);
-              locationLayers.current?.[index].setIndex(3);
-            }
-          }
-        },
-      );
-    }
-  }
-
-  const updateLocations = React.useCallback((timestamp: number) => {
-    updateLocationss(timestamp);
-  }, [props.locations]);
-
   React.useEffect(() => {
     scene.current = new Scene({
       id: mapContainer.current!,
@@ -373,8 +247,9 @@ export function RealTimeL7Component(props: IProps) {
             );
             scene.current?.addPopup(popup.current!);
             timer = setTimeout(() => {
-              scene.current?.removePopup(popup.current!);
+               scene.current?.removePopup(popup.current!);
             }, 5000);
+
           });
         }
       });
@@ -383,11 +258,86 @@ export function RealTimeL7Component(props: IProps) {
 
   // 处理标签展示内容
   React.useEffect(() => {
+    if (loaded && mapWidth) {
+      forEach(
+        [
+          'Equipment',
+          'Personnel',
+          'Vehicle',
+          'Stuff',
+          'Equipment-selected',
+          'Personnel-selected',
+          'Vehicle-selected',
+          'Stuff-selected',
+        ],
+        (key, index) => {
+          const source = (props.locations ?? [])
+            ?.filter((f) => {
+              const [type, selected] = key.split('-');
+              if (selected) {
+                return f.type === type && f.deviceId === props.selectedDeviceId;
+              } else {
+                return f.type === type;
+              }
+            })
+            ?.map((item) => {
+              const [lng, lat] = convertCMtoL([item.posX!, item.posY!], mapWidth) ?? [];
+              return { ...item, lng, lat };
+            });
 
-
-    updateLocations(performance.now());
-    requestAnimationFrame(updateLocations);
-  }, [updateLocations, loaded, mapWidth]);
+          if (!locationLayers.current?.[index]) {
+            if (!isEmpty(source)) {
+              locationLayers.current![index] = new PointLayer({
+                name: 'real-time',
+                zIndex: 3,
+                layerType: 'fillImage',
+              })
+                .source(source, {
+                  parser: { type: 'json', x: 'lng', y: 'lat', name: 'type' },
+                })
+                // .color(green[3])
+                // .color('red')
+                .size(15)
+                .shape(key)
+                .animate(true);
+              scene.current?.addLayer(locationLayers.current![index]!);
+              locationLayers.current?.[index].on('mousemove', (e) => {
+                clearTimeout(timer);
+                console.log(e);
+                popup.current?.setLnglat(e.lngLat).setHTML(
+                  `<span>
+                    <p>deviceId:${e.feature.deviceId}</p>
+                    <p>X:${e.feature.posX}</p>
+                    <p>Y:${e.feature.posY}</p>
+                    <p>${intl.formatMessage({
+                      id: 'pages.device-manage.label.type',
+                      defaultMessage: '类型',
+                    })}: ${TypeLabel[e.feature.type as any]}</p>
+                  </span>
+                  `,
+                );
+                scene.current?.addPopup(popup.current!);
+                timer = setTimeout(() => {
+                  scene.current?.removePopup(popup.current!);
+               }, 5000);
+              });
+            }
+          } else {
+            if (isEmpty(props.locations)) {
+              // 图层不能设置空数据 ，这里数据为空时直接隐藏图层
+              locationLayers.current?.[index].hide();
+            } else {
+              if (!locationLayers.current?.[index].isVisible()) {
+                locationLayers.current?.[index].show();
+              }
+              locationLayers.current?.[index].setData(source);
+              locationLayers.current?.[index].setIndex(3);
+            }
+          }
+        },
+      );
+    }
+  }, [props.locations, loaded, mapWidth]);
 
   // 处理围栏展示内容
   React.useEffect(() => {
@@ -401,6 +351,7 @@ export function RealTimeL7Component(props: IProps) {
         });
         return;
       }
+
 
       forEach(fenceLayers.current, (item) => {
         if (!props.fences?.find((f) => item?.name.endsWith(f.fenceId + ''))) {
@@ -453,19 +404,19 @@ export function RealTimeL7Component(props: IProps) {
         }
       });
     }
-  }, [props.fences]);
+  }, [props.fences, loaded, mapWidth]);
 
   React.useEffect(() => {
     if (!isNil(props.hiddenFence)) {
       if (props.hiddenFence) {
         forEach(fenceLayers.current, (item) => item?.hide());
       } else {
-        if (props.fences !== undefined && props.fences.length > 0) {
+        if (props.fences != undefined && props.fences.length > 0) {
           forEach(fenceLayers.current, (item) => item?.show());
         } else {
           forEach(fenceLayers.current, (item) => item?.hide());
         }
-        
+
       }
     }
   }, [props.hiddenFence]);
