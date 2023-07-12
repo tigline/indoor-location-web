@@ -45,8 +45,8 @@ export function EditBaseStationModal(props: IProps): JSX.Element {
       labelCol={{ xs: 6 }}
       wrapperCol={{ xs: 16 }}
       onFinish={(values) => {
-        const { mapId, name, groupId,...rest } = values;
-        return run({ gateway: props.record.gateway! }, { mapId: mapId!, name: name!, group:groupId, ...rest });
+        const { mapId, name, groupId, companyCode,...rest } = values;
+        return run({ gateway: props.record.gateway! }, { mapId: mapId!, name: name!, group:groupId, companyCode:companyCode, ...rest });
       }}
       // onChange={(e) => {
       //   if (!e) {

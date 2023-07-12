@@ -26,6 +26,7 @@ export default () => {
   const options = (data ?? []).map((item) => ({
     label: item.name,
     value: item.mapId,
+    companyCode: item.companyCode,
   }));
   return {
     run,

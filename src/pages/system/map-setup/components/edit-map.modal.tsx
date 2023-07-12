@@ -1,7 +1,8 @@
 import { ImageUploadFormItem } from '@/components/image.upload.form.item';
+import { SelectVendor } from '@/components/select-personnel-tag.select';
 import { updateMap } from '@/services/swagger/xitongguanli';
 import { OK } from '@/utils/global.utils';
-import { ModalForm, ProFormDigit, ProFormText } from '@ant-design/pro-components';
+import { ModalForm, ProFormDigit, ProFormSelect, ProFormText } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl, useModel } from '@umijs/max';
 import { Button, Form, notification } from 'antd';
 import { UploadFile } from 'antd/es/upload';
@@ -130,6 +131,45 @@ export function EditMapModal(props: IProps): JSX.Element {
           },
         ]}
       ></ProFormDigit>
+      <SelectVendor
+        width="lg"
+        name='companyCode'
+        initialValue={props.record.companyCode}
+        label={intl.formatMessage({
+          id: 'pages.device-manage.base-vendor.name',
+          defaultMessage: '厂商',
+        })}
+        rules={[
+          {
+            required: true,
+          }
+        ]}
+      />
+      <ProFormSelect
+        width="lg"
+        name="coordinateType"
+        label={intl.formatMessage({ id: 'pages.system.map-setup.coordinate.type', defaultMessage: '坐标类型' })}
+        initialValue={props.record.coordinateType}
+        valueEnum={{
+          Cartesian: intl.formatMessage({
+            id: 'pages.system.map-setup.coordinate.type.cartesian',
+            defaultMessage: '笛卡尔坐标',
+          }),
+          World: intl.formatMessage({
+            id: 'pages.system.map-setup.coordinate.type.world',
+            defaultMessage: '世界坐标',
+          })
+        }}
+        rules={[
+          {
+            required: true,
+            message: intl.formatMessage({
+              id: 'pages.system.map-setup.coordinate.type.required.failure',
+              defaultMessage: '坐标类型必填',
+            }),
+          },
+        ]}
+      ></ProFormSelect>
       <ImageUploadFormItem
         width="lg"
         name="picture"

@@ -1,3 +1,4 @@
+import { SelectVendor } from '@/components/select-personnel-tag.select';
 import { addBeacon } from '@/services/swagger/shebeiguanli';
 import { OK } from '@/utils/global.utils';
 import { PlusOutlined } from '@ant-design/icons';
@@ -79,14 +80,23 @@ export function AddLabelModal(props: IProps): JSX.Element {
           },
         ]}
       />
-      <ProFormText
+      <SelectVendor
         width="lg"
-        name='name'
+        name='companyCode'
         //initialValue={props.record.name}
         label={intl.formatMessage({
-          id: 'pages.device-manage.base-station.device.name',
-          defaultMessage: '名称',
+          id: 'pages.device-manage.base-vendor.name',
+          defaultMessage: '厂商',
         })}
+        rules={[
+          {
+            required: true,
+            // message: intl.formatMessage({
+            //   id: 'pages.device-manage.label.device.mac.required.failure',
+            //   defaultMessage: '物理地址必填',
+            // }),
+          }
+        ]}
       />
       <ProFormSelect
         name="type"

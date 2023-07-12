@@ -55,7 +55,7 @@ export default function Page() {
           submitter={{ resetButtonProps: { style: { display: 'none' } } }}
           formRef={formRef}
           layout="vertical"
-          span={6}
+          span={12}
           onFinish={(values) => {
             // console.log(values);
             return submit(values);
@@ -65,6 +65,7 @@ export default function Page() {
           <SelectBeacon name="deviceId" />
           {/* <ProFormDigit name="filterValue" /> */}
           <ProFormDateTimeRangePicker
+            width="lg"
             name="range"
             transform={(value: [Moment?, Moment?]) => {
               const [startTime, endTime] = fmtDate(value) ?? [];

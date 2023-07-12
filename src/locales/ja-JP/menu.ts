@@ -8,6 +8,12 @@ export default {
   'menu.register': '登録',
   'menu.register-result': '登録結果',
 
+  'menu.system': 'システム設定',
+  'menu.system.fence-manage': '囲い管理',
+  'menu.system.map-setup': '地図設定',
+  'menu.system.floor-manager': '地図管理',
+  'menu.system.general-setting': '一般設定',
+
   // 项目专有菜单
   'menu.dashboard.location.info': '位置概要',
   'menu.dashboard.label-distribution': 'オンラインビーコン分布',
@@ -47,10 +53,6 @@ export default {
   'menu.personnel-manage.personnel-info': '人事情報',
   'menu.personnel-manage.regional-statistics': '地域統計',
   
-  'menu.system': 'システム設定',
-  'menu.system.fence-manage': 'フェンス管理',
-  'menu.system.map-setup': '地図設定',
-  'menu.system.general-setting': '一般設定',
   // 项目专有菜单
 
   'menu.dashboard.analysis': '分析',

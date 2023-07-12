@@ -12,40 +12,46 @@ import React from 'react';
 //   }
 //   return filteredData
 // }
-
-export default () => {
-  const { initialState } = useModel('@@initialState');
-  // 当前有实时数据的标签
-  const [beacons, setBeacons] = React.useState<Record<string, API.AoaDataInfo>>();
-  // const [state, setState] = React.useState();
-
-  // const [aoas,setAoas] = React.useState<Record<string,API.AoaDataInfo[]>>()
-  // const [alarms,setAlarms] = React.useState<Record<string,API.AlarmInfo[]>>()
-
-  const url = location.hostname.replace('localhost', '') || '8.217.20.176';
-
-  // const url = 'localhost:3000';
-  const { connect, readyState, latestMessage } = useWebSocket(
-    `ws://${url}/websocket?userId=${initialState?.currentUser?.userId}`,
-    {
-      manual: true,
       // onOpen: () => console.log('web socket connected'),
       // onClose: () => console.log('web socket closed'),
       // onMessage(message: MessageEvent<string>) {
       //   console.log('Receive:', message);
       // },
       // onError: (err) => console.log(err),
+        // const [state, setState] = React.useState();
+
+  // const [aoas,setAoas] = React.useState<Record<string,API.AoaDataInfo[]>>()
+  // const [alarms,setAlarms] = React.useState<Record<string,API.AlarmInfo[]>>()
+
+export default () => {
+  const { initialState } = useModel('@@initialState');
+  // 当前有实时数据的标签
+  const [beaconLocations, setBeaconLocations] = React.useState<Record<string, API.AoaDataInfo>>();
+
+
+  const url = location.hostname.replace('localhost', '') || '192.168.0.10';
+  //const url = '192.168.0.5:9050';
+  
+  const { connect, readyState, latestMessage } = useWebSocket(
+    `ws://${url}/websocket?userId=${initialState?.currentUser?.userId}`,
+    {
+      manual: true,
     },
   );
-  React.useEffect(() => {}, [latestMessage?.data]);
+
+  React.useEffect(() => { }, [latestMessage?.data]);
 
   React.useEffect(() => {
     if (latestMessage?.data) {
+      //console.log('socket message:', latestMessage?.data);
       const res = JSON.parse(latestMessage?.data) as ILocation;
-      //console.log('socket message:', res);
       //这里只处理'定位数据'
       if (res.type === 'AOAData') {
-        setBeacons((pre) => {
+        // const currentDate = new Date();
+        // //格式化时间
+        // const formattedDate = currentDate.toISOString();
+        // console.log('socket message:', formattedDate , res);
+        setBeaconLocations((pre) => {
           return { ...pre, [res.data.deviceId!]: res.data as API.AoaDataInfo };
         });
       }
@@ -56,7 +62,7 @@ export default () => {
     readyState,
     connect,
     data: latestMessage?.data,
-    beacons,
+    beaconLocations,
   };
 };
 

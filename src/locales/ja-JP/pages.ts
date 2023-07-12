@@ -200,6 +200,10 @@ export default {
 'pages.system.map-setup.map.id.required.failure': '一意の識別子は必須です',
 'pages.system.map-setup.map.setting': '設定',
 'pages.system.map-setup.map.view': 'プレビュー',
+'pages.system.map-setup.coordinate.type': '座標タイプ',
+'pages.system.map-setup.coordinate.type.required.failure': '座標タイプは必須です',
+'pages.system.map-setup.coordinate.type.cartesian': '直交座標',
+'pages.system.map-setup.coordinate.type.world': '世界座標',
 
 'pages.system.fence-manage.add': 'フェンスを追加',
 'pages.system.fence-manage.edit': 'フェンスを編集',
@@ -266,5 +270,9 @@ export default {
 
 'pages.device-manage.track.map.required': '请选择地图',
 'pages.device-manage.track.beacon.required': '请选择标签',
+
+'pages.device-manage.base-vendor.name': 'ベンダー名',
+'pages.device-manage.base-vendor.select.placeholder': 'ベンダーを選択してください',
+'pages.device-manage.base-vendor.name.required.failure': 'ベンダー名は必須です',
 
 };

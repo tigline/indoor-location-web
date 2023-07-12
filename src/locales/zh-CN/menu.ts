@@ -13,8 +13,16 @@ export default {
   // 项目专有菜单
 
   'menu.dashboard': '总览',
-
+  'menu.dashboard.map': '地図',
   'menu.position-manage': '位置管理',
+  'menu.dashboard.location.info': '位置概要',
+  'menu.dashboard.label.status': '标签状态',
+  'menu.dashboard.base.station.status': '基站状态',
+  'menu.dashboard.system.running.time': '系统运行时间',
+  'menu.dashboard.label-distribution': '在线标签分布',
+  'menu.dashboard.warning.last.24.hours': '24小时告警变化',
+  'menu.dashboard.warning.today': '今日告警',
+  'menu.dashboard.Today\'s.alarm.analogy.ratio': '今日告警类似比率',
 
   'menu.position-manage.real-time-location': '实时位置',
   'menu.position-manage.tracking-manage': '轨迹追踪',

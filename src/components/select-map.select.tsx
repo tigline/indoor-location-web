@@ -2,13 +2,15 @@ import { ProFormSelect, ProFormSelectProps } from '@ant-design/pro-components';
 import { useModel,useIntl } from '@umijs/max';
 import React from 'react';
 
-type IProps = ProFormSelectProps;
+type IProps = ProFormSelectProps & { companyCode?: string };
 export function SelectMapSelect(props: IProps) {
   const intl = useIntl();
   const { run, options, loading, initialValue } = useModel('mapModel');
+  
   React.useEffect(() => {
     run();
   }, []);
+
   return (
     <ProFormSelect
       {...props}
@@ -26,7 +28,7 @@ export function SelectMapSelect(props: IProps) {
       style={{ width: 240 }}
       fieldProps={{ loading }}
       initialValue={props.initialValue ?? initialValue}
-      options={options}
+      options={options.filter(option => !props.companyCode || option.companyCode === props.companyCode)}
     />
   );
 }

@@ -1,6 +1,6 @@
 import { RealTimeL7Component } from '@/components/map-components/real-time-L7-component';
 import { SelectMapSelect } from '@/components/select-map.select';
-import { pageGateway } from '@/services/swagger/shebeiguanli';
+import { pageBeacon, pageGateway, pageMapBeacon } from '@/services/swagger/shebeiguanli';
 import { getMap, pageFence } from '@/services/swagger/xitongguanli';
 import { fmt, OK } from '@/utils/global.utils';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
@@ -12,11 +12,13 @@ import {
   ProFormInstance,
   Statistic,
 } from '@ant-design/pro-components';
+import { PointLayer } from '@antv/l7';
 import { FormattedMessage, useIntl, useModel, useRequest, useSearchParams } from '@umijs/max';
 import { useInterval } from 'ahooks';
-import { Card, Col, Row, Switch, Typography } from 'antd';
+import { Card, Col, Row, Switch, Typography,Spin } from 'antd';
 import { chain } from 'lodash';
 import React from 'react';
+
 
 /**
  * 展示当前时间
@@ -46,6 +48,7 @@ export function StatisticOfNow() {
  * @export
  * @return {*}
  */
+
 export default function Page() {
   // const intl = useIntl();
   // const param = useParams();
@@ -58,6 +61,41 @@ export default function Page() {
   const [currentMapId, setCurrentMapId] = React.useState<string>();
   const [fenceEnable, setFenceDisable] = React.useState<boolean>(true);
   const [warningFenceId, setWarningFenceId] = React.useState<string>();
+  const [loading, setLoading] = React.useState<boolean>(true);
+  const [beacons, setBeacons] = React.useState<API.BeaconInfo[]>([]); 
+
+  // 在组件外部定义类型
+
+  
+
+  React.useEffect(() => {
+    let current = 1;
+    const size = 50;
+  
+    const fetchBeacons = async () => {
+      while (true) {
+        const response = await pageBeacon({ current: current.toString(), size: size.toString() });
+        if (response.code === 200 && response.data?.items) {
+          const items = response.data.items;
+          if (Array.isArray(items)) {
+            setBeacons(oldBeacons => [...oldBeacons, ...items]);
+          }
+          if (response.data.total && response.data.total <= current * size) {
+            break;
+          }
+          current += 1;
+        } else {
+          // handle error
+          break;
+        }
+      }
+      setLoading(false);
+    };
+  
+    fetchBeacons();
+  }, []);
+
+
 
   const { run: queryFences, data: fences } = useRequest(pageFence, {
     manual: true,
@@ -80,7 +118,7 @@ export default function Page() {
   const { run: query, data: gateways } = useRequest(pageGateway, {
     manual: true,
   });
-  const { beacons } = useModel('messageSocket');
+  const { beaconLocations } = useModel('messageSocket');
 
   function submit(mapId: string) {
     query({ mapId: mapId });
@@ -133,9 +171,27 @@ export default function Page() {
           </Row>
         </ProForm>
       </ProCard>
-      <Card style={{marginTop:12}}>
-        <RealTimeL7Component
+      <Card style={{marginTop:12, position: 'relative'}}>
+      {loading && (
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(255, 255, 255, 0.3)',
+          zIndex: 1,
+        }}>
+          <Spin />
+        </div>
+        )}
+        <div style={{ zIndex: 0 }}>
+          <RealTimeL7Component
           map={mapInfo?.data?.picture}
+          coordinateType={mapInfo?.data?.coordinateType}
           rect={[mapInfo?.data?.length, mapInfo?.data?.width]}
           stations={gateways?.items}
           fences={fences}
@@ -144,11 +200,12 @@ export default function Page() {
           clear={() => setWarningFenceId('')}
           selectedStation={selectedGateway}
           selectedDeviceId={selectedDeviceId}
-          locations={chain(beacons)
+          locations={chain(beaconLocations)
             .map((o) => o)
             .filter((f) => f.mapId === currentMapId)
             .value()}
         />
+      </div>
       </Card>
     </PageContainer>
   );

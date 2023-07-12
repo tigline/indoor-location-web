@@ -58,10 +58,10 @@ export default function Page() {
     },
     {
       title: intl.formatMessage({
-        id: 'pages.device-manage.base-station.device.name',
-        defaultMessage: '名称',
+        id: 'pages.device-manage.base-vendor.name',
+        defaultMessage: '厂商',
       }),
-      dataIndex: 'name',
+      dataIndex: 'companyCode',
       copyable: true,
       ellipsis: true,
       // tip: '标题过长会自动收缩',

@@ -2,6 +2,23 @@
 /* eslint-disable */
 import { request } from '@umijs/max';
 
+export async function listCompany(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.listCompanyParams,
+  options?: { [key: string]: any },
+) {
+  const lang = params.lang;
+  return request<API.RestValueListCompanyInfo>('/api/v1/company/list', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      'lang':lang||'jp',
+    },
+    ...(options || {}),
+  });
+}
+
+
 
 export async function uploadFile(body: FormData, options?: { [key: string]: any }) {
   return request('/api/v1/upload', {

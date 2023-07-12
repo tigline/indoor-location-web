@@ -1,5 +1,6 @@
 declare namespace API {
   type AddBeaconInfo = {
+    companyCode?: string;
     deviceId: string;
     gateway?: string;
     groupId?: string;
@@ -20,6 +21,7 @@ declare namespace API {
   }
 
   type AddGatewayInfo = {
+    companyCode?: string;
     angle?: number;
     gateway: string;
     groupId?: string;
@@ -59,6 +61,8 @@ declare namespace API {
     picture: string;
     width?: number;
     widthPx?: number;
+    companyCode?: string;
+    coordinateType?: 'Cartesian' | 'World';
   };
 
   type AddOrUpdatePersonnel = {
@@ -132,6 +136,7 @@ declare namespace API {
   };
 
   type BeaconInfo = {
+    companyCode?: string;
     deviceId?: string;
     extraInfo?: string;
     fenceIds?: string;
@@ -151,6 +156,15 @@ declare namespace API {
     systemId?: string;
     type?: 'Equipment' | 'Personnel' | 'Vehicle' | 'Stuff';
     updateTime?: number;
+  };
+
+  type CompanyInfo = {
+     label?: string;
+     value?: string;
+  };
+
+  type listCompanyParams = {
+    lang?: string;
   };
 
   type BuildingInfo = {
@@ -236,6 +250,7 @@ declare namespace API {
   };
 
   type GatewayInfo = {
+    companyCode?: string;
     angle?: number;
     extraInfo?: string;
     fenceIds?: string;
@@ -316,6 +331,8 @@ declare namespace API {
     picture?: string;
     width?: number;
     widthPx?: number;
+    companyCode?: string;
+    coordinateType?: 'Cartesian' | 'World';
   };
 
   type OnlineStatusCount = {
@@ -339,6 +356,15 @@ declare namespace API {
 
   type pageBeaconParams = {
     deviceId?: string;
+    name?: string;
+    /** 当前页码 */
+    current?: string;
+    /** 每页数量 */
+    size?: string;
+  };
+
+  type pageMapBeaconParams = {
+    mapId?: string;
     name?: string;
     /** 当前页码 */
     current?: string;
@@ -561,6 +587,13 @@ declare namespace API {
     message?: string;
   };
 
+  type RestValueListCompanyInfo = {
+    code?: number;
+    data?: CompanyInfo[];
+    errorDetail?: string;
+    message?: string;
+  };
+
   type RestValueListDepartmentTree = {
     code?: number;
     data?: DepartmentTree[];
@@ -718,8 +751,9 @@ declare namespace API {
 
   type UpdateBeacon = {
     fenceIds?: string;
-    name: string;
+    name?: string;
     type: 'Equipment' | 'Personnel' | 'Vehicle' | 'Stuff';
+    companyCode?: string;
   };
 
   type updateBeaconParams = {
@@ -741,11 +775,12 @@ declare namespace API {
   type UpdateGateway = {
     angle?: number;
     mapId: string;
-    name: string;
+    name?: string;
     setX?: number;
     setY?: number;
     setZ?: number;
     group?: string;
+    companyCode?: string;
   };
 
   type updateGatewayParams = {

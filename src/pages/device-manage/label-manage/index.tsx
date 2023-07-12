@@ -11,7 +11,7 @@ import { EditLabelModal } from './components/edit-label.modal';
 
 export default function Page() {
   const actionRef = React.useRef<ActionType>();
-  const { beacons } = useModel('messageSocket');
+  const { beaconLocations } = useModel('messageSocket');
   const intl = useIntl();
   const { run: remove, fetches } = useRequest(deleteBeacon, {
     manual: true,
@@ -38,10 +38,10 @@ export default function Page() {
     },
     {
       title: intl.formatMessage({
-        id: 'pages.device-manage.base-station.device.name',
-        defaultMessage: '名称',
+        id: 'pages.device-manage.base-vendor.name',
+        defaultMessage: '厂商',
       }),
-      dataIndex: 'name',
+      dataIndex: 'companyCode',
       copyable: true,
       ellipsis: true,
     },
@@ -59,8 +59,8 @@ export default function Page() {
       },
       valueEnum: {
         Equipment: intl.formatMessage({
-          id: 'pages.device-manage.label.device.equipment',
-          defaultMessage: '装备',
+          id: 'pages.device-manage.label.type.equipment',
+          defaultMessage: '设备',
         }),
         Personnel: intl.formatMessage({
           id: 'pages.device-manage.label.device.personnel',
@@ -122,7 +122,7 @@ export default function Page() {
         <Button.Group>
           <EditLabelModal record={record} refresh={action?.reload} />
           {/* 这个标签有实时位置的时候才展示跳转逻辑 */}
-          {beacons?.[record.deviceId!] && (
+          {beaconLocations?.[record.deviceId!] && (
             <Button hidden={!record.online} type="link" size="small">
               <Link
                 to={`/position-manage/real-time-location${qs.stringify(

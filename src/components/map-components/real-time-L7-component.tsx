@@ -26,7 +26,7 @@ import { useIntl } from '@umijs/max';
 import { Card } from 'antd';
 import { forEach, isEmpty, isNil } from 'lodash';
 import React from 'react';
-import { convertCMtoL, scale } from './convert';
+import { convertCMtoL, convertScale, scale } from './convert';
 
 /**
  * 让围栏图层闪烁
@@ -53,6 +53,7 @@ interface IProps {
   width?: number;
   height?: number;
   rect: [number?, number?];
+  coordinateType?: String;
 
   /**
    * 基站内容
@@ -281,9 +282,15 @@ export function RealTimeL7Component(props: IProps) {
               }
             })
             ?.map((item) => {
-              const [lng, lat] = convertCMtoL([item.posX!, item.posY!], mapWidth) ?? [];
+              let lng = item.posX!, lat = item.posY!;
+              if (props.coordinateType == "World") {
+                  [lng, lat] = convertCMtoL([item.posX!, item.posY!], mapWidth) ?? [];
+              } else {
+                  [lng, lat] = convertScale([item.posX!, item.posY!], mapWidth) ?? [];
+              }
               return { ...item, lng, lat };
             });
+
 
           if (!locationLayers.current?.[index]) {
             if (!isEmpty(source)) {

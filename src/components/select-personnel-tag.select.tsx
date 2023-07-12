@@ -1,6 +1,7 @@
 import { listUnboundBeacon, pageBeacon } from '@/services/swagger/shebeiguanli';
+import { listCompany } from '@/services/swagger/xitongguanli';
 import { fmtPage } from '@/utils/global.utils';
-import { ProFormSelect } from '@ant-design/pro-components';
+import { ProFormSelect, ProFormSelectProps } from '@ant-design/pro-components';
 import { useIntl, useRequest } from '@umijs/max';
 
 /**
@@ -83,6 +84,63 @@ export function SelectBeacon(props: React.ComponentProps<typeof ProFormSelect>) 
       fieldProps={{
         showSearch: true,
         style: { minWidth: 180 },
+      }}
+      {...props}
+    />
+  );
+}
+
+interface SelectVendorProps extends ProFormSelectProps {
+  companyCode?: string;
+  onValueChange?: (value: string | undefined) => void;
+}
+
+export function SelectVendor(props: SelectVendorProps) {
+  const intl = useIntl();
+
+  const handleChange = (value: string | undefined) => {
+    // 这里，我们调用传递给组件的 onValueChange 函数
+    props.onValueChange?.(value);
+  };
+  return (
+    <ProFormSelect
+      request={async ({ keyWords = '' }) => {
+        var lang = intl.locale;
+        if (lang == 'zh-CN') {
+          lang = 'cn';
+        } else if (lang == 'ja-JP') {
+          lang = 'jp';
+        } else {
+          lang = 'en';
+        } 
+        const params: API.listCompanyParams = {
+          lang: lang,
+        };
+        const res = await listCompany(params);
+        const list = res.data?.map((item) => ({
+          label: item.label,
+          value: item.value,
+        })) ?? [];
+        return list;
+        // return run({ current: '1', size: '20', name: keyWords });
+      }}
+      placeholder={intl.formatMessage({
+        id: 'pages.device-manage.base-vendor.select.placeholder',
+        defaultMessage: '请选择厂商',
+      })}
+      rules={[
+        {
+          required: true,
+          message: intl.formatMessage({
+            id: 'pages.device-manage.base-vendor.name.required.failure',
+            defaultMessage: '厂商名称不能为空',
+          }),
+        },
+      ]}
+      fieldProps={{
+        showSearch: true,
+        style: { minWidth: 180 },
+        onChange: handleChange, // 添加此行
       }}
       {...props}
     />

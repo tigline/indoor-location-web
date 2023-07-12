@@ -21,6 +21,26 @@ export async function pageBeacon(
   });
 }
 
+/**分页获取当前地图标签列表 GET /api/map/beacon */
+
+export async function pageMapBeacon(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.pageMapBeaconParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.RestValuePageResultBeaconInfo>('/api/v1/beacon', {
+    method: 'GET',
+    params: {
+      // current has a default value: 1
+      current: '1',
+      // size has a default value: 10
+      size: '50',
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
 /** 添加标签信息 POST /api/v1/beacon */
 export async function addBeacon(body: API.AddBeaconInfo, options?: { [key: string]: any }) {
   return request<API.RestValueBoolean>('/api/v1/beacon', {

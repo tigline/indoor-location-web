@@ -1,3 +1,4 @@
+import { SelectVendor } from '@/components/select-personnel-tag.select';
 import { updateBeacon } from '@/services/swagger/shebeiguanli';
 import { pageFence } from '@/services/swagger/xitongguanli';
 import { OK } from '@/utils/global.utils';
@@ -42,10 +43,10 @@ export function EditLabelModal(props: IProps): JSX.Element {
       labelCol={{ xs: 6 }}
       wrapperCol={{ xs: 16 }}
       width={550}
-      onFinish={({ name, type, fenceIds }) => {
+      onFinish={({ name, type, fenceIds, companyCode }) => {
         return updateBeacon(
           { deviceId: props.record.deviceId! },
-          { name: name!, type, fenceIds },
+          { name: name!, companyCode, type, fenceIds },
         ).then((res) => {
           if (res.code === OK) {
             notification.success({
@@ -95,14 +96,24 @@ export function EditLabelModal(props: IProps): JSX.Element {
           // },
         ]}
       />
-      <ProFormText
+
+      <SelectVendor
         width="lg"
-        name='name'
-        initialValue={props.record.name}
+        name='companyCode'
+        initialValue={props.record.companyCode}
         label={intl.formatMessage({
-          id: 'pages.device-manage.base-station.device.name',
-          defaultMessage: '名称',
+          id: 'pages.device-manage.base-vendor.name',
+          defaultMessage: '厂商',
         })}
+        rules={[
+          {
+            required: true,
+            // message: intl.formatMessage({
+            //   id: 'pages.device-manage.label.device.mac.required.failure',
+            //   defaultMessage: '物理地址必填',
+            // }),
+          }
+        ]}
       />
       <ProFormSelect
         name="type"

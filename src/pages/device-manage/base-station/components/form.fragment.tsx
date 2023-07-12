@@ -1,7 +1,8 @@
 import { SelectMapSelect } from '@/components/select-map.select';
+import { SelectVendor } from '@/components/select-personnel-tag.select';
 import { ProFormDigit, ProFormText } from '@ant-design/pro-components';
 import { useIntl } from '@umijs/max';
-import React from 'react';
+import React, { useState } from 'react';
 
 interface IProps {
   // children: JSX.Element;
@@ -11,9 +12,19 @@ interface IProps {
 }
 export function BaseStationFormFragment(props: IProps) {
   const intl = useIntl();
+
+  const [companyCode, setCompanyCode] = useState<string | undefined>(props.record?.companyCode);
+  const [mapId, setMapId] = useState<string | undefined>(props.record?.mapId);
+
+  const handleCompanyCodeChange = (newCompanyCode: string | undefined) => {
+    setCompanyCode(newCompanyCode);
+    // 当 companyCode 改变时，重置 mapId
+    setMapId(undefined);
+  };
+
   return (
     <React.Fragment>
-      <ProFormText
+      {/* <ProFormText
         width="lg"
         name="name"
         initialValue={props.record?.name}
@@ -21,6 +32,26 @@ export function BaseStationFormFragment(props: IProps) {
           id: 'pages.device-manage.label.device.name',
           defaultMessage: '设置名称',
         })}
+      /> */}
+      <SelectVendor
+        width="lg"
+        name='companyCode'
+        fieldProps={{ disabled: props.isEdit}}
+        initialValue={companyCode}
+        onValueChange={handleCompanyCodeChange}
+        label={intl.formatMessage({
+          id: 'pages.device-manage.base-vendor.name',
+          defaultMessage: '厂商',
+        })}
+        rules={[
+          {
+            required: true,
+            // message: intl.formatMessage({
+            //   id: 'pages.device-manage.label.device.mac.required.failure',
+            //   defaultMessage: '物理地址必填',
+            // }),
+          }
+        ]}
       />
       <ProFormText
         width="lg"
@@ -31,8 +62,17 @@ export function BaseStationFormFragment(props: IProps) {
           id: 'pages.device-manage.label.device.deviceId',
           defaultMessage: '设备ID',
         })}
+        rules={[
+          {
+            required: true,
+            message: intl.formatMessage({
+              id: 'pages.device-manage.label.device.deviceId',
+              defaultMessage: '设备ID',
+            }),
+          },
+        ]}
       />
-      <ProFormText
+      {/* <ProFormText
         width="lg"
         name="productName"
         initialValue={props.record?.productName}
@@ -40,7 +80,7 @@ export function BaseStationFormFragment(props: IProps) {
           id: 'pages.device-manage.label.device.productName',
           defaultMessage: '产品名称',
         })}
-      />
+      /> */}
       <ProFormDigit
         width="lg"
         name="setX"
@@ -99,7 +139,8 @@ export function BaseStationFormFragment(props: IProps) {
           id: 'pages.device-manage.label.device.map',
           defaultMessage: '地图',
         })}
-        initialValue={props.record?.mapId}
+        companyCode={companyCode}
+        initialValue={mapId}
       />
     </React.Fragment>
   );

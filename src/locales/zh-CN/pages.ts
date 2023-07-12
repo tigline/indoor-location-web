@@ -137,6 +137,7 @@ export default {
   'pages.device-manage.label.device.vehicle': '车辆',
   'pages.device-manage.label.device.stuff': '物品',
   'pages.device-manage.label.device.batch': '批量操作',
+  'pages.device-manage.label.device.deviceId.required.failure': '设备ID必填',
 
   'pages.device-manage.label.device.deviceId': '设备ID',
   'pages.device-manage.label.device.gateway': '基站',
@@ -200,6 +201,11 @@ export default {
   'pages.system.map-setup.map.id.required.failure': '唯一标识必填',
   'pages.system.map-setup.map.setting': '配置',
   'pages.system.map-setup.map.view': '预览',
+  'pages.system.map-setup.coordinate.type': '坐标类型',
+  'pages.system.map-setup.coordinate.type.required.failure': '坐标类型必填',
+  'pages.system.map-setup.coordinate.type.cartesian': '笛卡尔坐标',
+  'pages.system.map-setup.coordinate.type.world': '世界坐标',
+
 
   'pages.system.fence-manage.add': '添加围栏',
   'pages.system.fence-manage.edit': '编辑围栏',
@@ -267,5 +273,9 @@ export default {
 
   'pages.device-manage.track.map.required': '请选择地图',
   'pages.device-manage.track.beacon.required': '请选择标签',
+
+  'pages.device-manage.base-vendor.name': '厂商名称',
+  'pages.device-manage.base-vendor.select.placeholder': '请选择厂商',
+  'pages.device-manage.base-vendor.name.required.failure': '厂商名称必填',
 
 };
