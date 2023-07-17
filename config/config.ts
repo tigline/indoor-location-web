@@ -8,6 +8,8 @@ import routes from './routes';
 const { REACT_APP_ENV = 'dev' } = process.env;
 
 export default defineConfig({
+  // base: '/indoor-location-web/public/',
+  // publicPath: '/indoor-location-web/public/',
   /**
    * @name 开启 hash 模式
    * @description 让 build 之后的产物包含 hash 后缀。通常用于增量发布和避免浏览器加载缓存。
@@ -41,6 +43,15 @@ export default defineConfig({
     // 只有设置为 variable， 才能使用 configProvide 动态设置主色调
     'root-entry-name': 'variable',
   },
+  manifest: {
+    fileName: 'asset-manifest.json',
+    basePath: 'icons',
+  },
+  links: [
+    { rel: 'manifest', href: '/indoor-location-web/manifest.json' },
+    { rel: 'manifest', href: '/indoor-location-web/asset-manifest.json' },
+  ],
+
   /**
    * @name moment 的国际化配置
    * @description 如果对国际化没有要求，打开之后能减少js的包大小
