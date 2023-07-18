@@ -15,6 +15,34 @@ export default defineConfig({
    */
   hash: true,
 
+  // proxy: {
+  //   '/ips/api/': {
+  //     // 要代理的地址
+  //     target: 'http://8.217.20.176/',
+  //     pathRewrite: { '^': '' },
+  //     // 配置了这个可以从 http 代理到 https
+  //     // 依赖 origin 的功能可能需要这个，比如 cookie
+  //     changeOrigin: true,
+      
+  //     // target: 'http://localhost:9050',
+  //     // pathRewrite: { '^/ips/api/': '/api/' },
+
+  //   },
+  // },
+
+  base: '/',
+  publicPath: '/',
+
+  manifest: {
+    fileName: 'asset-manifest.json',
+    basePath: 'icons',
+  },
+  links: [
+    { rel: 'manifest', href: '/manifest.json' },
+    { rel: 'manifest', href: '/asset-manifest.json' },
+  ],
+
+
   /**
    * @name 兼容性设置
    * @description 设置 ie11 不一定完美兼容，需要检查自己使用的所有依赖

@@ -1,0 +1,26 @@
+{
+  "name": "室内定位平台",
+  "short_name": "室内定位平台",
+  "display": "standalone",
+  "start_url": "./?utm_source=homescreen",
+  "id":"./?utm_source=homescreen",
+  "theme_color": "#002140",
+  "background_color": "#001529",
+  "icons": [
+    {
+      "src": "icon-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "icon-128x128.png",
+      "type": "image/png",
+      "sizes": "128x128"
+    },
+    {
+      "src": "icon-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}
