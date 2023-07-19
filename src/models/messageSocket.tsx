@@ -29,8 +29,8 @@ export default () => {
   const [beaconLocations, setBeaconLocations] = React.useState<Record<string, API.AoaDataInfo>>();
 
 
-  const url = location.hostname.replace('localhost', '') || '192.168.0.10';
-  //const url = '192.168.0.5:9050';
+  //const url = location.hostname.replace('localhost', '') || '192.168.0.10';
+  const url = '127.0.0.1';
   
   const { connect, readyState, latestMessage } = useWebSocket(
     `ws://${url}/websocket?userId=${initialState?.currentUser?.userId}`,
